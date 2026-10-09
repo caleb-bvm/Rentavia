@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+.vs/
+.dotnet-local/
+.nuget/
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+TestResults/
+tmp/
+*.user
+*.suo
+src/Rentavia.Web/wwwroot/uploads/
