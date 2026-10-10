@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0e0b0c" />
+    <title>@ViewData["Title"] · Rentavía</title>
+    <link rel="preload" href="~/fonts/material-symbols-rounded.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+@{
+    var controlador = ViewContext.RouteData.Values["controller"]?.ToString();
+    var accion = ViewContext.RouteData.Values["action"]?.ToString();
+    // Controlador, texto e ícono de Material Symbols de cada opción del menú
+    var operacion = new[]
+    {
+        ("Home", "Inicio", "space_dashboard"),
+        ("Disponibilidad", "Disponibilidad", "event_available"),
+        ("Vehiculos", "Vehículos", "directions_car"),
+        ("Clientes", "Clientes", "group"),
+        ("Reservas", "Reservas", "event"),
+        ("Alquileres", "Alquileres", "car_rental"),
+        ("Mantenimientos", "Mantenimiento", "build"),
+        ("Recomendaciones", "Recomendador IA", "auto_awesome"),
+        ("Categorias", "Categorías", "category"),
+        ("Sucursales", "Sucursales", "store")
+    };
+}
+<div class="app-shell @(User.Identity?.IsAuthenticated == true ? "" : "public-shell")">
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <aside class="sidebar" id="menu">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark">RV</span>
+                <span>RENTAVÍA<small>GESTIÓN DE FLOTA</small></span>
+            </a>
+            <span class="nav-caption">OPERACIÓN</span>
+            <nav aria-label="Navegación principal">
+                @foreach (var item in operacion)
+                {
+                    <a class="@(controlador == item.Item1 ? "active" : "")" asp-controller="@item.Item1" asp-action="Index">
+                        <span class="icon" aria-hidden="true">@item.Item3</span>@item.Item2
+                    </a>
+                }
+                @if (User.IsInRole("Administrador"))
+                {
+                    <span class="nav-caption">ADMINISTRACIÓN</span>
+                    <a class="@(controlador == "Reportes" && accion == "Index" ? "active" : "")" asp-controller="Reportes" asp-action="Index">
+                        <span class="icon" aria-hidden="true">analytics</span>Reportes
+                    </a>
+                    <a class="@(controlador == "Reportes" && accion == "Auditoria" ? "active" : "")" asp-controller="Reportes" asp-action="Auditoria">
+                        <span class="icon" aria-hidden="true">policy</span>Auditoría
+                    </a>
+                    <a class="@(controlador == "Usuarios" ? "active" : "")" asp-controller="Usuarios" asp-action="Index">
+                        <span class="icon" aria-hidden="true">manage_accounts</span>Usuarios
+                    </a>
+                }
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="user-chip">
+                    <span class="avatar"><span class="icon" aria-hidden="true">person</span></span>
+                    <small>@User.Identity?.Name</small>
+                </div>
+                <form asp-controller="Cuenta" asp-action="Salir" method="post">
+                    <button class="btn btn-outline-secondary logout"><span class="icon" aria-hidden="true">logout</span>Cerrar sesión</button>
+                </form>
+            </div>
+        </aside>
+        <div class="scrim" data-nav-toggle></div>
+    }
+    <main class="main-content" id="contenido">
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <header class="topbar">
+                <button class="menu-toggle" type="button" data-nav-toggle aria-controls="menu" aria-label="Abrir menú">
+                    <span class="icon" aria-hidden="true">menu</span>
+                </button>
+                <span class="topbar-title">Agencia piloto <span class="badge-soft">Prototipo académico</span></span>
+                <a asp-controller="Home" asp-action="Privacy"><span class="icon" aria-hidden="true">info</span><span>Acerca del sistema</span></a>
+            </header>
+            <div class="content-wrap">
+                @RenderBody()
+            </div>
+            <footer>Rentavía · Proyecto académico 2026 · Horario de la agencia: UTC-6</footer>
+        }
+        else
+        {
+            @RenderBody()
+        }
+        @if (TempData["Exito"] is string exito)
+        {
+            <div class="alert alert-success" role="status"><span class="icon" aria-hidden="true">check_circle</span>@exito</div>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="alert alert-danger" role="alert"><span class="icon" aria-hidden="true">error</span>@error</div>
+        }
+    </main>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

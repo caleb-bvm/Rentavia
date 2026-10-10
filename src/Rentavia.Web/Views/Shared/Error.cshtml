@@ -1,0 +1,9 @@
+@model ErrorViewModel
+@{ ViewData["Title"] = "No se pudo completar la operación"; }
+<div class="panel status-page">
+    <span class="icon" aria-hidden="true">error</span>
+    <h1>No se pudo completar la operación</h1>
+    <p class="lead-text">Inténtalo nuevamente. Si el problema continúa, informa al administrador.</p>
+    @if (Model.ShowRequestId) { <p>Referencia: <code>@Model.RequestId</code></p> }
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3"><span class="icon" aria-hidden="true">home</span>Volver al inicio</a>
+</div>
