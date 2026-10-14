@@ -1,0 +1,76 @@
+@model PanelModel
+@{ ViewData["Title"] = "Inicio"; }
+<div class="page-heading">
+    <div>
+        <span class="eyebrow">TU OPERACIÓN, A UN VISTAZO</span>
+        <h1>Inicio</h1>
+        <p class="lead-text">Disponibilidad y seguimiento de la agencia.</p>
+    </div>
+    <a class="btn btn-primary" asp-controller="Reservas" asp-action="Editar"><span class="icon" aria-hidden="true">add</span>Nueva reserva</a>
+</div>
+<div class="metrics">
+    <div class="metric">
+        <span class="icon" aria-hidden="true">directions_car</span>
+        <strong>@Model.VehiculosActivos</strong>
+        <span>Vehículos activos</span>
+    </div>
+    <div class="metric">
+        <span class="icon" aria-hidden="true">group</span>
+        <strong>@Model.ClientesActivos</strong>
+        <span>Clientes activos</span>
+    </div>
+    <div class="metric">
+        <span class="icon" aria-hidden="true">event</span>
+        <strong>@Model.ReservasConfirmadas</strong>
+        <span>Reservas confirmadas</span>
+    </div>
+    <div class="metric">
+        <span class="icon" aria-hidden="true">car_rental</span>
+        <strong>@Model.AlquileresAbiertos</strong>
+        <span>Alquileres abiertos</span>
+    </div>
+</div>
+<div class="panel">
+    <div class="page-heading">
+        <h2><span class="icon" aria-hidden="true">schedule</span>Próximas devoluciones</h2>
+        <a class="btn btn-sm" asp-controller="Alquileres" asp-action="Index">Ver alquileres<span class="icon" aria-hidden="true">arrow_forward</span></a>
+    </div>
+    @if (Model.Devoluciones.Count == 0)
+    {
+        <p class="empty">No hay devoluciones pendientes.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Vehículo</th>
+                        <th>Devolución prevista</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model.Devoluciones)
+                    {
+                        <tr>
+                            <td>@a.Vehiculo.Placa · @a.Vehiculo.Modelo</td>
+                            <td>@Presentacion.Fecha(a.Reserva.FinUtc)</td>
+                            <td><span class="state">@(a.Reserva.FinUtc < DateTimeOffset.UtcNow ? "Atrasado" : "En curso")</span></td>
+                            <td><a class="btn btn-sm btn-outline-secondary" asp-controller="Alquileres" asp-action="Detalle" asp-route-id="@a.Id"><span class="icon" aria-hidden="true">visibility</span>Ver detalle</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+<div class="panel">
+    <h2><span class="icon" aria-hidden="true">auto_awesome</span>Selecciona el vehículo adecuado</h2>
+    <p class="lead-text">Consulta fechas y capacidades antes de confirmar. El recomendador ofrece alternativas según las preferencias del viaje.</p>
+    <div class="form-actions">
+        <a class="btn btn-outline-secondary" asp-controller="Disponibilidad" asp-action="Index"><span class="icon" aria-hidden="true">event_available</span>Consultar disponibilidad</a>
+        <a class="btn btn-primary" asp-controller="Recomendaciones" asp-action="Index"><span class="icon" aria-hidden="true">auto_awesome</span>Abrir recomendador IA</a>
+    </div>
+</div>
