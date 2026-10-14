@@ -1,0 +1,35 @@
+@model List<IdentityUser>
+@{ ViewData["Title"] = "Usuarios"; }
+<div class="page-heading">
+<div>
+<h1>Usuarios</h1>
+<p class="lead-text">Cuentas internas de la agencia.</p>
+</div>
+<a asp-action="Crear" class="btn btn-primary"><span class="icon" aria-hidden="true">add</span>Nuevo usuario</a>
+</div>
+<div class="panel table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Correo</th>
+<th>Acceso</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var u in Model){var bloqueado=u.LockoutEnd>DateTimeOffset.UtcNow;<tr>
+<td>@u.Email</td>
+<td>
+<span class="state">@(bloqueado ? "Bloqueado" : "Habilitado")</span>
+</td>
+<td>
+<form asp-action="Bloquear" method="post" data-confirm="¿Cambiar el acceso de esta cuenta?">
+<input name="id" value="@u.Id" type="hidden"/>
+<button class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">@(bloqueado ? "lock_open" : "block")</span>@(bloqueado ? "Habilitar" : "Bloquear")</button>
+</form>
+</td>
+</tr>}
+</tbody>
+</table>
+</div>

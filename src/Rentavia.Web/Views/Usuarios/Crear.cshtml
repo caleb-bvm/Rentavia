@@ -1,0 +1,46 @@
+@model UsuarioForm
+@{ ViewData["Title"] = "Crear usuario"; }
+<div class="page-heading">
+<div>
+<h1>Crear usuario</h1>
+<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
+</div>
+</div>
+<div class="hint">La contraseña inicial debe tener al menos 10 caracteres, mayúscula, minúscula, número y símbolo. Entrega las credenciales por un medio seguro.</div>
+<div class="panel form-panel">
+<form asp-action="Crear" method="post" >
+<div asp-validation-summary="All">
+</div>
+
+<div class="form-grid">
+<div class="field">
+<label asp-for="Correo">
+</label>
+<input asp-for="Correo" class="form-control" type="email"  />
+<span asp-validation-for="Correo" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Clave">
+</label>
+<input asp-for="Clave" class="form-control" type="password"  />
+<span asp-validation-for="Clave" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Rol">
+</label>
+<select asp-for="Rol" class="form-select" asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new[]{"Empleado","Administrador"}))">
+<option value="">Selecciona una opción</option>
+</select>
+<span asp-validation-for="Rol" class="text-danger">
+</span>
+</div>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Guardar</button>
+<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
+</div>
+</form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
