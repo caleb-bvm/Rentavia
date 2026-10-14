@@ -1,0 +1,32 @@
+@model LoginForm
+@{ ViewData["Title"] = "Iniciar sesión"; }
+<div class="login">
+    <section class="login-story">
+        <div class="brand">
+            <span class="brand-mark">RV</span>
+            <span>RENTAVÍA<small>GESTIÓN DE FLOTA</small></span>
+        </div>
+        <span class="eyebrow">CONTROL, DISPONIBILIDAD Y ATENCIÓN</span>
+        <h1>Toda tu agencia de renta de vehículos, en <em>una sola fuente</em> de información.</h1>
+        <p>Consulta la flota disponible, organiza reservas y acompaña cada alquiler desde la entrega hasta la devolución.</p>
+        <p>Un espacio de trabajo sencillo para el equipo de la agencia.</p>
+    </section>
+    <section class="login-form">
+        <h2>Iniciar sesión</h2>
+        <p class="lead-text">Ingresa con tu cuenta de la agencia.</p>
+        <form asp-action="Ingresar" method="post">
+            <div asp-validation-summary="All"></div>
+            <input asp-for="ReturnUrl" type="hidden" />
+            <div class="field">
+                <label asp-for="Correo"></label>
+                <input asp-for="Correo" class="form-control" type="email" autocomplete="username" />
+            </div>
+            <div class="field">
+                <label asp-for="Clave"></label>
+                <input asp-for="Clave" class="form-control" type="password" autocomplete="current-password" />
+            </div>
+            <button class="btn btn-primary mt-2"><span class="icon" aria-hidden="true">login</span>Entrar al panel</button>
+        </form>
+    </section>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
