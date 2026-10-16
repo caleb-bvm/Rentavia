@@ -1,0 +1,46 @@
+@model List<Cliente>
+@{ ViewData["Title"] = "Clientes"; }
+<div class="page-heading">
+<div>
+<h1>Clientes</h1>
+<p class="lead-text">Información de contacto y licencia.</p>
+</div>
+<a asp-action="Editar" class="btn btn-primary"><span class="icon" aria-hidden="true">add</span>Nuevo cliente</a>
+</div>
+<form asp-action="Index" method="get" class="search">
+<span class="icon" aria-hidden="true">search</span>
+<input name="buscar" class="form-control" placeholder="Nombre o documento" aria-label="Buscar cliente"/>
+<button class="btn btn-primary">Buscar</button>
+</form>
+<div class="panel table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Cliente</th>
+<th>Documento</th>
+<th>Licencia vence</th>
+<th>Teléfono</th>
+<th>Estado</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var c in Model){<tr>
+<td>@c.Nombre @c.Apellido</td>
+<td>@c.TipoDocumento · @c.NumeroDocumento</td>
+<td>@c.VencimientoLicencia.ToString("dd/MM/yyyy")</td>
+<td>@c.Telefono</td>
+<td>
+<span class="state">@(c.Activo ? "Activo" : "Inactivo")</span>
+</td>
+<td>
+<a asp-action="Editar" asp-route-id="@c.Id" class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">edit</span>Editar</a>
+@if(User.IsInRole("Administrador")){<form asp-action="Eliminar" method="post" data-confirm="¿Eliminar o desactivar este cliente? Se conserva el historial.">
+<input name="id" value="@c.Id" type="hidden"/>
+<input name="version" value="@Convert.ToBase64String(c.Version)" type="hidden"/>
+<button class="btn btn-sm btn-outline-danger"><span class="icon" aria-hidden="true">delete</span>Eliminar</button>
+</form>}</td>
+</tr>}
+</tbody>
+</table>@if(Model.Count==0){<p class="empty">No se encontraron clientes.</p>}</div>
