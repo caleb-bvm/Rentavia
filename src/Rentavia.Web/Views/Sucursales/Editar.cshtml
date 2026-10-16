@@ -1,0 +1,49 @@
+@model SucursalForm
+@{ ViewData["Title"] = "Guardar sucursal"; }
+<div class="page-heading">
+<div>
+<h1>Guardar sucursal</h1>
+<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
+</div>
+</div>
+
+<div class="panel form-panel">
+<form asp-action="Editar" method="post" >
+<div asp-validation-summary="All">
+</div>
+<input asp-for="Id" type="hidden" />
+<div class="form-grid">
+<div class="field">
+<label asp-for="Nombre">
+</label>
+<input asp-for="Nombre" class="form-control" type="text"  />
+<span asp-validation-for="Nombre" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Direccion">
+</label>
+<input asp-for="Direccion" class="form-control" type="text"  />
+<span asp-validation-for="Direccion" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Telefono">
+</label>
+<input asp-for="Telefono" class="form-control" type="text"  />
+<span asp-validation-for="Telefono" class="text-danger">
+</span>
+</div>
+<div class="form-check field">
+<input asp-for="Activa" class="form-check-input" />
+<label asp-for="Activa" class="form-check-label">
+</label>
+</div>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Guardar</button>
+<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
+</div>
+</form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
