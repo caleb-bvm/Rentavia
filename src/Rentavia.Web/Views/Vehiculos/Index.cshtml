@@ -1,0 +1,46 @@
+@model List<Vehiculo>
+@{ ViewData["Title"] = "Vehículos"; }
+<div class="page-heading">
+<div>
+<h1>Vehículos</h1>
+<p class="lead-text">Características, tarifas y estado de la flota.</p>
+</div>
+<a asp-action="Editar" class="btn btn-primary"><span class="icon" aria-hidden="true">add</span>Nuevo vehículo</a>
+</div>
+<form asp-action="Index" method="get" class="search">
+<span class="icon" aria-hidden="true">search</span>
+<input name="buscar" class="form-control" placeholder="Placa, marca o modelo" aria-label="Buscar vehículo"/>
+<button class="btn btn-primary">Buscar</button>
+</form>
+<div class="panel table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Vehículo</th>
+<th>Placa</th>
+<th>Categoría / sucursal</th>
+<th>Tarifa diaria</th>
+<th>Estado</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var v in Model){<tr>
+<td>@v.Marca @v.Modelo · @v.Anio</td>
+<td>@v.Placa</td>
+<td>@v.Categoria.Nombre / @v.Sucursal.Nombre</td>
+<td>@Presentacion.Dinero(v.TarifaDiaria)</td>
+<td>
+<span class="state">@v.Estado</span>
+</td>
+<td>
+<a asp-action="Editar" asp-route-id="@v.Id" class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">edit</span>Editar</a>
+@if(User.IsInRole("Administrador")){<form asp-action="Eliminar" method="post" data-confirm="¿Eliminar o retirar este vehículo? Se conserva el historial.">
+<input name="id" value="@v.Id" type="hidden"/>
+<input name="version" value="@Convert.ToBase64String(v.Version)" type="hidden"/>
+<button class="btn btn-sm btn-outline-danger"><span class="icon" aria-hidden="true">delete</span>Eliminar</button>
+</form>}</td>
+</tr>}
+</tbody>
+</table>@if(Model.Count==0){<p class="empty">No se encontraron vehículos.</p>}</div>
