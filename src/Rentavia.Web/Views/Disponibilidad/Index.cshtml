@@ -1,0 +1,81 @@
+@model DisponibilidadForm
+@{ ViewData["Title"] = "Disponibilidad"; }
+<div class="page-heading">
+<div>
+<span class="eyebrow">BÚSQUEDA POR FECHAS</span>
+<h1>Disponibilidad de flota</h1>
+<p class="lead-text">Encuentra vehículos para las fechas del viaje.</p>
+</div>
+</div>
+<div class="panel">
+<form asp-action="Index" method="get">
+<div asp-validation-summary="All">
+</div>
+<div class="form-grid">
+<div class="field">
+<label asp-for="Inicio">
+</label>
+<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="Inicio" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Fin">
+</label>
+<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="Fin" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Pasajeros">
+</label>
+<input asp-for="Pasajeros" class="form-control" type="number"  />
+<span asp-validation-for="Pasajeros" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Maletas">
+</label>
+<input asp-for="Maletas" class="form-control" type="number"  />
+<span asp-validation-for="Maletas" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="CategoriaId">
+</label>
+<select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.Categorias">
+<option value="">Selecciona una opción</option>
+</select>
+<span asp-validation-for="CategoriaId" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="SucursalId">
+</label>
+<select asp-for="SucursalId" class="form-select" asp-items="ViewBag.Sucursales">
+<option value="">Selecciona una opción</option>
+</select>
+<span asp-validation-for="SucursalId" class="text-danger">
+</span>
+</div>
+</div>
+<button class="btn btn-primary"><span class="icon" aria-hidden="true">search</span>Buscar disponibilidad</button>
+</form>
+</div>
+<div class="hint">Horario UTC-6. La disponibilidad se verifica nuevamente al confirmar. Tarifa demo por períodos de 24 horas redondeados hacia arriba.</div>
+<div class="vehicle-grid">@foreach(var v in Model.Vehiculos){<article class="vehicle-card">
+<div class="vehicle-image">@if(v.FotoRuta is not null){<img src="@v.FotoRuta" alt="@v.Marca @v.Modelo"/>}else{<span class="icon" aria-hidden="true">directions_car</span>}</div>
+<div class="vehicle-card-body">
+<span><span class="state">Disponible</span></span>
+<h3 class="mt-2">@v.Marca @v.Modelo <small>@v.Anio</small></h3>
+<div class="specs">
+<span><span class="icon" aria-hidden="true">person</span>@v.CapacidadPasajeros</span>
+<span><span class="icon" aria-hidden="true">luggage</span>@v.CapacidadMaletas</span>
+<span><span class="icon" aria-hidden="true">settings</span>@v.Transmision</span>
+<span><span class="icon" aria-hidden="true">store</span>@v.Sucursal.Nombre</span>
+</div>
+<p class="price">@Presentacion.Dinero(v.TarifaDiaria) <small>/ día</small></p>
+<a asp-controller="Reservas" asp-action="Editar" asp-route-vehiculoId="@v.Id" asp-route-inicio="@Model.Inicio.ToString("yyyy-MM-ddTHH:mm")" asp-route-fin="@Model.Fin.ToString("yyyy-MM-ddTHH:mm")" class="btn btn-primary"><span class="icon" aria-hidden="true">event</span>Seleccionar y reservar</a>
+</div>
+</article>}</div>
+@if(Model.Vehiculos.Count==0){<p class="empty">No hay vehículos que cumplan estos filtros.</p>}
