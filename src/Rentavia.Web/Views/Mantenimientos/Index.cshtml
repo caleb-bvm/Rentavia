@@ -1,0 +1,40 @@
+@model List<Mantenimiento>
+@{ ViewData["Title"] = "Mantenimiento"; }
+<div class="page-heading">
+<div>
+<h1>Mantenimiento</h1>
+<p class="lead-text">Servicios que bloquean la agenda del vehículo.</p>
+</div>
+<a asp-action="Crear" class="btn btn-primary"><span class="icon" aria-hidden="true">add</span>Programar servicio</a>
+</div>
+<div class="panel table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Vehículo</th>
+<th>Servicio</th>
+<th>Período UTC-6</th>
+<th>Costo</th>
+<th>Estado</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var m in Model){<tr>
+<td>@m.Vehiculo.Placa</td>
+<td>@m.Tipo<br/>
+<small>@m.Descripcion</small>
+</td>
+<td>@Presentacion.Fecha(m.InicioUtc)<br/>@Presentacion.Fecha(m.FinUtc)</td>
+<td>@Presentacion.Dinero(m.Costo)</td>
+<td>
+<span class="state">@(m.Finalizado ? "Finalizado" : "Programado")</span>
+</td>
+<td>@if(!m.Finalizado){<form asp-action="Finalizar" method="post" data-confirm="¿Finalizar el mantenimiento y liberar la agenda?">
+<input name="id" value="@m.Id" type="hidden"/>
+<button class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">done_all</span>Finalizar</button>
+</form>}</td>
+</tr>}
+</tbody>
+</table>@if(Model.Count==0){<p class="empty">Todavía no hay mantenimientos.</p>}</div>
