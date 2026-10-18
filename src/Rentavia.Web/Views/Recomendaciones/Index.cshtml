@@ -1,0 +1,80 @@
+@model RecomendacionForm
+@{ ViewData["Title"] = "Recomendador IA"; }
+<div class="page-heading">
+<div>
+<span class="eyebrow">ASISTENTE CON IA</span>
+<h1>Recomendador de vehículos</h1>
+<p class="lead-text">Describe el viaje y compara alternativas disponibles.</p>
+</div>
+</div>
+<div class="panel">
+<form asp-action="Index" method="post">
+<div asp-validation-summary="All">
+</div>
+<div class="form-grid">
+<div class="field">
+<label asp-for="Inicio">
+</label>
+<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="Inicio" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Fin">
+</label>
+<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="Fin" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Pasajeros">
+</label>
+<input asp-for="Pasajeros" class="form-control" type="number"  />
+<span asp-validation-for="Pasajeros" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Maletas">
+</label>
+<input asp-for="Maletas" class="form-control" type="number"  />
+<span asp-validation-for="Maletas" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="PresupuestoDiario">
+</label>
+<input asp-for="PresupuestoDiario" class="form-control" type="number" step="0.01" />
+<span asp-validation-for="PresupuestoDiario" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Preferencias">
+</label>
+<textarea asp-for="Preferencias" class="form-control" rows="3">
+</textarea>
+<span asp-validation-for="Preferencias" class="text-danger">
+</span>
+</div>
+</div>
+<button class="btn btn-primary"><span class="icon" aria-hidden="true">auto_awesome</span>Obtener recomendaciones</button>
+</form>
+</div>
+<div class="hint">La recomendación no confirma una reserva. Escribe preferencias del viaje; evita incluir nombres, documentos o información personal.</div>
+@if(Model.Resultado is not null){<div class="panel">
+<h2><span class="icon" aria-hidden="true">auto_awesome</span>@Model.Resultado.Origen</h2>
+<p>@Model.Resultado.Mensaje</p>
+<details>
+<summary>Cómo se procesó la consulta</summary>
+<p>Primero se filtró por fechas, estado, capacidad y presupuesto: @Model.Vehiculos.Count candidatos elegibles. Después se validó cada identificador sugerido. La IA no modifica la agenda.</p>
+</details>
+</div>
+<div class="vehicle-grid">@foreach(var s in Model.Resultado.Sugerencias){var v=Model.Vehiculos.Single(x=>x.Id==s.VehiculoId);<article class="vehicle-card">
+<div class="vehicle-image">@if(v.FotoRuta is not null){<img src="@v.FotoRuta" alt="@v.Marca @v.Modelo"/>}else{<span class="icon" aria-hidden="true">directions_car</span>}</div>
+<div class="vehicle-card-body">
+<h3>@v.Marca @v.Modelo</h3>
+<p>@s.Motivo</p>
+<p class="price">@Presentacion.Dinero(v.TarifaDiaria) <small>/ día</small></p>
+<a asp-controller="Reservas" asp-action="Editar" asp-route-vehiculoId="@v.Id" asp-route-inicio="@Model.Inicio.ToString("yyyy-MM-ddTHH:mm")" asp-route-fin="@Model.Fin.ToString("yyyy-MM-ddTHH:mm")" class="btn btn-primary"><span class="icon" aria-hidden="true">check</span>Elegir vehículo</a>
+</div>
+</article>}</div>}
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
