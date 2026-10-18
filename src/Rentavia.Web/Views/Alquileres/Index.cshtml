@@ -1,0 +1,40 @@
+@model List<Alquiler>
+@{ ViewData["Title"] = "Alquileres"; }
+<div class="page-heading">
+<div>
+<h1>Alquileres</h1>
+<p class="lead-text">Entregas, devoluciones y saldos.</p>
+</div>
+</div>
+<div class="panel table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Contrato</th>
+<th>Cliente</th>
+<th>Vehículo</th>
+<th>Entrega</th>
+<th>Total / saldo</th>
+<th>Estado</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var a in Model){<tr>
+<td>#@a.Id</td>
+<td>@a.Reserva.Cliente.Nombre @a.Reserva.Cliente.Apellido</td>
+<td>@a.Vehiculo.Placa</td>
+<td>@Presentacion.Fecha(a.EntregaUtc)</td>
+<td>@Presentacion.Dinero(a.MontoTotal)<br/>
+<small>Saldo: @Presentacion.Dinero(a.MontoTotal-a.Pagos.Sum(p=>p.Monto))</small>
+</td>
+<td>
+<span class="state">@a.Estado</span>
+</td>
+<td>
+<a asp-action="Detalle" asp-route-id="@a.Id" class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">visibility</span>Detalle</a>
+</td>
+</tr>}
+</tbody>
+</table>@if(Model.Count==0){<p class="empty">Todavía no hay alquileres. Convierte una reserva desde Entregar.</p>}</div>

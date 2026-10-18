@@ -1,0 +1,46 @@
+@model EntregaForm
+@{ ViewData["Title"] = "Registrar entrega"; }
+<div class="page-heading">
+<div>
+<h1>Registrar entrega</h1>
+<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
+</div>
+</div>
+<div class="hint">La entrega se permite desde cinco minutos antes del inicio y mientras la reserva siga vigente.</div>
+<div class="panel form-panel">
+<form asp-action="Entregar" method="post" >
+<div asp-validation-summary="All">
+</div>
+<input asp-for="ReservaId" type="hidden" />
+<input asp-for="Version" type="hidden" />
+<div class="form-grid">
+<div class="field">
+<label asp-for="Kilometraje">
+</label>
+<input asp-for="Kilometraje" class="form-control" type="number"  />
+<span asp-validation-for="Kilometraje" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Combustible">
+</label>
+<input asp-for="Combustible" class="form-control" type="number"  />
+<span asp-validation-for="Combustible" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Observaciones">
+</label>
+<textarea asp-for="Observaciones" class="form-control" rows="3">
+</textarea>
+<span asp-validation-for="Observaciones" class="text-danger">
+</span>
+</div>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Entregar vehículo</button>
+<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
+</div>
+</form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

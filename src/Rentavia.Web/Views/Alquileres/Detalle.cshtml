@@ -1,0 +1,83 @@
+@model Alquiler
+@{ ViewData["Title"] = "Detalle de alquiler"; var saldo = Model.MontoTotal-Model.Pagos.Sum(p=>p.Monto); }
+<div class="page-heading">
+<div>
+<span class="eyebrow">CONTRATO</span>
+<h1>Alquiler #@Model.Id</h1>
+<p class="lead-text">Reserva #@Model.ReservaId · @Model.Estado</p>
+</div>
+<div class="form-actions">
+<button class="btn btn-outline-secondary" onclick="window.print()"><span class="icon" aria-hidden="true">print</span>Imprimir</button> @if(Model.Estado==EstadoAlquiler.Abierto){<a class="btn btn-primary" asp-action="Devolver" asp-route-id="@Model.Id"><span class="icon" aria-hidden="true">assignment_return</span>Registrar devolución</a>}</div>
+</div>
+<div class="panel details-grid">
+<dl>
+<dt>Cliente</dt>
+<dd>@Model.Reserva.Cliente.Nombre @Model.Reserva.Cliente.Apellido</dd>
+<dt>Vehículo</dt>
+<dd>@Model.Vehiculo.Placa · @Model.Vehiculo.Marca @Model.Vehiculo.Modelo</dd>
+<dt>Período acordado</dt>
+<dd>@Presentacion.Fecha(Model.Reserva.InicioUtc) → @Presentacion.Fecha(Model.Reserva.FinUtc)</dd>
+<dt>Tarifa histórica / días</dt>
+<dd>@Presentacion.Dinero(Model.Reserva.TarifaDiaria) / @Model.Reserva.Dias</dd>
+<dt>Total / saldo</dt>
+<dd>@Presentacion.Dinero(Model.MontoTotal) / @Presentacion.Dinero(saldo)</dd>
+</dl>
+<dl>
+<dt>Entrega</dt>
+<dd>@Presentacion.Fecha(Model.EntregaUtc) · @Model.KilometrajeInicial km · @Model.CombustibleInicial% combustible</dd>
+<dt>Inspección de entrega</dt>
+<dd>@Model.ObservacionesEntrega</dd>
+<dt>Devolución</dt>
+<dd>@(Model.DevolucionUtc.HasValue ? Presentacion.Fecha(Model.DevolucionUtc.Value) : "Pendiente") · @Model.KilometrajeFinal km · @Model.CombustibleFinal%</dd>
+<dt>Inspección de devolución</dt>
+<dd>@Model.ObservacionesDevolucion</dd>
+<dt>Cargo adicional</dt>
+<dd>@Presentacion.Dinero(Model.CargoAdicional) · @Model.ConceptoCargo</dd>
+</dl>
+</div>
+@if(Model.Estado==EstadoAlquiler.Abierto && Model.Reserva.FinUtc<DateTimeOffset.UtcNow){<div class="hint">Devolución atrasada. Revisa las reservas posteriores y coordina su resolución; el vehículo no se ofrece para nuevas operaciones hasta devolverse.</div>}
+<div class="panel">
+<h2><span class="icon" aria-hidden="true">payments</span>Pagos registrados</h2>
+<div class="table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Monto</th>
+<th>Método</th>
+<th>Referencia</th>
+</tr>
+</thead>
+<tbody>@foreach(var p in Model.Pagos){<tr>
+<td>@Presentacion.Fecha(p.FechaUtc)</td>
+<td>@Presentacion.Dinero(p.Monto)</td>
+<td>@p.Metodo</td>
+<td>@p.Referencia</td>
+</tr>}</tbody>
+</table>
+</div>
+@if(saldo>0){<form asp-action="Pago" method="post" class="no-print">
+<input name="AlquilerId" value="@Model.Id" type="hidden"/>
+<div class="form-grid">
+<div class="field">
+<label for="monto">Monto USD</label>
+<input id="monto" name="Monto" class="form-control" type="number" step="0.01" min="0.01" max="@saldo.ToString(System.Globalization.CultureInfo.InvariantCulture)" required/>
+</div>
+<div class="field">
+<label for="metodo">Método</label>
+<select id="metodo" name="Metodo" class="form-select">
+<option>Efectivo</option>
+<option>Transferencia</option>
+<option>Tarjeta</option>
+</select>
+</div>
+<div class="field">
+<label for="referencia">Referencia</label>
+<input id="referencia" name="Referencia" maxlength="100" class="form-control"/>
+</div>
+</div>
+<button class="btn btn-primary"><span class="icon" aria-hidden="true">add_card</span>Registrar pago</button>
+<p class="lead-text mt-2">Registro interno; no realiza un cobro bancario.</p>
+</form>}
+</div>
+<a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver a alquileres</a>
