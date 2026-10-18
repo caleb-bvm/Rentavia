@@ -1,0 +1,56 @@
+@model ReservaForm
+@{ ViewData["Title"] = "Confirmar reserva"; }
+<div class="page-heading">
+<div>
+<h1>Confirmar reserva</h1>
+<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
+</div>
+</div>
+<div class="hint">Horario UTC-6. Cobro demo en USD por períodos de 24 horas, redondeados hacia arriba. Al editar, conserva el mismo vehículo y la tarifa acordada; para cambiarlo, cancela y crea otra reserva.</div>
+<div class="panel form-panel">
+<form asp-action="Editar" method="post" >
+<div asp-validation-summary="All">
+</div>
+<input asp-for="Id" type="hidden" />
+<input asp-for="Version" type="hidden" />
+<div class="form-grid">
+<div class="field">
+<label asp-for="ClienteId">
+</label>
+<select asp-for="ClienteId" class="form-select" asp-items="ViewBag.Clientes">
+<option value="">Selecciona una opción</option>
+</select>
+<span asp-validation-for="ClienteId" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="VehiculoId">
+</label>
+<select asp-for="VehiculoId" class="form-select" asp-items="ViewBag.Vehiculos">
+<option value="">Selecciona una opción</option>
+</select>
+<span asp-validation-for="VehiculoId" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Inicio">
+</label>
+<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="Inicio" class="text-danger">
+</span>
+</div>
+<div class="field">
+<label asp-for="Fin">
+</label>
+<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="Fin" class="text-danger">
+</span>
+</div>
+</div>
+<div class="form-actions">
+<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Confirmar reserva</button>
+<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
+</div>
+</form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

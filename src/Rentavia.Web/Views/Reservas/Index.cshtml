@@ -1,0 +1,45 @@
+@model List<Reserva>
+@{ ViewData["Title"] = "Reservas"; }
+<div class="page-heading">
+<div>
+<h1>Reservas</h1>
+<p class="lead-text">Seguimiento de fechas y condiciones acordadas.</p>
+</div>
+<a asp-action="Editar" class="btn btn-primary"><span class="icon" aria-hidden="true">add</span>Nueva reserva</a>
+</div>
+<div class="panel table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Reserva</th>
+<th>Cliente</th>
+<th>Vehículo</th>
+<th>Período UTC-6</th>
+<th>Estimado</th>
+<th>Estado</th>
+<th>
+</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var r in Model){<tr>
+<td>#@r.Id</td>
+<td>@r.Cliente.Nombre @r.Cliente.Apellido</td>
+<td>@r.Vehiculo.Placa</td>
+<td>@Presentacion.Fecha(r.InicioUtc)<br/>@Presentacion.Fecha(r.FinUtc)</td>
+<td>@Presentacion.Dinero(r.TotalEstimado)<br/>
+<small>@r.Dias día(s)</small>
+</td>
+<td>
+<span class="state">@r.Estado</span>
+</td>
+<td>
+@if(r.Estado==EstadoReserva.Confirmada){<a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@r.Id"><span class="icon" aria-hidden="true">edit</span>Editar</a> <a class="btn btn-sm btn-primary" asp-controller="Alquileres" asp-action="Entregar" asp-route-reservaId="@r.Id"><span class="icon" aria-hidden="true">key</span>Entregar</a>
+<form asp-action="Cancelar" method="post" data-confirm="¿Cancelar esta reserva y liberar el vehículo?">
+<input name="id" value="@r.Id" type="hidden"/>
+<input name="version" value="@Convert.ToBase64String(r.Version)" type="hidden"/>
+<button class="btn btn-sm btn-outline-danger"><span class="icon" aria-hidden="true">event_busy</span>Cancelar</button>
+</form>}</td>
+</tr>}
+</tbody>
+</table>@if(Model.Count==0){<p class="empty">Todavía no hay reservas.</p>}</div>
