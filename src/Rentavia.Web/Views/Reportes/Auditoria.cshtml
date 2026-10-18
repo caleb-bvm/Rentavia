@@ -1,0 +1,33 @@
+@model List<Auditoria>
+@{ ViewData["Title"] = "Auditoría"; }
+<div class="page-heading">
+<div>
+<span class="eyebrow">ADMINISTRACIÓN</span>
+<h1>Auditoría</h1>
+<p class="lead-text">Últimas 200 operaciones registradas. No contiene contraseñas ni documentos personales.</p>
+</div>
+</div>
+<div class="panel table-responsive">
+<table class="table">
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Usuario ID</th>
+<th>Acción</th>
+<th>Entidad</th>
+<th>Registro</th>
+</tr>
+</thead>
+<tbody>
+@foreach(var a in Model){<tr>
+<td>@Presentacion.Fecha(a.FechaUtc)</td>
+<td>
+<small>@a.UsuarioId</small>
+</td>
+<td>@a.Accion</td>
+<td>@a.Entidad</td>
+<td>@(a.RegistroClave ?? a.RegistroId.ToString())</td>
+</tr>}
+</tbody>
+</table>
+</div>
