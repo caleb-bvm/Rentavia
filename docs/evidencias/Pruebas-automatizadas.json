@@ -1,0 +1,66 @@
+{
+  "fechaUtc": "2026-10-12T18:26:38.1888665+00:00",
+  "fallos": 0,
+  "pruebas": [
+    {
+      "nombre": "Tarifa por 24 horas y redondeo",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "Intervalos adyacentes no se cruzan",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "Rango inv\u00E1lido rechazado",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "Versi\u00F3n anterior rechazada",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "OpenAI valida salida y contrato HTTP (respuesta simulada)",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "ID ajeno de IA provoca respaldo expl\u00EDcito",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "HTTP 429 y JSON defectuoso no rompen el recomendador",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "Timeout e identificador fuera de rango provocan respaldo",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "Sin clave o sin candidatos no se consume API",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "SQL: dos conexiones no confirman reservas superpuestas",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "SQL: tarifa hist\u00F3rica, edici\u00F3n y cancelaci\u00F3n",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "SQL: mantenimiento bloquea y luego libera la agenda",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "SQL: entrega, pago, devoluci\u00F3n, versi\u00F3n y auditor\u00EDa",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "SQL: mantenimiento vencido sin finalizar no se ofrece",
+      "estado": "Correcto"
+    },
+    {
+      "nombre": "SQL: edici\u00F3n concurrente protegida por rowversion",
+      "estado": "Correcto"
+    }
+  ]
+}

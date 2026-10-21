@@ -1,0 +1,6 @@
+﻿OK: rowversion cambia al editar
+OK: placa duplicada rechazada
+OK: capacidad inválida rechazada
+OK: categoría referenciada protegida
+OK: documento duplicado rechazado
+OK: pruebas finalizadas; registros ficticios revertidos
