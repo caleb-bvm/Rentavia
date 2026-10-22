@@ -2,9 +2,17 @@
 @{
     var nuevo = Model.Id == 0;
     ViewData["Title"] = nuevo ? "Nuevo cliente" : "Editar cliente";
+    var volver = ViewBag.Volver as string;
 }
 <div class="form-page">
-    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Clientes</a>
+    @if (volver is not null)
+    {
+        <a class="back-link" href="@volver"><span class="icon" aria-hidden="true">arrow_back</span>Volver a la reserva</a>
+    }
+    else
+    {
+        <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Clientes</a>
+    }
     <div class="panel form-panel">
         <header class="form-head">
             <span class="form-head-icon" aria-hidden="true"><span class="icon">group</span></span>
@@ -19,6 +27,11 @@
                 <div asp-validation-summary="ModelOnly" class="form-alert"></div>
                 <input asp-for="Id" type="hidden" />
                 <input asp-for="Version" type="hidden" />
+                @if (volver is not null)
+                {
+                    <input type="hidden" name="volver" value="@volver" />
+                    <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>Al guardar regresarás a la reserva con este cliente ya seleccionado.</span></p>
+                }
                 <fieldset class="form-section">
                     <legend>Identidad</legend>
                     <div class="rv-grid">
@@ -81,7 +94,7 @@
                 </fieldset>
             </div>
             <footer class="form-foot">
-                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <a class="btn btn-quiet" href="@(volver ?? Url.Action("Index"))">Cancelar</a>
                 <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>@(nuevo ? "Registrar cliente" : "Guardar cambios")</button>
             </footer>
         </form>

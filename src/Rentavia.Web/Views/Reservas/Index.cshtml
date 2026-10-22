@@ -1,12 +1,18 @@
 @model List<Reserva>
-@{ ViewData["Title"] = "Reservas"; }
+@{
+    ViewData["Title"] = "Reservas";
+    var pestanas = (Pestanas)ViewBag.Pestanas;
+    var contratos = (Dictionary<int, int>)ViewBag.Contratos;
+}
 <div class="page-heading">
 <div>
 <h1>Reservas</h1>
-<p class="lead-text">Seguimiento de fechas y condiciones acordadas.</p>
+<p class="lead-text">Vehículos apartados para un cliente. Cuando el cliente llega, registra la entrega.</p>
 </div>
-<a asp-action="Editar" class="btn btn-primary"><span class="icon" aria-hidden="true">add</span>Nueva reserva</a>
+<a asp-controller="Disponibilidad" asp-action="Index" class="btn btn-primary"><span class="icon" aria-hidden="true">add</span>Nueva reserva</a>
 </div>
+<partial name="_PasosRenta" model="2" />
+<partial name="_Pestanas" model="pestanas" />
 <div class="panel table-responsive">
 <table class="table">
 <thead>
@@ -17,29 +23,29 @@
 <th>Período UTC-6</th>
 <th>Estimado</th>
 <th>Estado</th>
-<th>
-</th>
+<th><span class="visually-hidden">Acciones</span></th>
 </tr>
 </thead>
 <tbody>
 @foreach(var r in Model){<tr>
 <td>#@r.Id</td>
 <td>@r.Cliente.Nombre @r.Cliente.Apellido</td>
-<td>@r.Vehiculo.Placa</td>
+<td>@r.Vehiculo.Placa<br/><small>@r.Vehiculo.Marca @r.Vehiculo.Modelo</small></td>
 <td>@Presentacion.Fecha(r.InicioUtc)<br/>@Presentacion.Fecha(r.FinUtc)</td>
 <td>@Presentacion.Dinero(r.TotalEstimado)<br/>
 <small>@r.Dias día(s)</small>
 </td>
 <td>
-<span class="state">@r.Estado</span>
+<span class="state">@(r.Estado == EstadoReserva.Convertida ? "Entregada" : r.Estado.ToString())</span>
 </td>
 <td>
-@if(r.Estado==EstadoReserva.Confirmada){<a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@r.Id"><span class="icon" aria-hidden="true">edit</span>Editar</a> <a class="btn btn-sm btn-primary" asp-controller="Alquileres" asp-action="Entregar" asp-route-reservaId="@r.Id"><span class="icon" aria-hidden="true">key</span>Entregar</a>
+@if(r.Estado==EstadoReserva.Confirmada){<a class="btn btn-sm btn-primary" asp-controller="Alquileres" asp-action="Entregar" asp-route-reservaId="@r.Id"><span class="icon" aria-hidden="true">key</span>Entregar</a> <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@r.Id"><span class="icon" aria-hidden="true">edit</span>Editar</a>
 <form asp-action="Cancelar" method="post" data-confirm="¿Cancelar esta reserva y liberar el vehículo?">
 <input name="id" value="@r.Id" type="hidden"/>
 <input name="version" value="@Convert.ToBase64String(r.Version)" type="hidden"/>
 <button class="btn btn-sm btn-outline-danger"><span class="icon" aria-hidden="true">event_busy</span>Cancelar</button>
-</form>}</td>
+</form>}
+else if(contratos.TryGetValue(r.Id, out var contrato)){<a class="btn btn-sm btn-outline-secondary" asp-controller="Alquileres" asp-action="Detalle" asp-route-id="@contrato"><span class="icon" aria-hidden="true">visibility</span>Ver alquiler</a>}</td>
 </tr>}
 </tbody>
-</table>@if(Model.Count==0){<p class="empty">Todavía no hay reservas.</p>}</div>
+</table>@if(Model.Count==0){<p class="empty">@(pestanas.Actual == "por-entregar" ? "No hay reservas pendientes de entregar. Crea una desde Buscar vehículo." : "No hay reservas en esta vista.")</p>}</div>
