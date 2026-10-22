@@ -1,5 +1,13 @@
 # Rentavía
 
+![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white)
+![C#](https://img.shields.io/badge/C%23-ASP.NET_Core_MVC-239120?logo=dotnet&logoColor=white)
+![EF Core](https://img.shields.io/badge/EF_Core-10-512BD4)
+![SQL Server](https://img.shields.io/badge/SQL_Server-2025-CC2927?logo=microsoftsqlserver&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-gpt--4.1--mini-412991?logo=openai&logoColor=white)
+![UDB](https://img.shields.io/badge/UDB-DSP_ciclo_02--2026-003366)
+
 Sistema web para la gestión interna de una agencia de renta de vehículos. Es el proyecto de cátedra de Desarrollo de Software Propietario (Universidad Don Bosco, ciclo 02-2026).
 
 El personal de la agencia administra la flota y los clientes, consulta la disponibilidad por fechas, crea reservas, entrega y recibe vehículos, registra pagos y programa mantenimientos. Un recomendador con OpenAI sugiere vehículos disponibles según las necesidades del viaje.
@@ -38,18 +46,6 @@ Requiere Docker Desktop con motor Linux.
 
 `Preparar-env-demo.ps1` crea `.env` con contraseñas aleatorias; el correo y la contraseña del administrador quedan en ese archivo. La aplicación abre en `http://localhost:8080`. En los siguientes arranques basta con `./scripts/Iniciar-docker.ps1`.
 
-## Ejecución local en Windows
-
-Doble clic en `Iniciar-Rentavia.cmd`, o desde PowerShell:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\Iniciar-Rentavia.ps1
-```
-
-El lanzador instala lo que falte (.NET 10 y SQL Server LocalDB), aplica las migraciones, crea la cuenta administradora y carga datos de demostración. La web abre en `http://127.0.0.1:5295`. Las credenciales generadas quedan en `.env.local.json`, que se queda en el equipo local.
-
-Los pasos manuales, las opciones del lanzador y la configuración de OpenAI están en el [manual de instalación](docs/manuales/Instalacion.md).
-
 ## Estructura del proyecto
 
 ```text
@@ -65,14 +61,6 @@ scripts/                    Arranque local, Docker y creación de cuentas
 docs/                       Manuales, documentación técnica y evidencias
 ```
 
-## Pruebas
-
-```powershell
-dotnet run --project tests/Rentavia.Tests -- --sql
-```
-
-Ejecuta 15 pruebas de reglas de negocio, del adaptador de OpenAI y de integración con SQL Server. Crea una base temporal y la elimina al terminar. El detalle está en [tests/README.md](tests/README.md).
-
 ## Documentación
 
 - [Manual de instalación](docs/manuales/Instalacion.md)
@@ -84,19 +72,3 @@ Ejecuta 15 pruebas de reglas de negocio, del adaptador de OpenAI y de integraci�
 - [Guion del video y la presentación](docs/fase-2/Guion-demostracion.md)
 - [Modelo de datos](docs/tecnico/Modelo-completo.md)
 - [Evidencias de pruebas](docs/evidencias/Verificacion-funcional.md)
-
-## Equipo
-
-| Integrante | Rol |
-| --- | --- |
-| Josue Gamaliel Flores Figueroa | Líder de proyecto y análisis |
-| Cristian Josué Torres Reyes | Backend e IA |
-| Michael Caleb Ortiz Melendez | Frontend y UX/UI |
-| Nathaly Ivania Martinez Guerrero | Base de datos y DevOps |
-| Jimmy Steeven Peña Saravia | Pruebas y documentación |
-
-Docente: Ing. Rene Mauricio Tejada.
-
-## Alcance
-
-Rentavía es un prototipo académico pensado para una agencia piloto con personal interno. Los clientes no tienen portal propio. Usa dólares, la zona horaria UTC-6 y cobra por períodos de 24 horas redondeados hacia arriba. Los pagos son registros internos, sin conexión con bancos. Los datos de demostración son ficticios.
