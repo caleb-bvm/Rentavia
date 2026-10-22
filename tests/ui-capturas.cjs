@@ -27,7 +27,7 @@ const path = require('path');
     }
     await page.locator('#Pasajeros').fill('4');
     await page.locator('#Maletas').fill('2');
-    await page.locator('#Preferencias').fill('Viaje familiar de demostración');
+    await page.locator('#Preferencias').fill('Viaje familiar de fin de semana');
     await Promise.all([
         page.waitForResponse(response => response.request().method() === 'POST' && response.url().includes('/Recomendaciones')),
         page.getByRole('button', { name: 'Obtener recomendaciones' }).click()

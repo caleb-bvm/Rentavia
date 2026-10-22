@@ -5,14 +5,14 @@ Verifica e instala dependencias, prepara SQL Server y ejecuta Rentavia localment
 .EXAMPLE
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Iniciar-Rentavia.ps1
 .EXAMPLE
-.\Iniciar-Rentavia.ps1 -ServidorSql '(localdb)\Rentavia' -BaseDatos Rentavia_Demo -SoloPreparar
+.\Iniciar-Rentavia.ps1 -ServidorSql '(localdb)\Rentavia' -BaseDatos Rentavia_Pruebas -SoloPreparar
 #>
 [CmdletBinding()]
 param(
     [string]$ServidorSql,
     [ValidatePattern('^[A-Za-z0-9_]{1,128}$')][string]$BaseDatos,
     [ValidateRange(1024, 65535)][int]$Puerto = 5295,
-    [switch]$SinDatosDemo,
+    [switch]$SinDatosIniciales,
     [switch]$SoloPreparar,
     [switch]$SinAbrirNavegador
 )
@@ -163,7 +163,7 @@ function Consultar-Sql {
     } finally { $sql.Dispose() }
 }
 
-function Leer-EntornoDemo {
+function Leer-ArchivoEnv {
     $valores = @{}
     $archivo = Join-Path $raiz '.env'
     if (Test-Path -LiteralPath $archivo) {
@@ -237,18 +237,18 @@ try {
     $ejecucion = @('run', '--project', $proyecto, '--no-build', '--no-launch-profile', '--')
     Invocar-Programa $dotnet ($ejecucion + '--migrate') 'No se pudo crear o actualizar la base de datos'
 
-    Write-Host '[4/5] Verificando la cuenta inicial y los datos demo...'
-    $demo = Leer-EntornoDemo
+    Write-Host '[4/5] Verificando la cuenta inicial y los datos iniciales...'
+    $valoresEnv = Leer-ArchivoEnv
     $usuarios = Consultar-Sql $conexion.ConnectionString 'SELECT COUNT(*) FROM AspNetUsers'
     $config['ServidorSql'] = $ServidorSql
     $config['BaseDatos'] = $BaseDatos
     if ($usuarios -eq 0) {
         if (-not $config['ADMIN_EMAIL']) {
-            $config['ADMIN_EMAIL'] = 'admin.demo@rentavia.test'
-            if ($demo['ADMIN_EMAIL']) { $config['ADMIN_EMAIL'] = $demo['ADMIN_EMAIL'] }
+            $config['ADMIN_EMAIL'] = 'admin@rentavia.test'
+            if ($valoresEnv['ADMIN_EMAIL']) { $config['ADMIN_EMAIL'] = $valoresEnv['ADMIN_EMAIL'] }
         }
         if (-not $config['ADMIN_PASSWORD']) {
-            if ($demo['ADMIN_PASSWORD']) { $config['ADMIN_PASSWORD'] = $demo['ADMIN_PASSWORD'] }
+            if ($valoresEnv['ADMIN_PASSWORD']) { $config['ADMIN_PASSWORD'] = $valoresEnv['ADMIN_PASSWORD'] }
             else {
                 $bytes = New-Object byte[] 24
                 $generador = [Security.Cryptography.RandomNumberGenerator]::Create()
@@ -266,18 +266,18 @@ try {
     $config | ConvertTo-Json | Set-Content -LiteralPath $configuracionLocal -Encoding UTF8
     [Environment]::SetEnvironmentVariable('ADMIN_EMAIL', $entornoAnterior['ADMIN_EMAIL'], 'Process')
     [Environment]::SetEnvironmentVariable('ADMIN_PASSWORD', $entornoAnterior['ADMIN_PASSWORD'], 'Process')
-    if (-not $SinDatosDemo) {
+    if (-not $SinDatosIniciales) {
         $registros = Consultar-Sql $conexion.ConnectionString @'
 SELECT (SELECT COUNT(*) FROM Categorias) + (SELECT COUNT(*) FROM Sucursales)
      + (SELECT COUNT(*) FROM Clientes) + (SELECT COUNT(*) FROM Vehiculos)
 '@
         if ($registros -eq 0) {
-            Invocar-Programa $dotnet ($ejecucion + '--seed-demo') 'No se pudieron cargar los datos de demostracion'
+            Invocar-Programa $dotnet ($ejecucion + '--seed') 'No se pudieron cargar los datos iniciales'
         } else { Write-Host 'Los catalogos ya tienen datos; se conserva su contenido.' }
     }
     # Las variables ya configuradas en la sesion tienen prioridad sobre .env.
-    if (-not $env:OPENAI_API_KEY -and $demo['OPENAI_API_KEY']) { $env:OPENAI_API_KEY = $demo['OPENAI_API_KEY'] }
-    if (-not $env:OpenAI__Modelo -and $demo['OPENAI_MODEL']) { $env:OpenAI__Modelo = $demo['OPENAI_MODEL'] }
+    if (-not $env:OPENAI_API_KEY -and $valoresEnv['OPENAI_API_KEY']) { $env:OPENAI_API_KEY = $valoresEnv['OPENAI_API_KEY'] }
+    if (-not $env:OpenAI__Modelo -and $valoresEnv['OPENAI_MODEL']) { $env:OpenAI__Modelo = $valoresEnv['OPENAI_MODEL'] }
     if ($SoloPreparar) {
         Write-Host '[5/5] Preparacion completada. Ejecuta este archivo sin -SoloPreparar para iniciar la web.'
     } else {

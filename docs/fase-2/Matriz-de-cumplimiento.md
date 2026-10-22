@@ -16,7 +16,7 @@ Relación entre lo que pide la [guía de la Fase II](../lineamientos/DSP_Proyect
 | 7. Manual de instalación | [Instalacion.md](../manuales/Instalacion.md) | Completo |
 | 7. Manual de usuario | [Usuario.md](../manuales/Usuario.md) | Completo |
 | 7. Manual técnico | [Tecnico.md](../manuales/Tecnico.md) | Completo |
-| 8. Video de 5 a 10 minutos | [Guion](Guion-demostracion.md) | Por grabar |
+| 8. Video de 5 a 10 minutos | [Guion](Guion-video.md) | Por grabar |
 | 9. Repositorio con `/src`, `/docs`, `/database`, `/docker`, README, `.env.example` | Raíz del proyecto | Completo |
 | Documento de avance técnico | [Avance técnico](Avance-tecnico.md) | Completo |
 
@@ -35,7 +35,7 @@ Relación entre lo que pide la [guía de la Fase II](../lineamientos/DSP_Proyect
 | 9. Pruebas y validación | 15 pruebas automatizadas, recorrido HTTP, pruebas SQL y capturas |
 | 10. Documentación técnica | Tres manuales, modelo de datos, avance técnico y matriz |
 | 11. Estructura del proyecto | Carpetas pedidas por la guía, README y `.env.example` |
-| 12. Presentación final | [Guion](Guion-demostracion.md) con reparto por integrante |
+| 12. Presentación final | [Guion](Guion-video.md) con reparto por integrante |
 
 ## Opcionales de la guía
 

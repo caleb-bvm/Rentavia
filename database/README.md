@@ -7,7 +7,7 @@ Motor: SQL Server. El esquema se crea con las migraciones de Entity Framework Co
 | Archivo | Uso |
 | --- | --- |
 | `scripts/Esquema-completo.sql` | SQL generado a partir de las tres migraciones, para revisar el esquema completo |
-| `scripts/Verificar-base.sql` | Prueba de restricciones con datos ficticios: placa y documento únicos, capacidad, borrado restringido y rowversion. Revierte sus cambios al terminar |
+| `scripts/Verificar-base.sql` | Prueba de restricciones: placa y documento únicos, capacidad, borrado restringido y rowversion. Revierte sus cambios al terminar |
 
 El diagrama entidad-relación y el diccionario de datos están en el [modelo de datos](../docs/tecnico/Modelo-completo.md).
 

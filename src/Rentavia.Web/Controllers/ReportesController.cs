@@ -12,7 +12,7 @@ public class ReportesController(RentaviaDbContext db) : ProyectoController
 {
     public async Task<IActionResult> Index(DateOnly? desde, DateOnly? hasta)
     {
-        var model = new ReporteModel { Desde = desde ?? DateOnly.FromDateTime(DateTime.Today.AddDays(-30)), Hasta = hasta ?? DateOnly.FromDateTime(DateTime.Today) };
+        var model = new ReporteModel { Desde = desde ?? DateOnly.FromDateTime(DateTime.Today.AddDays(-29)), Hasta = hasta ?? DateOnly.FromDateTime(DateTime.Today) };
         if (!ModelState.IsValid || model.Desde.Year < 2000 || model.Hasta.Year > 2100
             || model.Hasta < model.Desde || model.Hasta.DayNumber - model.Desde.DayNumber > 365)
         { ModelState.AddModelError("", "Selecciona un período válido de hasta un año."); return View(model); }

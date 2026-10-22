@@ -24,7 +24,7 @@ public class AlquilerService(RentaviaDbContext db, AgendaService agenda)
         ReglasAlquiler.VersionActual(reserva.Version, version);
         var ahora = DateTimeOffset.UtcNow;
         if (reserva.Estado != EstadoReserva.Confirmada || vehiculo.Estado != EstadoVehiculo.Activo
-            || !reserva.Cliente.Activo || reserva.Cliente.VencimientoLicencia < DateOnly.FromDateTime(reserva.FinUtc.UtcDateTime.AddHours(-6))
+            || !reserva.Cliente.Activo
             || reserva.InicioUtc > ahora.AddMinutes(5) || reserva.FinUtc <= ahora)
             throw new ReglaNegocioException("La reserva debe estar confirmada, vigente y próxima a iniciar; cliente y vehículo deben estar habilitados.");
         if (kilometraje < vehiculo.Kilometraje || combustible is < 0 or > 100 || observaciones.Length > 500)

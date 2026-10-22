@@ -7,56 +7,74 @@
 <p class="lead-text">Describe el viaje y compara alternativas disponibles.</p>
 </div>
 </div>
-<div class="panel">
-<form asp-action="Index" method="post">
-<div asp-validation-summary="All">
+<div class="panel filter-panel">
+<form asp-action="Index" method="post" data-rango-fechas>
+<div class="filter-header">
+<span class="icon" aria-hidden="true">auto_awesome</span>
+<div>
+<h2>Describe el viaje</h2>
+<p>Con las fechas, la capacidad y el presupuesto se filtran los vehículos; las preferencias ayudan a ordenarlos.</p>
 </div>
-<div class="form-grid">
+</div>
+<div class="filter-body">
+<div asp-validation-summary="ModelOnly"></div>
+<div class="filter-groups">
+<fieldset class="filter-group">
+<legend><span class="icon" aria-hidden="true">schedule</span>Fechas del viaje</legend>
+<div class="field has-icon">
+<label asp-for="Inicio">Recogida</label>
+<span class="icon field-icon" aria-hidden="true">key</span>
+<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-inicio />
+<span asp-validation-for="Inicio" class="text-danger"></span>
+</div>
+<div class="field has-icon">
+<label asp-for="Fin">Devolución</label>
+<span class="icon field-icon" aria-hidden="true">assignment_return</span>
+<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-fin />
+<span asp-validation-for="Fin" class="text-danger"></span>
+</div>
+</fieldset>
+<fieldset class="filter-group">
+<legend><span class="icon" aria-hidden="true">group</span>Capacidad y presupuesto</legend>
+<div class="filter-row">
+<div class="field has-icon">
+<label asp-for="Pasajeros"></label>
+<span class="icon field-icon" aria-hidden="true">person</span>
+<input asp-for="Pasajeros" class="form-control" type="number" min="1" max="50" inputmode="numeric" />
+<span asp-validation-for="Pasajeros" class="text-danger"></span>
+</div>
+<div class="field has-icon">
+<label asp-for="Maletas"></label>
+<span class="icon field-icon" aria-hidden="true">luggage</span>
+<input asp-for="Maletas" class="form-control" type="number" min="0" max="50" inputmode="numeric" />
+<span asp-validation-for="Maletas" class="text-danger"></span>
+</div>
+</div>
+<div class="field has-icon">
+<label asp-for="PresupuestoDiario"></label>
+<span class="icon field-icon" aria-hidden="true">payments</span>
+<input asp-for="PresupuestoDiario" class="form-control" type="number" step="0.01" min="0.01" inputmode="decimal" />
+<span asp-validation-for="PresupuestoDiario" class="text-danger"></span>
+</div>
+</fieldset>
+<fieldset class="filter-group">
+<legend><span class="icon" aria-hidden="true">tune</span>Preferencias <small>Opcional</small></legend>
 <div class="field">
-<label asp-for="Inicio">
-</label>
-<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
-<span asp-validation-for="Inicio" class="text-danger">
-</span>
+<label asp-for="Preferencias">¿Qué buscas en el vehículo?</label>
+<textarea asp-for="Preferencias" class="form-control" rows="4" maxlength="1000" placeholder="Ej.: viaje familiar a la playa, prefiero transmisión automática y espacio para equipaje." aria-describedby="preferencias-ayuda"></textarea>
+<span asp-validation-for="Preferencias" class="text-danger"></span>
 </div>
-<div class="field">
-<label asp-for="Fin">
-</label>
-<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
-<span asp-validation-for="Fin" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Pasajeros">
-</label>
-<input asp-for="Pasajeros" class="form-control" type="number"  />
-<span asp-validation-for="Pasajeros" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Maletas">
-</label>
-<input asp-for="Maletas" class="form-control" type="number"  />
-<span asp-validation-for="Maletas" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="PresupuestoDiario">
-</label>
-<input asp-for="PresupuestoDiario" class="form-control" type="number" step="0.01" />
-<span asp-validation-for="PresupuestoDiario" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Preferencias">
-</label>
-<textarea asp-for="Preferencias" class="form-control" rows="3">
-</textarea>
-<span asp-validation-for="Preferencias" class="text-danger">
-</span>
+<span class="field-hint" id="preferencias-ayuda"><span>Sin nombres ni datos personales.</span><span data-contador-para="Preferencias"></span></span>
+</fieldset>
 </div>
 </div>
+<div class="filter-footer">
+<span class="filter-summary" data-duracion aria-live="polite"></span>
+<div class="filter-actions">
+<a asp-action="Index" class="btn btn-outline-secondary">Restablecer</a>
 <button class="btn btn-primary"><span class="icon" aria-hidden="true">auto_awesome</span>Obtener recomendaciones</button>
+</div>
+</div>
 </form>
 </div>
 <div class="hint">La recomendación no confirma una reserva. Escribe preferencias del viaje; evita incluir nombres, documentos o información personal.</div>
@@ -71,8 +89,8 @@
 <div class="vehicle-grid">@foreach(var s in Model.Resultado.Sugerencias){var v=Model.Vehiculos.Single(x=>x.Id==s.VehiculoId);<article class="vehicle-card">
 <div class="vehicle-image">@if(v.FotoRuta is not null){<img src="@v.FotoRuta" alt="@v.Marca @v.Modelo"/>}else{<span class="icon" aria-hidden="true">directions_car</span>}</div>
 <div class="vehicle-card-body">
-<h3>@v.Marca @v.Modelo</h3>
-<p>@s.Motivo</p>
+<h3 title="@v.Marca @v.Modelo">@v.Marca @v.Modelo</h3>
+<p title="@s.Motivo">@s.Motivo</p>
 <p class="price">@Presentacion.Dinero(v.TarifaDiaria) <small>/ día</small></p>
 <a asp-controller="Reservas" asp-action="Editar" asp-route-vehiculoId="@v.Id" asp-route-inicio="@Model.Inicio.ToString("yyyy-MM-ddTHH:mm")" asp-route-fin="@Model.Fin.ToString("yyyy-MM-ddTHH:mm")" class="btn btn-primary"><span class="icon" aria-hidden="true">check</span>Elegir vehículo</a>
 </div>

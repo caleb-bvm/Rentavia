@@ -7,7 +7,7 @@ public class CategoriaForm
 {
     public int Id { get; set; }
     [Required(ErrorMessage = "Escribe el nombre."), StringLength(50)] public string Nombre { get; set; } = "";
-    [StringLength(150)] public string? Descripcion { get; set; }
+    public string? Descripcion { get; set; }
 }
 
 public class SucursalForm
@@ -19,19 +19,36 @@ public class SucursalForm
     public bool Activa { get; set; } = true;
 }
 
-public class ClienteForm
+/// <summary>
+/// El cliente se identifica con DUI (formato 00000000-0) o con pasaporte (formato libre).
+/// Solo se llena el campo del tipo elegido; el otro queda desactivado en pantalla.
+/// </summary>
+public class ClienteForm : IValidatableObject
 {
+    public const string Dui = "DUI";
+    public const string Pasaporte = "PASAPORTE";
+
     public int Id { get; set; }
     [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(50)] public string Nombre { get; set; } = "";
     [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(50)] public string Apellido { get; set; } = "";
-    [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(20), Display(Name = "Tipo de documento")] public string TipoDocumento { get; set; } = "DEMO";
-    [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(30), Display(Name = "Número de documento")] public string NumeroDocumento { get; set; } = "";
-    [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(30)] public string Licencia { get; set; } = "";
-    [DataType(DataType.Date), Display(Name = "Vencimiento de licencia")] public DateOnly VencimientoLicencia { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddYears(1));
+    [Required(ErrorMessage = "Este campo es obligatorio."), Display(Name = "Tipo de documento")] public string TipoDocumento { get; set; } = Dui;
+    [RegularExpression(@"^\d{8}-\d$", ErrorMessage = "El DUI debe tener el formato 00000000-0."), Display(Name = "DUI")] public string? NumeroDui { get; set; }
+    [StringLength(30), Display(Name = "Pasaporte")] public string? NumeroPasaporte { get; set; }
     [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(20), Display(Name = "Teléfono")] public string Telefono { get; set; } = "";
     [EmailAddress, StringLength(100)] public string? Correo { get; set; }
     public bool Activo { get; set; } = true;
     public string Version { get; set; } = "";
+
+    /// <summary>Número que se guarda según el tipo elegido.</summary>
+    public string NumeroDocumento => (TipoDocumento == Dui ? NumeroDui : NumeroPasaporte)?.Trim().ToUpperInvariant() ?? "";
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (TipoDocumento != Dui && TipoDocumento != Pasaporte)
+            yield return new ValidationResult("Selecciona DUI o Pasaporte.", [nameof(TipoDocumento)]);
+        else if (string.IsNullOrWhiteSpace(NumeroDocumento))
+            yield return new ValidationResult("Escribe el número de documento.", [TipoDocumento == Dui ? nameof(NumeroDui) : nameof(NumeroPasaporte)]);
+    }
 }
 
 public class VehiculoForm
@@ -39,7 +56,9 @@ public class VehiculoForm
     public int Id { get; set; }
     [Range(1, int.MaxValue), Display(Name = "Categoría")] public int CategoriaId { get; set; }
     [Range(1, int.MaxValue), Display(Name = "Sucursal")] public int SucursalId { get; set; }
-    [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(15)] public string Placa { get; set; } = "";
+    [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(15),
+     RegularExpression(@"^[Pp][A-Za-z0-9]{3}-[A-Za-z0-9]{3}$", ErrorMessage = "Usa el formato Pxxx-xxx con letras o números, por ejemplo P123-ABC.")]
+    public string Placa { get; set; } = "";
     [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(50)] public string Marca { get; set; } = "";
     [Required(ErrorMessage = "Este campo es obligatorio."), StringLength(50)] public string Modelo { get; set; } = "";
     [Range(1980, 2100), Display(Name = "Año")] public int Anio { get; set; } = DateTime.Today.Year;

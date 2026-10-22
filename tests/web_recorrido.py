@@ -1,4 +1,4 @@
-"""Prueba HTTP del recorrido. Solo datos ficticios en una base de demostración."""
+"""Prueba HTTP del recorrido completo. Usar sobre una base de pruebas."""
 import argparse
 import json
 import os
@@ -47,6 +47,7 @@ def success(response, name):
     return response.headers['Location']
 
 suffix = secrets.token_hex(4)
+placa = ('P'+suffix[:3]+'-'+suffix[3:6]).upper()
 try:
     anonymous = requests.get(base+'/Reservas',allow_redirects=False,timeout=15)
     check(anonymous.status_code==302 and '/Cuenta/Ingresar' in anonymous.headers['Location'],'Rutas privadas requieren sesión')
@@ -58,17 +59,17 @@ try:
         get(path)
     # Crear y eliminar catálogos no referenciados.
     nombre='PRUEBA-'+suffix
-    success(submit('/Categorias/Editar',{'Id':0,'Nombre':nombre,'Descripcion':'Categoría ficticia'}),'CRUD: crear categoría')
+    success(submit('/Categorias/Editar',{'Id':0,'Nombre':nombre,'Descripcion':'Vehículos compactos para ciudad'}),'CRUD: crear categoría')
     row=next(r for r in BeautifulSoup(get('/Categorias').text,'html.parser').select('tbody tr') if nombre in r.get_text())
     category_id=row.select_one('input[name=id]')['value']
-    success(submit('/Categorias/Editar',{'Id':category_id,'Nombre':nombre+'-EDITADA','Descripcion':'Edición ficticia'},'/Categorias/Editar/'+category_id),'CRUD: editar categoría')
+    success(submit('/Categorias/Editar',{'Id':category_id,'Nombre':nombre+'-EDITADA','Descripcion':'Descripción actualizada'},'/Categorias/Editar/'+category_id),'CRUD: editar categoría')
     success(submit('/Categorias/Eliminar',{'id':category_id},'/Categorias'),'CRUD: eliminar categoría no referenciada')
-    success(submit('/Sucursales/Editar',{'Id':0,'Nombre':nombre,'Direccion':'Dirección ficticia','Telefono':'0000-0000','Activa':'true'}),'CRUD: crear sucursal')
+    success(submit('/Sucursales/Editar',{'Id':0,'Nombre':nombre,'Direccion':'Colonia Escalón, San Salvador','Telefono':'0000-0000','Activa':'true'}),'CRUD: crear sucursal')
     row=next(r for r in BeautifulSoup(get('/Sucursales').text,'html.parser').select('tbody tr') if nombre in r.get_text())
     branch_id=row.select_one('input[name=id]')['value']
-    success(submit('/Sucursales/Editar',{'Id':branch_id,'Nombre':nombre+'-EDITADA','Direccion':'Otra dirección ficticia','Activa':'true'},'/Sucursales/Editar/'+branch_id),'CRUD: editar sucursal')
+    success(submit('/Sucursales/Editar',{'Id':branch_id,'Nombre':nombre+'-EDITADA','Direccion':'Paseo General Escalón, San Salvador','Activa':'true'},'/Sucursales/Editar/'+branch_id),'CRUD: editar sucursal')
     success(submit('/Sucursales/Eliminar',{'id':branch_id},'/Sucursales'),'CRUD: eliminar sucursal no referenciada')
-    client_data={'Id':0,'Nombre':'Prueba','Apellido':suffix,'TipoDocumento':'DEMO','NumeroDocumento':suffix,'Licencia':'TEST-'+suffix,'VencimientoLicencia':'2028-10-12','Telefono':'0000-0000','Activo':'true'}
+    client_data={'Id':0,'Nombre':'Prueba','Apellido':suffix,'TipoDocumento':'PASAPORTE','NumeroPasaporte':suffix,'Telefono':'0000-0000','Activo':'true'}
     success(submit('/Clientes/Editar',client_data),'CRUD: crear cliente')
     row=next(r for r in BeautifulSoup(get('/Clientes').text,'html.parser').select('tbody tr') if suffix in r.get_text())
     new_client_id=row.select_one('input[name=id]')['value']
@@ -83,18 +84,18 @@ try:
     options=BeautifulSoup(get('/Vehiculos/Editar').text,'html.parser')
     c_id=next(o['value'] for o in options.select('#CategoriaId option') if o.get('value'))
     s_id=next(o['value'] for o in options.select('#SucursalId option') if o.get('value'))
-    vehicle_data={'Id':0,'CategoriaId':c_id,'SucursalId':s_id,'Placa':'T-'+suffix,'Marca':'Demo','Modelo':'Prueba','Anio':2024,'CapacidadPasajeros':5,'CapacidadMaletas':2,'Kilometraje':0,'Transmision':0,'Estado':0,'TarifaDiaria':'40'}
+    vehicle_data={'Id':0,'CategoriaId':c_id,'SucursalId':s_id,'Placa':placa,'Marca':'Nissan','Modelo':'Prueba','Anio':2024,'CapacidadPasajeros':5,'CapacidadMaletas':2,'Kilometraje':0,'Transmision':0,'Estado':0,'TarifaDiaria':'40'}
     success(submit('/Vehiculos/Editar',vehicle_data),'CRUD: crear vehículo')
     r=submit('/Vehiculos/Editar',vehicle_data)
     check(r.status_code==200 and 'No se pudo guardar' in r.text,'Placa duplicada rechazada en formulario')
-    row=next(r for r in BeautifulSoup(get('/Vehiculos').text,'html.parser').select('tbody tr') if ('T-'+suffix).upper() in r.get_text())
+    row=next(r for r in BeautifulSoup(get('/Vehiculos').text,'html.parser').select('tbody tr') if placa in r.get_text())
     new_vehicle_id=row.select_one('input[name=id]')['value']
     old_vehicle_version=BeautifulSoup(get('/Vehiculos/Editar/'+new_vehicle_id).text,'html.parser').select_one('#Version')['value']
     vehicle_data.update({'Id':new_vehicle_id,'Modelo':'Prueba editada','Version':old_vehicle_version})
     success(submit('/Vehiculos/Editar',vehicle_data,'/Vehiculos/Editar/'+new_vehicle_id),'CRUD: editar vehículo')
     new_version=BeautifulSoup(get('/Vehiculos/Editar/'+new_vehicle_id).text,'html.parser').select_one('#Version')['value']
     success(submit('/Vehiculos/Eliminar',{'id':new_vehicle_id,'version':new_version},'/Vehiculos'),'CRUD: eliminar vehículo no referenciado')
-    # La flota demo permite completar un alquiler real, sin alterar datos personales.
+    # La flota inicial permite completar un alquiler real, sin alterar datos personales.
     doc=BeautifulSoup(get('/Reservas/Editar').text,'html.parser')
     client_id=next(o['value'] for o in doc.select('#ClienteId option') if o.get('value'))
     vehicle_id=next(o['value'] for o in doc.select('#VehiculoId option') if o.get('value'))
@@ -111,11 +112,11 @@ try:
     # Rechazar una escritura sin el token antifalsificación.
     r=session.post(base+'/Alquileres/Pago',data={'AlquilerId':rental_id,'Monto':'1','Metodo':'Efectivo'},timeout=15)
     check(r.status_code==400,'Antifalsificación rechaza POST sin token')
-    success(submit('/Alquileres/Pago',{'AlquilerId':rental_id,'Monto':'10','Metodo':'Efectivo','Referencia':'DEMO-'+suffix},detalle),'Registrar pago interno')
+    success(submit('/Alquileres/Pago',{'AlquilerId':rental_id,'Monto':'10','Metodo':'Efectivo','Referencia':'REF-'+suffix},detalle),'Registrar pago interno')
     get(detalle)
-    success(submit('/Alquileres/Devolver',{'Id':rental_id,'Kilometraje':km+50,'Combustible':80,'Observaciones':'Devolución ficticia','Cargo':'5','Concepto':'Cargo demo'},'/Alquileres/Devolver/'+rental_id),'Registrar devolución y cerrar alquiler')
+    success(submit('/Alquileres/Devolver',{'Id':rental_id,'Kilometraje':km+50,'Combustible':80,'Observaciones':'Vehículo inspeccionado','Cargo':'5','Concepto':'Limpieza adicional'},'/Alquileres/Devolver/'+rental_id),'Registrar devolución y cerrar alquiler')
     check('Cerrado' in get(detalle).text,'Alquiler cerrado visible')
-    r=submit('/Recomendaciones',{'Inicio':start,'Fin':end,'Pasajeros':4,'Maletas':2,'PresupuestoDiario':100,'Preferencias':'Viaje familiar de demostración'})
+    r=submit('/Recomendaciones',{'Inicio':start,'Fin':end,'Pasajeros':4,'Maletas':2,'PresupuestoDiario':100,'Preferencias':'Viaje familiar de fin de semana'})
     check(r.status_code==200 and 'Reglas (sin IA)' in BeautifulSoup(r.text,'html.parser').get_text(),'Respaldo sin clave identificado en la pantalla')
     # Un empleado no accede a la administración.
     empleado='empleado.'+suffix+'@rentavia.test'

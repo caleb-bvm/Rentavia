@@ -17,7 +17,7 @@
 <dd>@Model.Vehiculo.Placa · @Model.Vehiculo.Marca @Model.Vehiculo.Modelo</dd>
 <dt>Período acordado</dt>
 <dd>@Presentacion.Fecha(Model.Reserva.InicioUtc) → @Presentacion.Fecha(Model.Reserva.FinUtc)</dd>
-<dt>Tarifa histórica / días</dt>
+<dt>Tarifa / días</dt>
 <dd>@Presentacion.Dinero(Model.Reserva.TarifaDiaria) / @Model.Reserva.Dias</dd>
 <dt>Total / saldo</dt>
 <dd>@Presentacion.Dinero(Model.MontoTotal) / @Presentacion.Dinero(saldo)</dd>
@@ -77,7 +77,6 @@
 </div>
 </div>
 <button class="btn btn-primary"><span class="icon" aria-hidden="true">add_card</span>Registrar pago</button>
-<p class="lead-text mt-2">Registro interno; no realiza un cobro bancario.</p>
 </form>}
 </div>
 <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver a alquileres</a>

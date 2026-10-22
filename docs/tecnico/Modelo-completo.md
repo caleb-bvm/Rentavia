@@ -1,6 +1,6 @@
 # Modelo de datos de Rentavía
 
-Esquema resultante de las migraciones `BaseInicialSqlServer`, `OperacionDeRentas` y `ReferenciaAuditoria`. La fuente del esquema es el modelo de EF Core; el SQL equivalente está en [Esquema-completo.sql](../../database/scripts/Esquema-completo.sql).
+Esquema resultante de las migraciones `BaseInicialSqlServer`, `OperacionDeRentas`, `ReferenciaAuditoria` y `DocumentoClienteSinLicencia`. La fuente del esquema es el modelo de EF Core; el SQL equivalente está en [Esquema-completo.sql](../../database/scripts/Esquema-completo.sql).
 
 ```mermaid
 erDiagram
@@ -25,9 +25,9 @@ Todos los Id son `int IDENTITY` y PK. Las FK son int con borrado restringido. Lo
 
 | Tabla | Campos implementados | Reglas principales |
 | --- | --- | --- |
-| Categorias | Id; Nombre nvarchar(50); Descripcion nvarchar(150), opcional | Nombre único |
+| Categorias | Id; Nombre nvarchar(50); Descripcion nvarchar(max), opcional y sin límite | Nombre único |
 | Sucursales | Id; Nombre(100); Direccion(200); Telefono(20), opcional; Activa bit | Inactiva excluye vehículos de nuevas reservas |
-| Clientes | Id; Nombre/Apellido(50); TipoDocumento(20); NumeroDocumento/Licencia(30); VencimientoLicencia date; Telefono(20); Correo(100), opcional; FechaRegistroUtc; Activo; Version rowversion | Tipo+documento únicos; licencia vigente al reservar/entregar |
+| Clientes | Id; Nombre/Apellido(50); TipoDocumento(20): DUI o PASAPORTE; NumeroDocumento(30); Telefono(20); Correo(100), opcional; FechaRegistroUtc; Activo; Version rowversion | Tipo+documento únicos; DUI con formato 00000000-0; cliente activo al reservar/entregar |
 | Vehiculos | Id; CategoriaId; SucursalId; Placa(15); Marca/Modelo(50); Anio; capacidades; Kilometraje; Transmision/Estado(20); TarifaDiaria; FotoRuta(200), opcional; Version | Placa única; capacidad pasajeros positiva; km/maletas/tarifa no negativos; tarifa positiva exigida para reservar |
 | Reservas | Id; ClienteId; VehiculoId; InicioUtc; FinUtc; CreadaUtc; TarifaDiaria; Dias; TotalEstimado; Estado(20); Version | Fecha final posterior; días/importes positivos; estados Confirmada, Cancelada, Convertida |
 | Ocupaciones | Id; VehiculoId; ReservaId, opcional; MantenimientoId, opcional; InicioUtc; FinUtc; Activa | Un solo origen; fecha final posterior; índice por vehículo/activo/rango; origen único |

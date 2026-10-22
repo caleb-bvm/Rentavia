@@ -33,7 +33,7 @@ Solo el administrador las crea y edita. Una sucursal inactiva deja de ofrecer su
 
 En Vehículos, **Nuevo vehículo** abre el formulario con placa, marca, modelo, año, categoría, sucursal, pasajeros, maletas, kilometraje, transmisión, estado y tarifa diaria. También se puede subir una fotografía PNG o JPEG de hasta 2 MB.
 
-- La placa se guarda en mayúsculas y no puede repetirse.
+- La placa sigue el formato Pxxx-xxx, con letras o números (por ejemplo, P123-456). Se guarda en mayúsculas y no puede repetirse.
 - El kilometraje no puede bajar al editar.
 - Para ofrecer un vehículo en reservas debe estar en estado Activo y tener tarifa mayor que cero.
 - Cambiar la tarifa no altera las reservas ya creadas.
@@ -42,7 +42,7 @@ Si un vehículo tiene reservas o mantenimientos, al eliminarlo pasa a estado Ret
 
 ### Clientes
 
-Registra nombre, apellido, tipo y número de documento, licencia, vencimiento de la licencia, teléfono y correo opcional. No se permiten dos clientes con el mismo tipo y número de documento. Un cliente inactivo, o cuya licencia vence antes de terminar la reserva, no puede reservar. Si el cliente tiene reservas, al eliminarlo queda desactivado.
+Registra nombre, apellido, documento de identidad, teléfono y correo opcional. En **Tipo de documento** eliges DUI o Pasaporte: el sistema habilita solo la casilla del tipo elegido y desactiva la otra. El DUI se escribe con el formato 00000000-0; el pasaporte admite cualquier formato. No se permiten dos clientes con el mismo tipo y número de documento. Un cliente inactivo no puede reservar. Si el cliente tiene reservas, al eliminarlo queda desactivado.
 
 Si dos personas editan el mismo registro a la vez, la segunda recibe un aviso para recargar la página antes de guardar.
 

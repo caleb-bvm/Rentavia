@@ -39,12 +39,12 @@ Requiere Docker Desktop con motor Linux.
 
 ```powershell
 # Desde la carpeta raíz del proyecto
-./scripts/Preparar-env-demo.ps1
+./scripts/Preparar-env.ps1
 # Abre .env y escribe tu clave en OPENAI_API_KEY
-./scripts/Iniciar-docker.ps1 -CrearAdministrador -DatosDemo
+./scripts/Iniciar-docker.ps1 -CrearAdministrador -DatosIniciales
 ```
 
-`Preparar-env-demo.ps1` crea `.env` con contraseñas aleatorias; el correo y la contraseña del administrador quedan en ese archivo. La aplicación abre en `http://localhost:8080`. En los siguientes arranques basta con `./scripts/Iniciar-docker.ps1`.
+`Preparar-env.ps1` crea `.env` con contraseñas aleatorias; el correo y la contraseña del administrador quedan en ese archivo. La aplicación abre en `http://localhost:8080`. En los siguientes arranques basta con `./scripts/Iniciar-docker.ps1`.
 
 ## Estructura del proyecto
 
@@ -69,6 +69,6 @@ docs/                       Manuales, documentación técnica y evidencias
 - [Avance técnico](docs/fase-2/Avance-tecnico.md)
 - [Matriz de cumplimiento de la Fase II](docs/fase-2/Matriz-de-cumplimiento.md)
 - [Propuesta de despliegue en Azure](docs/fase-2/Propuesta-Azure.md)
-- [Guion del video y la presentación](docs/fase-2/Guion-demostracion.md)
+- [Guion del video y la presentación](docs/fase-2/Guion-video.md)
 - [Modelo de datos](docs/tecnico/Modelo-completo.md)
 - [Evidencias de pruebas](docs/evidencias/Verificacion-funcional.md)

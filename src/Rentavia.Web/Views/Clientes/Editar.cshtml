@@ -11,12 +11,11 @@
             <div>
                 <span class="eyebrow">CLIENTES</span>
                 <h1>@ViewData["Title"]</h1>
-                <p class="lead-text">Datos de identidad, licencia y contacto de quien renta.</p>
+                <p class="lead-text">Datos de identidad y contacto de quien renta.</p>
             </div>
         </header>
         <form asp-action="Editar" method="post">
             <div class="form-content">
-                <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>Usa datos ficticios durante la demostración. La licencia se verifica al reservar y entregar.</span></p>
                 <div asp-validation-summary="ModelOnly" class="form-alert"></div>
                 <input asp-for="Id" type="hidden" />
                 <input asp-for="Version" type="hidden" />
@@ -35,29 +34,22 @@
                         </div>
                         <div class="rv-field">
                             <label asp-for="TipoDocumento" class="rv-label"></label>
-                            <input asp-for="TipoDocumento" class="rv-input" type="text" placeholder="Ej. DUI, pasaporte" />
+                            <select asp-for="TipoDocumento" class="rv-select" data-tipo-documento>
+                                <option value="@ClienteForm.Dui">DUI</option>
+                                <option value="@ClienteForm.Pasaporte">Pasaporte</option>
+                            </select>
                             <span asp-validation-for="TipoDocumento" class="rv-error"></span>
                         </div>
-                        <div class="rv-field">
-                            <label asp-for="NumeroDocumento" class="rv-label"></label>
-                            <input asp-for="NumeroDocumento" class="rv-input" type="text" />
-                            <span asp-validation-for="NumeroDocumento" class="rv-error"></span>
+                        @* Solo se muestra la caja del documento elegido *@
+                        <div class="rv-field is-required" data-documento="@ClienteForm.Dui">
+                            <label asp-for="NumeroDui" class="rv-label">Número de DUI</label>
+                            <input asp-for="NumeroDui" class="rv-input" type="text" inputmode="numeric" placeholder="00000000-0" maxlength="10" />
+                            <span asp-validation-for="NumeroDui" class="rv-error"></span>
                         </div>
-                    </div>
-                </fieldset>
-                <fieldset class="form-section">
-                    <legend>Licencia de conducir</legend>
-                    <div class="rv-grid">
-                        <div class="rv-field">
-                            <label asp-for="Licencia" class="rv-label">Número de licencia</label>
-                            <input asp-for="Licencia" class="rv-input" type="text" />
-                            <span asp-validation-for="Licencia" class="rv-error"></span>
-                        </div>
-                        <div class="rv-field">
-                            <label asp-for="VencimientoLicencia" class="rv-label"></label>
-                            <input asp-for="VencimientoLicencia" class="rv-input" type="date" />
-                            <span class="rv-help">Debe seguir vigente al terminar cada reserva.</span>
-                            <span asp-validation-for="VencimientoLicencia" class="rv-error"></span>
+                        <div class="rv-field is-required" data-documento="@ClienteForm.Pasaporte">
+                            <label asp-for="NumeroPasaporte" class="rv-label">Número de pasaporte</label>
+                            <input asp-for="NumeroPasaporte" class="rv-input" type="text" maxlength="30" />
+                            <span asp-validation-for="NumeroPasaporte" class="rv-error"></span>
                         </div>
                     </div>
                 </fieldset>
@@ -95,4 +87,21 @@
         </form>
     </div>
 </div>
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+<script>
+// Muestra solo la caja del documento elegido; la otra se limpia y se desactiva.
+const tipo = document.querySelector("[data-tipo-documento]");
+function cambiarDocumento() {
+    document.querySelectorAll("[data-documento]").forEach(campo => {
+        const elegido = campo.dataset.documento === tipo.value;
+        const input = campo.querySelector("input");
+        campo.hidden = !elegido;
+        input.disabled = !elegido;
+        if (!elegido) input.value = "";
+    });
+}
+tipo.addEventListener("change", cambiarDocumento);
+cambiarDocumento();
+</script>
+}

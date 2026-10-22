@@ -28,7 +28,6 @@ public class RentaviaDbContext(DbContextOptions<RentaviaDbContext> options)
         modelBuilder.Entity<Categoria>(entity =>
         {
             entity.Property(c => c.Nombre).HasMaxLength(50).IsRequired();
-            entity.Property(c => c.Descripcion).HasMaxLength(150);
             entity.HasIndex(c => c.Nombre).IsUnique();
         });
 
@@ -45,7 +44,6 @@ public class RentaviaDbContext(DbContextOptions<RentaviaDbContext> options)
             entity.Property(c => c.Apellido).HasMaxLength(50).IsRequired();
             entity.Property(c => c.TipoDocumento).HasMaxLength(20).IsRequired();
             entity.Property(c => c.NumeroDocumento).HasMaxLength(30).IsRequired();
-            entity.Property(c => c.Licencia).HasMaxLength(30).IsRequired();
             entity.Property(c => c.Telefono).HasMaxLength(20).IsRequired();
             entity.Property(c => c.Correo).HasMaxLength(100);
             entity.Property(c => c.FechaRegistroUtc).HasColumnType("datetimeoffset(0)");

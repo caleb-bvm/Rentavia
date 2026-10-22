@@ -42,7 +42,7 @@ El despliegue seguiría estos pasos:
 
 ## Costos aproximados
 
-Escenario de demostración en la región East US, en dólares y por mes: una réplica de 0.5 vCPU y 1 GiB activa una hora al día, menos de 50,000 solicitudes, una base pequeña y pocos archivos. No incluye impuestos ni créditos de estudiante.
+Escenario estimado en la región East US, en dólares y por mes: una réplica de 0.5 vCPU y 1 GiB activa una hora al día, menos de 50,000 solicitudes, una base pequeña y pocos archivos. No incluye impuestos ni créditos de estudiante.
 
 | Componente | USD por mes | Base del cálculo |
 | --- | --- | --- |

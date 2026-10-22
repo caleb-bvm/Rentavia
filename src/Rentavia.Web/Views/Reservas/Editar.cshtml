@@ -14,9 +14,9 @@
                 <p class="lead-text">Aparta un vehículo para un cliente durante un período.</p>
             </div>
         </header>
-        <form asp-action="Editar" method="post">
+        <form asp-action="Editar" method="post" data-rango-fechas>
             <div class="form-content">
-                <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>Horario UTC-6. Cobro demo en USD por períodos de 24 horas, redondeados hacia arriba. Al editar, se conservan el vehículo y la tarifa acordada; para cambiarlo, cancela y crea otra reserva.</span></p>
+                <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>Horario UTC-6. Cobro en USD por períodos de 24 horas, redondeados hacia arriba. Al editar, se conservan el vehículo y la tarifa acordada; para cambiarlo, cancela y crea otra reserva.</span></p>
                 <div asp-validation-summary="ModelOnly" class="form-alert"></div>
                 <input asp-for="Id" type="hidden" />
                 <input asp-for="Version" type="hidden" />
@@ -44,15 +44,16 @@
                     <div class="rv-grid">
                         <div class="rv-field">
                             <label asp-for="Inicio" class="rv-label">Recogida</label>
-                            <input asp-for="Inicio" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                            <input asp-for="Inicio" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-inicio />
                             <span asp-validation-for="Inicio" class="rv-error"></span>
                         </div>
                         <div class="rv-field">
                             <label asp-for="Fin" class="rv-label">Devolución</label>
-                            <input asp-for="Fin" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                            <input asp-for="Fin" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-fin />
                             <span asp-validation-for="Fin" class="rv-error"></span>
                         </div>
                     </div>
+                    <p class="filter-summary form-duration" data-duracion aria-live="polite"></p>
                 </fieldset>
             </div>
             <footer class="form-foot">

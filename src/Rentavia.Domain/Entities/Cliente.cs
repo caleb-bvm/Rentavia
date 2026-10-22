@@ -6,10 +6,9 @@ public class Cliente
     public int Id { get; set; }
     public string Nombre { get; set; } = string.Empty;
     public string Apellido { get; set; } = string.Empty;
+    /// <summary>DUI o PASAPORTE.</summary>
     public string TipoDocumento { get; set; } = string.Empty;
     public string NumeroDocumento { get; set; } = string.Empty;
-    public string Licencia { get; set; } = string.Empty;
-    public DateOnly VencimientoLicencia { get; set; }
     public string Telefono { get; set; } = string.Empty;
     public string? Correo { get; set; }
     public DateTimeOffset FechaRegistroUtc { get; set; }

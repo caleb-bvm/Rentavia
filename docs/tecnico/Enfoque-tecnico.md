@@ -19,7 +19,7 @@ Decisiones que tomó el equipo durante la Fase II y su motivo. El detalle de la 
 | La IA solo elige entre candidatos ya filtrados | Las restricciones objetivas (fechas, capacidad, presupuesto) se resuelven con SQL; la IA aporta el criterio sobre preferencias en texto libre |
 | Respaldo por reglas cuando falla la IA | La pantalla sigue siendo útil y siempre indica el origen del resultado |
 | Migraciones explícitas (`--migrate`) | La web no modifica el esquema al arrancar; en Docker lo hace el servicio `setup` |
-| Azure solo como propuesta | La guía no exige el despliegue; la demostración se hace con Docker |
+| Azure solo como propuesta | La guía no exige el despliegue; la ejecución local se hace con Docker |
 
 ## Parámetros de la agencia piloto
 
