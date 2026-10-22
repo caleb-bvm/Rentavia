@@ -8,74 +8,89 @@
 </div>
 </div>
 <div class="panel filter-panel">
-<form asp-action="Index" method="post" data-rango-fechas>
-<div class="filter-header">
-<span class="icon" aria-hidden="true">auto_awesome</span>
-<div>
-<h2>Describe el viaje</h2>
-<p>Con las fechas, la capacidad y el presupuesto se filtran los vehículos; las preferencias ayudan a ordenarlos.</p>
-</div>
-</div>
-<div class="filter-body">
-<div asp-validation-summary="ModelOnly"></div>
-<div class="filter-groups">
-<fieldset class="filter-group">
-<legend><span class="icon" aria-hidden="true">schedule</span>Fechas del viaje</legend>
-<div class="field has-icon">
-<label asp-for="Inicio">Recogida</label>
-<span class="icon field-icon" aria-hidden="true">key</span>
-<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-inicio />
-<span asp-validation-for="Inicio" class="text-danger"></span>
-</div>
-<div class="field has-icon">
-<label asp-for="Fin">Devolución</label>
-<span class="icon field-icon" aria-hidden="true">assignment_return</span>
-<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-fin />
-<span asp-validation-for="Fin" class="text-danger"></span>
-</div>
-</fieldset>
-<fieldset class="filter-group">
-<legend><span class="icon" aria-hidden="true">group</span>Capacidad y presupuesto</legend>
-<div class="filter-row">
-<div class="field has-icon">
-<label asp-for="Pasajeros"></label>
-<span class="icon field-icon" aria-hidden="true">person</span>
-<input asp-for="Pasajeros" class="form-control" type="number" min="1" max="50" inputmode="numeric" />
-<span asp-validation-for="Pasajeros" class="text-danger"></span>
-</div>
-<div class="field has-icon">
-<label asp-for="Maletas"></label>
-<span class="icon field-icon" aria-hidden="true">luggage</span>
-<input asp-for="Maletas" class="form-control" type="number" min="0" max="50" inputmode="numeric" />
-<span asp-validation-for="Maletas" class="text-danger"></span>
-</div>
-</div>
-<div class="field has-icon">
-<label asp-for="PresupuestoDiario"></label>
-<span class="icon field-icon" aria-hidden="true">payments</span>
-<input asp-for="PresupuestoDiario" class="form-control" type="number" step="0.01" min="0.01" inputmode="decimal" />
-<span asp-validation-for="PresupuestoDiario" class="text-danger"></span>
-</div>
-</fieldset>
-<fieldset class="filter-group">
-<legend><span class="icon" aria-hidden="true">tune</span>Preferencias <small>Opcional</small></legend>
-<div class="field">
-<label asp-for="Preferencias">¿Qué buscas en el vehículo?</label>
-<textarea asp-for="Preferencias" class="form-control" rows="4" maxlength="1000" placeholder="Ej.: viaje familiar a la playa, prefiero transmisión automática y espacio para equipaje." aria-describedby="preferencias-ayuda"></textarea>
-<span asp-validation-for="Preferencias" class="text-danger"></span>
-</div>
-<span class="field-hint" id="preferencias-ayuda"><span>Sin nombres ni datos personales.</span><span data-contador-para="Preferencias"></span></span>
-</fieldset>
-</div>
-</div>
-<div class="filter-footer">
-<span class="filter-summary" data-duracion aria-live="polite"></span>
-<div class="filter-actions">
-<a asp-action="Index" class="btn btn-outline-secondary">Restablecer</a>
-<button class="btn btn-primary"><span class="icon" aria-hidden="true">auto_awesome</span>Obtener recomendaciones</button>
-</div>
-</div>
-</form>
+    <form asp-action="Index" method="post" data-rango-fechas>
+        <header class="filter-head">
+            <span class="form-head-icon" aria-hidden="true"><span class="icon">auto_awesome</span></span>
+            <div>
+                <h2>Describe el viaje</h2>
+                <p>Con las fechas, la capacidad y el presupuesto se filtran los vehículos; las preferencias ayudan a ordenarlos.</p>
+            </div>
+        </header>
+        <div class="filter-body">
+            <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+            <div class="filter-groups">
+                <fieldset class="filter-group">
+                    <legend>Fechas del viaje</legend>
+                    <div class="rv-grid rv-fluid">
+                        <div class="rv-field">
+                            <label asp-for="Inicio" class="rv-label">Recogida</label>
+                            <div class="rv-control">
+                                <span class="icon" aria-hidden="true">key</span>
+                                <input asp-for="Inicio" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-inicio />
+                            </div>
+                            <span asp-validation-for="Inicio" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Fin" class="rv-label">Devolución</label>
+                            <div class="rv-control">
+                                <span class="icon" aria-hidden="true">assignment_return</span>
+                                <input asp-for="Fin" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-fin />
+                            </div>
+                            <span asp-validation-for="Fin" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="filter-group">
+                    <legend>Capacidad y presupuesto</legend>
+                    <div class="rv-grid rv-pair">
+                        <div class="rv-field">
+                            <label asp-for="Pasajeros" class="rv-label"></label>
+                            <div class="rv-stepper">
+                                <button class="rv-step" type="button" data-step="-1" aria-label="Quitar un pasajero"></button>
+                                <input asp-for="Pasajeros" class="rv-input" type="number" min="1" max="50" inputmode="numeric" />
+                                <button class="rv-step" type="button" data-step="1" aria-label="Agregar un pasajero"></button>
+                            </div>
+                            <span asp-validation-for="Pasajeros" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Maletas" class="rv-label"></label>
+                            <div class="rv-stepper">
+                                <button class="rv-step" type="button" data-step="-1" aria-label="Quitar una maleta"></button>
+                                <input asp-for="Maletas" class="rv-input" type="number" min="0" max="50" inputmode="numeric" />
+                                <button class="rv-step" type="button" data-step="1" aria-label="Agregar una maleta"></button>
+                            </div>
+                            <span asp-validation-for="Maletas" class="rv-error"></span>
+                        </div>
+                    </div>
+                    <div class="rv-field">
+                        <label asp-for="PresupuestoDiario" class="rv-label">Presupuesto por día</label>
+                        <div class="rv-control">
+                            <span class="rv-affix">$</span>
+                            <input asp-for="PresupuestoDiario" class="rv-input" type="number" step="0.01" min="0.01" inputmode="decimal" />
+                            <span class="rv-suffix">USD</span>
+                        </div>
+                        <span asp-validation-for="PresupuestoDiario" class="rv-error"></span>
+                    </div>
+                </fieldset>
+                <fieldset class="filter-group">
+                    <legend>Preferencias</legend>
+                    <div class="rv-field">
+                        <label asp-for="Preferencias" class="rv-label">¿Qué buscas en el vehículo?</label>
+                        <textarea asp-for="Preferencias" class="rv-textarea" rows="4" maxlength="1000" placeholder="Ej.: viaje familiar a la playa, prefiero transmisión automática y espacio para equipaje." aria-describedby="preferencias-ayuda"></textarea>
+                        <span asp-validation-for="Preferencias" class="rv-error"></span>
+                        <p class="rv-help has-counter" id="preferencias-ayuda"><span>Sin nombres ni datos personales.</span><span data-contador-para="Preferencias"></span></p>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <footer class="filter-foot">
+            <p class="rv-summary" data-duracion aria-live="polite"></p>
+            <div class="filter-actions">
+                <a asp-action="Index" class="btn btn-quiet">Restablecer</a>
+                <button class="btn btn-primary"><span class="icon" aria-hidden="true">auto_awesome</span>Obtener recomendaciones</button>
+            </div>
+        </footer>
+    </form>
 </div>
 <div class="hint">La recomendación no confirma una reserva. Escribe preferencias del viaje; evita incluir nombres, documentos o información personal.</div>
 @if(Model.Resultado is not null){<div class="panel">
