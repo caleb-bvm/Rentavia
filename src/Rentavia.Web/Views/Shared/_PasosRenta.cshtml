@@ -1,0 +1,29 @@
+@model int
+@* Ciclo de una renta en cuatro pasos. El modelo es el paso actual (1 a 4); los anteriores se marcan como hechos. *@
+@{
+    var pasos = new[]
+    {
+        ("Buscar vehículo", "Fechas y capacidad", "search", "Disponibilidad", "Index", (string?)null),
+        ("Reservar", "Cliente y período", "event", "Reservas", "Index", (string?)null),
+        ("Entregar", "Inspección de salida", "key", "Reservas", "Index", (string?)"por-entregar"),
+        ("Devolver y cobrar", "Inspección y pagos", "assignment_return", "Alquileres", "Index", (string?)"en-curso")
+    };
+}
+<ol class="flow-steps" aria-label="Pasos de una renta">
+    @for (var i = 0; i < pasos.Length; i++)
+    {
+        var (texto, detalle, icono, controlador, accion, estado) = pasos[i];
+        var numero = i + 1;
+        var clase = numero == Model ? "is-current" : numero < Model ? "is-done" : "";
+        <li class="@clase">
+            <a asp-controller="@controlador" asp-action="@accion" asp-route-estado="@estado" aria-current="@(numero == Model ? "step" : null)">
+                <span class="flow-step-mark" aria-hidden="true"><span class="icon">@(numero < Model ? "check" : icono)</span></span>
+                <span class="flow-step-text">
+                    <small>Paso @numero</small>
+                    <strong>@texto</strong>
+                    <span>@detalle</span>
+                </span>
+            </a>
+        </li>
+    }
+</ol>

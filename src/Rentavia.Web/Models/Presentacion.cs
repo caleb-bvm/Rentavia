@@ -18,3 +18,7 @@ public static class Presentacion
         catch (FormatException) { return []; }
     }
 }
+
+/// <summary>Pestaña de filtro por estado en los listados; la clave viaja en ?estado=.</summary>
+public record Pestana(string Clave, string Texto, int Cantidad);
+public record Pestanas(string Actual, IReadOnlyList<Pestana> Opciones);
