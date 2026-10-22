@@ -32,7 +32,7 @@
 <td>@v.Categoria.Nombre / @v.Sucursal.Nombre</td>
 <td>@Presentacion.Dinero(v.TarifaDiaria)</td>
 <td>
-<span class="state">@v.Estado</span>
+<span class="state">@(v.Estado == EstadoVehiculo.Activo && ((HashSet<int>)ViewBag.EnMantenimiento).Contains(v.Id) ? "En mantenimiento" : v.Estado.ToString())</span>
 </td>
 <td>
 <a asp-action="Editar" asp-route-id="@v.Id" class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">edit</span>Editar</a>
