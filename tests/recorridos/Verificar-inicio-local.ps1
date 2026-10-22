@@ -3,8 +3,8 @@
 [CmdletBinding()]
 param([string]$ServidorSql = '.\SQLEXPRESS')
 $ErrorActionPreference = 'Stop'
-$raiz = Split-Path -Parent $PSScriptRoot
-$lanzador = Join-Path $raiz 'Iniciar-Rentavia.ps1'
+$raiz = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$lanzador = Join-Path $raiz 'scripts\Iniciar-Rentavia.ps1'
 $archivoConfig = Join-Path $raiz '.env.local.json'
 $configAnterior = $null
 if (Test-Path -LiteralPath $archivoConfig) { $configAnterior = [IO.File]::ReadAllBytes($archivoConfig) }

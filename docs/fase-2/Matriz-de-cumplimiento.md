@@ -12,7 +12,7 @@ Relación entre lo que pide la [guía de la Fase II](../lineamientos/DSP_Proyect
 | 4. Docker: Dockerfile, docker-compose.yml, variables de entorno | `docker/`, `.env.example`, `scripts/Iniciar-docker.ps1` | Completo; faltan capturas en evidencias |
 | 4. Propuesta Azure: servicio, beneficios, costos, arquitectura | [Propuesta Azure](Propuesta-Azure.md) | Completo |
 | 5. Integración general del sistema | Flujo de renta conectado a agenda, pagos, auditoría e IA | Completo |
-| 6. Pruebas de funcionamiento con evidencia | `tests/`, [verificación funcional](../evidencias/Verificacion-funcional.md) | Completo; faltan capturas de Docker y OpenAI |
+| 6. Pruebas de funcionamiento con evidencia | `tests/`, [pruebas en el manual técnico](../manuales/Tecnico.md#11-pruebas), capturas en `docs/evidencias/ui/` | Completo; faltan capturas de Docker y OpenAI |
 | 7. Manual de instalación | [Instalacion.md](../manuales/Instalacion.md) | Completo |
 | 7. Manual de usuario | [Usuario.md](../manuales/Usuario.md) | Completo |
 | 7. Manual técnico | [Tecnico.md](../manuales/Tecnico.md) | Completo |

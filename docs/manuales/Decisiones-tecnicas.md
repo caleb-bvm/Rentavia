@@ -1,6 +1,6 @@
 # Decisiones técnicas de Rentavía
 
-Decisiones que tomó el equipo durante la Fase II y su motivo. El detalle de la implementación está en el [manual técnico](../manuales/Tecnico.md).
+Decisiones que tomó el equipo durante la Fase II y su motivo. El detalle de la implementación está en el [manual técnico](Tecnico.md).
 
 | Decisión | Motivo |
 | --- | --- |

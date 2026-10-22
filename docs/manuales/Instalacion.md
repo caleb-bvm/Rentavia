@@ -78,10 +78,10 @@ docker compose --env-file .env -f docker/docker-compose.yml logs database
 ### Opción automática
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\Iniciar-Rentavia.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Iniciar-Rentavia.ps1
 ```
 
-También funciona con doble clic en `Iniciar-Rentavia.cmd`. Requiere Windows de 64 bits e Internet en la primera ejecución. No hace falta tener instalado Visual Studio ni SQL Server Management Studio.
+También funciona con doble clic en `Iniciar-Rentavia.cmd`, en la raíz del proyecto. Requiere Windows de 64 bits e Internet en la primera ejecución. No hace falta tener instalado Visual Studio ni SQL Server Management Studio.
 
 El lanzador:
 
@@ -149,4 +149,4 @@ Para comprobar la integración, abre Recomendador IA, completa el formulario y r
 dotnet run --project tests/Rentavia.Tests -- --sql
 ```
 
-Las pruebas crean una base temporal `Rentavia_Pruebas_<GUID>` y la eliminan al terminar; nunca tocan la base `Rentavia`. Sin `--sql` solo se ejecutan las pruebas que no necesitan base de datos. El [manual técnico](Tecnico.md) describe el recorrido web y las capturas automáticas.
+Las pruebas crean una base temporal `Rentavia_Pruebas_<GUID>` y la eliminan al terminar; nunca tocan la base `Rentavia`. Sin `--sql` solo se ejecutan las pruebas que no necesitan base de datos. El [manual técnico](Tecnico.md#11-pruebas) explica las demás pruebas: el recorrido web, las capturas automáticas, la verificación del lanzador y las restricciones SQL.
