@@ -158,6 +158,15 @@ if (args.Contains("--sql"))
             Verificar(!await agenda.Disponibles(ahora.AddDays(20), ahora.AddDays(21)).AnyAsync(v => v.Id == vehiculoId), "Ofreció vehículo aún en taller.");
             await agenda.FinalizarMantenimientoAsync(m.Id, "prueba");
         });
+        await Probar("SQL: mantenimiento en curso bloquea fechas posteriores a su fin estimado", async () =>
+        {
+            await using var db = Contexto(); var agenda = new AgendaService(db);
+            var m = await agenda.ProgramarMantenimientoAsync(vehiculoId, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1), "Correctivo", "En taller", 0, "prueba");
+            Verificar(!await agenda.Disponibles(ahora.AddDays(5), ahora.AddDays(6)).AnyAsync(v => v.Id == vehiculoId), "Ofreció vehículo en mantenimiento.");
+            await DebeRechazar(() => agenda.GuardarReservaAsync(null, clienteId, vehiculoId, ahora.AddDays(5), ahora.AddDays(6), [], "prueba"));
+            await agenda.FinalizarMantenimientoAsync(m.Id, "prueba");
+            Verificar(await agenda.Disponibles(ahora.AddDays(5), ahora.AddDays(6)).AnyAsync(v => v.Id == vehiculoId), "No liberó el vehículo.");
+        });
         await Probar("SQL: edición concurrente protegida por rowversion", async () =>
         {
             await using var db1 = Contexto(); await using var db2 = Contexto();

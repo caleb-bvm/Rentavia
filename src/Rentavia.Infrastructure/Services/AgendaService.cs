@@ -27,8 +27,10 @@ public class AgendaService(RentaviaDbContext db)
             // Un alquiler vencido que sigue abierto requiere intervención: no se ofrece el vehículo.
             .Where(v => !db.Alquileres.Any(a => a.VehiculoId == v.Id
                 && a.Estado == EstadoAlquiler.Abierto && a.Reserva.FinUtc < DateTimeOffset.UtcNow))
+            // Un mantenimiento iniciado y sin finalizar deja el vehículo en taller hasta que se finalice,
+            // aunque ya pasó o aún no llega la fecha estimada de fin.
             .Where(v => !db.Mantenimientos.Any(m => m.VehiculoId == v.Id
-                && !m.Finalizado && m.FinUtc < DateTimeOffset.UtcNow));
+                && !m.Finalizado && m.InicioUtc <= DateTimeOffset.UtcNow));
     }
 
     /// <summary>
@@ -182,7 +184,7 @@ public class AgendaService(RentaviaDbContext db)
             && a.Reserva.FinUtc < DateTimeOffset.UtcNow))
             throw new ReglaNegocioException("El vehículo tiene una devolución pendiente; resuélvela antes de programar otra operación.");
         if (await db.Mantenimientos.AnyAsync(m => m.VehiculoId == vehiculoId && !m.Finalizado
-            && m.FinUtc < DateTimeOffset.UtcNow))
-            throw new ReglaNegocioException("El vehículo tiene mantenimiento pendiente de finalizar.");
+            && m.InicioUtc <= DateTimeOffset.UtcNow))
+            throw new ReglaNegocioException("El vehículo está en mantenimiento; finalízalo antes de programar otra operación.");
     }
 }

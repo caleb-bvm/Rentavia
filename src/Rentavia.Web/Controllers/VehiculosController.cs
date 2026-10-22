@@ -14,10 +14,17 @@ namespace Rentavia.Web.Controllers;
 /// </summary>
 public class VehiculosController(RentaviaDbContext db, IWebHostEnvironment entorno) : ProyectoController
 {
-    public async Task<IActionResult> Index(string? buscar) => View(await db.Vehiculos.AsNoTracking()
-        .Include(v => v.Categoria).Include(v => v.Sucursal)
-        .Where(v => buscar == null || v.Placa.Contains(buscar) || v.Marca.Contains(buscar) || v.Modelo.Contains(buscar))
-        .OrderBy(v => v.Placa).ToListAsync());
+    public async Task<IActionResult> Index(string? buscar)
+    {
+        // Vehículos con un mantenimiento iniciado y sin finalizar: no pueden rentarse aunque su estado sea Activo.
+        ViewBag.EnMantenimiento = (await db.Mantenimientos
+            .Where(m => !m.Finalizado && m.InicioUtc <= DateTimeOffset.UtcNow)
+            .Select(m => m.VehiculoId).Distinct().ToListAsync()).ToHashSet();
+        return View(await db.Vehiculos.AsNoTracking()
+            .Include(v => v.Categoria).Include(v => v.Sucursal)
+            .Where(v => buscar == null || v.Placa.Contains(buscar) || v.Marca.Contains(buscar) || v.Modelo.Contains(buscar))
+            .OrderBy(v => v.Placa).ToListAsync());
+    }
 
     public async Task<IActionResult> Editar(int id = 0)
     {
