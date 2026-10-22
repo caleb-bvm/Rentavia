@@ -51,24 +51,30 @@ Los CRUD de catálogos usan el contexto de EF Core directamente desde su control
 | `src/Rentavia.Web/Controllers` | Un controlador por módulo; `ProyectoController` es la base con autorización |
 | `src/Rentavia.Web/Models` | Formularios con validaciones y modelos de las vistas |
 | `src/Rentavia.Web/Views` | Vistas Razor por módulo y el layout común |
-| `database/scripts` | SQL generado de las migraciones y script de verificación |
+| `database` | SQL generado de las migraciones y script de verificación |
 | `docker` | `Dockerfile` y `docker-compose.yml` |
-| `scripts` | Arranque local y en Docker, creación de cuentas y `.env` |
-| `tests` | Pruebas en C#, recorrido HTTP en Python y capturas con Playwright |
+| `scripts` | Lanzador de Windows, arranque en Docker, creación de cuentas y `.env` |
+| `tests/Rentavia.Tests` | Pruebas automatizadas en C# |
+| `tests/recorridos` | Recorrido HTTP en Python, capturas con Playwright y verificación del lanzador |
+| `docs` | Lineamientos, entregables de cada fase, manuales y capturas de evidencia |
 
 Las clases principales tienen comentarios `///` que explican su responsabilidad.
 
 ## 4. Base de datos
 
-El [modelo de datos](../tecnico/Modelo-completo.md) contiene el diagrama entidad-relación y el diccionario. La base tiene once tablas de negocio, siete de Identity y el historial de migraciones.
+El [modelo de datos](Modelo-de-datos.md) contiene el diagrama entidad-relación y el diccionario. La base tiene once tablas de negocio, siete de Identity y el historial de migraciones. Las [decisiones técnicas](Decisiones-tecnicas.md) resumen por qué se eligió cada parte del diseño.
 
-Hay tres migraciones:
+Hay cinco migraciones:
 
 | Migración | Cambio |
 | --- | --- |
 | `BaseInicialSqlServer` | Identity, categorías, sucursales, clientes y vehículos |
 | `OperacionDeRentas` | Reservas, ocupaciones, alquileres, pagos, mantenimientos, auditoría y recomendaciones |
 | `ReferenciaAuditoria` | Columna `RegistroClave` para auditar operaciones sobre usuarios |
+| `DocumentoClienteSinLicencia` | Retira las columnas de licencia del cliente; basta con el documento de identidad |
+| `DescripcionCategoriaSinLimite` | Quita el límite de longitud de la descripción de categorías |
+
+Las migraciones se aplican con `dotnet run --project src/Rentavia.Web -- --migrate` (o `dotnet ef database update --project src/Rentavia.Infrastructure --startup-project src/Rentavia.Web`); en Docker lo hace el servicio `setup`. `database/Esquema-completo.sql` es el SQL equivalente para revisar el esquema y no debe ejecutarse sobre una base que ya tiene las migraciones aplicadas.
 
 Decisiones de tipos: el dinero usa `decimal(12,2)` y las fechas con hora usan `datetimeoffset` en UTC. La interfaz convierte a UTC-6 al mostrar y al recibir fechas.
 
@@ -168,7 +174,7 @@ Compilación en dos etapas. La primera usa `mcr.microsoft.com/dotnet/sdk:10.0.40
 | `web` | `rentavia-web:local` | La aplicación; espera a que la base esté sana. Volúmenes `uploads` y `keys` |
 | `setup` | `rentavia-web:local` | Perfil `setup`; ejecuta `--migrate`, `--create-admin` o `--seed` y termina |
 
-Los puertos se publican solo en `127.0.0.1` (web 8080 y SQL 14330 por defecto). La web se conecta a la base por el nombre de servicio `database`, con autenticación SQL. La clave de OpenAI entra como variable de entorno; no forma parte de la imagen.
+Los puertos se publican solo en `127.0.0.1` (web en `WEB_PORT`, 8080, y SQL en `SQL_PORT`, 14330, por defecto). La web se conecta a la base por el nombre de servicio `database`, con autenticación SQL, y no arranca hasta que el healthcheck de SQL Server responde. La clave de OpenAI entra como variable de entorno; no forma parte de la imagen. `Seguridad__RedirigirHttps=false` sirve para la ejecución local por HTTP; un despliegue público necesita HTTPS.
 
 `scripts/Iniciar-docker.ps1` ejecuta la secuencia completa: valida Compose, construye la imagen, levanta la base, migra, crea la cuenta y los datos si se piden, y levanta la web.
 
@@ -179,11 +185,43 @@ Evidencia por agregar: capturas de `docker compose ps` con los servicios activos
 | Herramienta | Qué prueba |
 | --- | --- |
 | `tests/Rentavia.Tests` (`dotnet run -- --sql`) | 15 casos: cálculo de tarifas, intervalos, versiones, contrato y validación del adaptador OpenAI con respuestas controladas, y en SQL Server real la reserva concurrente, tarifa histórica, edición, cancelación, mantenimiento, entrega única, pagos, devolución, auditoría y rowversion |
-| `tests/web_recorrido.py` | 87 comprobaciones HTTP sobre una instalación local: rutas protegidas, CRUD de los cuatro catálogos, duplicados, concurrencia, flujo completo de renta, token antifalsificación y permisos por rol |
-| `tests/ui-capturas.cjs` | Capturas de escritorio y móvil con Playwright; revisa errores de JavaScript y desbordamiento horizontal |
-| `tests/Verificar-inicio-local.ps1` | El lanzador de Windows sobre una base temporal |
+| `tests/recorridos/web_recorrido.py` | 87 comprobaciones HTTP sobre una instalación local: rutas protegidas, CRUD de los cuatro catálogos, duplicados, concurrencia, flujo completo de renta, token antifalsificación y permisos por rol |
+| `tests/recorridos/ui-capturas.cjs` | Capturas de escritorio y móvil con Playwright; revisa errores de JavaScript y desbordamiento horizontal |
+| `tests/recorridos/Verificar-inicio-local.ps1` | El lanzador de Windows sobre una base temporal |
+| `database/Verificar-base.sql` | Restricciones de la base: placa y documento únicos, capacidad, borrado restringido y rowversion |
 
-Las pruebas SQL crean una base `Rentavia_Pruebas_<GUID>` y la eliminan al terminar. `RENTAVIA_TEST_CONNECTION` permite indicar otra instancia y `RENTAVIA_TEST_RESULT` guarda los resultados en JSON. Los resultados están en [evidencias](../evidencias/Verificacion-funcional.md).
+### Pruebas automatizadas
+
+```powershell
+dotnet run --project tests/Rentavia.Tests -- --sql
+```
+
+Las pruebas SQL crean una base `Rentavia_Pruebas_<GUID>` y la eliminan al terminar; sin `--sql` solo corren las que no necesitan base de datos. Las pruebas del adaptador de OpenAI usan respuestas HTTP controladas, así se cubren errores como un HTTP 429, un JSON defectuoso o un timeout, que no se pueden provocar a voluntad con la API real. `RENTAVIA_TEST_CONNECTION` permite indicar otra instancia y `RENTAVIA_TEST_RESULT` guarda los resultados en JSON.
+
+### Lanzador de Windows
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tests/recorridos/Verificar-inicio-local.ps1 -ServidorSql '(localdb)\Rentavia'
+```
+
+Requiere .NET y SQL Server instalados; sin `-ServidorSql` usa `.\SQLEXPRESS`. Crea y elimina una base `Rentavia_Inicio_Pruebas_<GUID>` y comprueba migraciones, cuenta inicial, repetición sin duplicados, la opción sin datos iniciales, el arranque HTTP y el inicio de sesión.
+
+### Recorrido HTTP y capturas
+
+```powershell
+python -m pip install -r tests/recorridos/requirements.txt
+python tests/recorridos/web_recorrido.py --url http://127.0.0.1:5295
+```
+
+Necesita la web en ejecución y `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `.env`. Deja alquileres y cuentas de prueba en la base, así que debe usarse sobre una base de pruebas. `ui-capturas.cjs` usa Node y Playwright con Chromium y guarda las capturas en `docs/evidencias/ui/`; no es una dependencia de la aplicación.
+
+### Restricciones SQL
+
+```powershell
+sqlcmd -S '.\SQLEXPRESS' -d Rentavia -E -C -b -f 65001 -i database/Verificar-base.sql
+```
+
+Solo en desarrollo: el script revierte sus filas, pero los valores IDENTITY consumidos pueden dejar saltos.
 
 ## 12. Mantenimiento del esquema
 
@@ -195,4 +233,4 @@ dotnet ef migrations has-pending-model-changes --project src/Rentavia.Infrastruc
 dotnet run --project src/Rentavia.Web -- --migrate
 ```
 
-No se deben editar migraciones que ya se aplicaron. Después de cada cambio conviene ejecutar de nuevo las pruebas SQL, sobre todo las de agenda, y regenerar `database/scripts/Esquema-completo.sql` con `dotnet ef migrations script`.
+No se deben editar migraciones que ya se aplicaron. Después de cada cambio conviene ejecutar de nuevo las pruebas SQL, sobre todo las de agenda, y regenerar `database/Esquema-completo.sql` con `dotnet ef migrations script`.

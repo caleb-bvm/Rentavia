@@ -3,9 +3,9 @@
 .SYNOPSIS
 Verifica e instala dependencias, prepara SQL Server y ejecuta Rentavia localmente.
 .EXAMPLE
-powershell -NoProfile -ExecutionPolicy Bypass -File .\Iniciar-Rentavia.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\Iniciar-Rentavia.ps1
 .EXAMPLE
-.\Iniciar-Rentavia.ps1 -ServidorSql '(localdb)\Rentavia' -BaseDatos Rentavia_Pruebas -SoloPreparar
+.\scripts\Iniciar-Rentavia.ps1 -ServidorSql '(localdb)\Rentavia' -BaseDatos Rentavia_Pruebas -SoloPreparar
 #>
 [CmdletBinding()]
 param(
@@ -19,7 +19,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2.0
-$raiz = $PSScriptRoot
+$raiz = Split-Path -Parent $PSScriptRoot
 $cache = Join-Path $raiz '.dotnet-local\bootstrap'
 $configuracionLocal = Join-Path $raiz '.env.local.json'
 $variables = @('PATH', 'DOTNET_ROOT', 'ASPNETCORE_ENVIRONMENT', 'ASPNETCORE_URLS',

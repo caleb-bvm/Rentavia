@@ -49,26 +49,39 @@ Requiere Docker Desktop con motor Linux.
 ## Estructura del proyecto
 
 ```text
+Iniciar-Rentavia.cmd        Doble clic para ejecutar en Windows sin Docker
 src/
   Rentavia.Domain/          Entidades del negocio
   Rentavia.Application/     Reglas de cálculo y contrato del recomendador
   Rentavia.Infrastructure/  EF Core, migraciones y servicios (agenda, alquiler, OpenAI)
   Rentavia.Web/             Controladores MVC, formularios y vistas Razor
-tests/                      Pruebas automatizadas y recorrido web
+tests/
+  Rentavia.Tests/           Pruebas automatizadas en C#
+  recorridos/               Recorrido HTTP, capturas de pantalla y prueba del lanzador
 database/                   Esquema SQL generado y script de verificación
 docker/                     Dockerfile y docker-compose.yml
-scripts/                    Arranque local, Docker y creación de cuentas
-docs/                       Manuales, documentación técnica y evidencias
+scripts/                    Lanzador de Windows, Docker, .env y creación de cuentas
+docs/
+  lineamientos/             Guías de la cátedra para cada fase
+  fase-1/                   Documento y diagramas de la propuesta
+  fase-2/                   Avance técnico, matriz de cumplimiento, propuesta Azure y guion
+  manuales/                 Instalación, usuario, técnico, modelo de datos y decisiones técnicas
+  evidencias/               Capturas de la interfaz
 ```
 
 ## Documentación
 
-- [Manual de instalación](docs/manuales/Instalacion.md)
-- [Manual de usuario](docs/manuales/Usuario.md)
-- [Manual técnico](docs/manuales/Tecnico.md)
+Manuales:
+
+- [Instalación](docs/manuales/Instalacion.md)
+- [Usuario](docs/manuales/Usuario.md)
+- [Técnico](docs/manuales/Tecnico.md), con las [pruebas](docs/manuales/Tecnico.md#11-pruebas)
+- [Modelo de datos](docs/manuales/Modelo-de-datos.md)
+- [Decisiones técnicas](docs/manuales/Decisiones-tecnicas.md)
+
+Entrega de la Fase II:
+
 - [Avance técnico](docs/fase-2/Avance-tecnico.md)
-- [Matriz de cumplimiento de la Fase II](docs/fase-2/Matriz-de-cumplimiento.md)
+- [Matriz de cumplimiento](docs/fase-2/Matriz-de-cumplimiento.md)
 - [Propuesta de despliegue en Azure](docs/fase-2/Propuesta-Azure.md)
 - [Guion del video y la presentación](docs/fase-2/Guion-video.md)
-- [Modelo de datos](docs/tecnico/Modelo-completo.md)
-- [Evidencias de pruebas](docs/evidencias/Verificacion-funcional.md)

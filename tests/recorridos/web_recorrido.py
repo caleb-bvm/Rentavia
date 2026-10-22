@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--url', default='http://127.0.0.1:5295')
 args = parser.parse_args()
 base = args.url.rstrip('/')
-root = Path(__file__).resolve().parents[1]
+root = Path(__file__).resolve().parents[2]
 config = dict(line.split('=', 1) for line in (root/'.env').read_text(encoding='utf-8').splitlines() if '=' in line and not line.startswith('#'))
 session = requests.Session()
 results = []
