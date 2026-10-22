@@ -4,73 +4,89 @@
     <div>
         <span class="eyebrow">TU OPERACIÓN, A UN VISTAZO</span>
         <h1>Inicio</h1>
-        <p class="lead-text">Disponibilidad y seguimiento de la agencia.</p>
+        <p class="lead-text">Lo que necesita atención hoy y el camino para atender a un nuevo cliente.</p>
     </div>
-    <a class="btn btn-primary" asp-controller="Reservas" asp-action="Editar"><span class="icon" aria-hidden="true">add</span>Nueva reserva</a>
+    <a class="btn btn-primary" asp-controller="Disponibilidad" asp-action="Index"><span class="icon" aria-hidden="true">add</span>Nueva renta</a>
 </div>
 <div class="metrics">
-    <div class="metric">
+    <a class="metric" asp-controller="Disponibilidad" asp-action="Index">
         <span class="icon" aria-hidden="true">directions_car</span>
-        <strong>@Model.VehiculosActivos</strong>
-        <span>Vehículos activos</span>
-    </div>
-    <div class="metric">
-        <span class="icon" aria-hidden="true">group</span>
-        <strong>@Model.ClientesActivos</strong>
-        <span>Clientes activos</span>
-    </div>
-    <div class="metric">
-        <span class="icon" aria-hidden="true">event</span>
-        <strong>@Model.ReservasConfirmadas</strong>
-        <span>Reservas confirmadas</span>
-    </div>
-    <div class="metric">
+        <strong>@Model.VehiculosLibres</strong>
+        <span>Vehículos libres ahora</span>
+    </a>
+    <a class="metric" asp-controller="Reservas" asp-action="Index" asp-route-estado="por-entregar">
+        <span class="icon" aria-hidden="true">key</span>
+        <strong>@Model.ReservasPorEntregar</strong>
+        <span>Reservas por entregar</span>
+    </a>
+    <a class="metric" asp-controller="Alquileres" asp-action="Index" asp-route-estado="en-curso">
         <span class="icon" aria-hidden="true">car_rental</span>
         <strong>@Model.AlquileresAbiertos</strong>
-        <span>Alquileres abiertos</span>
-    </div>
+        <span>Alquileres en curso</span>
+    </a>
+    <a class="metric @(Model.DevolucionesAtrasadas > 0 ? "is-alert" : "")" asp-controller="Alquileres" asp-action="Index" asp-route-estado="atrasados">
+        <span class="icon" aria-hidden="true">schedule</span>
+        <strong>@Model.DevolucionesAtrasadas</strong>
+        <span>Devoluciones atrasadas</span>
+    </a>
 </div>
-<div class="panel">
-    <div class="page-heading">
-        <h2><span class="icon" aria-hidden="true">schedule</span>Próximas devoluciones</h2>
-        <a class="btn btn-sm" asp-controller="Alquileres" asp-action="Index">Ver alquileres<span class="icon" aria-hidden="true">arrow_forward</span></a>
-    </div>
-    @if (Model.Devoluciones.Count == 0)
-    {
-        <p class="empty">No hay devoluciones pendientes.</p>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Vehículo</th>
-                        <th>Devolución prevista</th>
-                        <th>Estado</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var a in Model.Devoluciones)
-                    {
-                        <tr>
-                            <td>@a.Vehiculo.Placa · @a.Vehiculo.Modelo</td>
-                            <td>@Presentacion.Fecha(a.Reserva.FinUtc)</td>
-                            <td><span class="state">@(a.Reserva.FinUtc < DateTimeOffset.UtcNow ? "Atrasado" : "En curso")</span></td>
-                            <td><a class="btn btn-sm btn-outline-secondary" asp-controller="Alquileres" asp-action="Detalle" asp-route-id="@a.Id"><span class="icon" aria-hidden="true">visibility</span>Ver detalle</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+<section class="panel">
+    <h2><span class="icon" aria-hidden="true">info</span>Cómo se atiende una renta</h2>
+    <p class="lead-text">Cada renta pasa por cuatro pasos. Toca un paso para ir directo a esa pantalla.</p>
+    <partial name="_PasosRenta" model="0" />
+</section>
+<div class="panel-pair">
+    <section class="panel">
+        <div class="page-heading">
+            <h2><span class="icon" aria-hidden="true">key</span>Próximas entregas</h2>
+            <a class="btn btn-sm" asp-controller="Reservas" asp-action="Index" asp-route-estado="por-entregar">Ver todas<span class="icon" aria-hidden="true">arrow_forward</span></a>
         </div>
-    }
-</div>
-<div class="panel">
-    <h2><span class="icon" aria-hidden="true">auto_awesome</span>Selecciona el vehículo adecuado</h2>
-    <p class="lead-text">Consulta fechas y capacidades antes de confirmar. El recomendador ofrece alternativas según las preferencias del viaje.</p>
-    <div class="form-actions">
-        <a class="btn btn-outline-secondary" asp-controller="Disponibilidad" asp-action="Index"><span class="icon" aria-hidden="true">event_available</span>Consultar disponibilidad</a>
-        <a class="btn btn-primary" asp-controller="Recomendaciones" asp-action="Index"><span class="icon" aria-hidden="true">auto_awesome</span>Abrir recomendador IA</a>
-    </div>
+        @if (Model.Entregas.Count == 0)
+        {
+            <p class="empty">No hay reservas pendientes de entregar.</p>
+        }
+        else
+        {
+            <ul class="task-list">
+                @foreach (var r in Model.Entregas)
+                {
+                    <li>
+                        <div>
+                            <strong>@r.Cliente.Nombre @r.Cliente.Apellido</strong>
+                            <small>@r.Vehiculo.Placa · @r.Vehiculo.Marca @r.Vehiculo.Modelo</small>
+                            <small>Recoge el @Presentacion.Fecha(r.InicioUtc)</small>
+                        </div>
+                        <a class="btn btn-sm btn-primary" asp-controller="Alquileres" asp-action="Entregar" asp-route-reservaId="@r.Id"><span class="icon" aria-hidden="true">key</span>Entregar</a>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
+    <section class="panel">
+        <div class="page-heading">
+            <h2><span class="icon" aria-hidden="true">assignment_return</span>Próximas devoluciones</h2>
+            <a class="btn btn-sm" asp-controller="Alquileres" asp-action="Index" asp-route-estado="en-curso">Ver todas<span class="icon" aria-hidden="true">arrow_forward</span></a>
+        </div>
+        @if (Model.Devoluciones.Count == 0)
+        {
+            <p class="empty">No hay devoluciones pendientes.</p>
+        }
+        else
+        {
+            <ul class="task-list">
+                @foreach (var a in Model.Devoluciones)
+                {
+                    var atrasado = a.Reserva.FinUtc < DateTimeOffset.UtcNow;
+                    <li>
+                        <div>
+                            <strong>@a.Vehiculo.Placa · @a.Vehiculo.Modelo</strong>
+                            <small>Regresa el @Presentacion.Fecha(a.Reserva.FinUtc)</small>
+                            <span><span class="state">@(atrasado ? "Atrasado" : "En curso")</span></span>
+                        </div>
+                        <a class="btn btn-sm btn-outline-secondary" asp-controller="Alquileres" asp-action="Devolver" asp-route-id="@a.Id"><span class="icon" aria-hidden="true">assignment_return</span>Devolver</a>
+                    </li>
+                }
+            </ul>
+        }
+    </section>
 </div>
