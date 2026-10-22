@@ -31,7 +31,7 @@ El recomendador filtra hasta veinte vehículos disponibles que cumplen capacidad
 
 ## Docker
 
-La imagen se compila en dos etapas y corre como usuario sin privilegios. Compose levanta SQL Server 2025 con healthcheck, la web y un servicio `setup` para migraciones, cuenta inicial y datos de demostración. La base, las fotos y las claves de sesión persisten en volúmenes. Los secretos se leen de `.env`.
+La imagen se compila en dos etapas y corre como usuario sin privilegios. Compose levanta SQL Server 2025 con healthcheck, la web y un servicio `setup` para migraciones, cuenta inicial y datos iniciales. La base, las fotos y las claves de sesión persisten en volúmenes. Los secretos se leen de `.env`.
 
 ## Base de datos
 

@@ -70,9 +70,9 @@ Hay tres migraciones:
 | `OperacionDeRentas` | Reservas, ocupaciones, alquileres, pagos, mantenimientos, auditoría y recomendaciones |
 | `ReferenciaAuditoria` | Columna `RegistroClave` para auditar operaciones sobre usuarios |
 
-Decisiones de tipos: el dinero usa `decimal(12,2)`, las fechas con hora usan `datetimeoffset` en UTC y el vencimiento de licencia usa `date`. La interfaz convierte a UTC-6 al mostrar y al recibir fechas.
+Decisiones de tipos: el dinero usa `decimal(12,2)` y las fechas con hora usan `datetimeoffset` en UTC. La interfaz convierte a UTC-6 al mostrar y al recibir fechas.
 
-Restricciones principales: placa única, documento único por tipo, claves foráneas con borrado restringido, `CHECK` en capacidades, kilometraje, combustible, fechas e importes, y un índice filtrado que permite un solo alquiler abierto por vehículo.
+Restricciones principales: placa única con formato Pxxx-xxx validado en el formulario, documento único por tipo, claves foráneas con borrado restringido, `CHECK` en capacidades, kilometraje, combustible, fechas e importes, y un índice filtrado que permite un solo alquiler abierto por vehículo.
 
 ## 5. Disponibilidad y concurrencia
 
@@ -152,7 +152,7 @@ Referencias: [API Responses](https://developers.openai.com/api/reference/resourc
 | `DataProtection__Ruta` | Carpeta donde persisten las claves de cookies (`/app/keys` en Docker) |
 | `.env` | Secretos para Docker y el lanzador; no se comparte |
 
-La aplicación acepta tres comandos administrativos que se ejecutan y terminan sin levantar la web: `--migrate`, `--create-admin` y `--seed-demo`. La web nunca migra la base al arrancar. El endpoint `/health` responde si hay conexión con SQL Server.
+La aplicación acepta tres comandos administrativos que se ejecutan y terminan sin levantar la web: `--migrate`, `--create-admin` y `--seed`. La web nunca migra la base al arrancar. El endpoint `/health` responde si hay conexión con SQL Server.
 
 ## 10. Docker
 
@@ -166,7 +166,7 @@ Compilación en dos etapas. La primera usa `mcr.microsoft.com/dotnet/sdk:10.0.40
 | --- | --- | --- |
 | `database` | `mcr.microsoft.com/mssql/server:2025-latest` | SQL Server Developer con healthcheck por `sqlcmd` y volumen `sql-data` |
 | `web` | `rentavia-web:local` | La aplicación; espera a que la base esté sana. Volúmenes `uploads` y `keys` |
-| `setup` | `rentavia-web:local` | Perfil `setup`; ejecuta `--migrate`, `--create-admin` o `--seed-demo` y termina |
+| `setup` | `rentavia-web:local` | Perfil `setup`; ejecuta `--migrate`, `--create-admin` o `--seed` y termina |
 
 Los puertos se publican solo en `127.0.0.1` (web 8080 y SQL 14330 por defecto). La web se conecta a la base por el nombre de servicio `database`, con autenticación SQL. La clave de OpenAI entra como variable de entorno; no forma parte de la imagen.
 
@@ -179,7 +179,7 @@ Evidencia por agregar: capturas de `docker compose ps` con los servicios activos
 | Herramienta | Qué prueba |
 | --- | --- |
 | `tests/Rentavia.Tests` (`dotnet run -- --sql`) | 15 casos: cálculo de tarifas, intervalos, versiones, contrato y validación del adaptador OpenAI con respuestas controladas, y en SQL Server real la reserva concurrente, tarifa histórica, edición, cancelación, mantenimiento, entrega única, pagos, devolución, auditoría y rowversion |
-| `tests/web_recorrido.py` | 87 comprobaciones HTTP sobre una instalación de demostración: rutas protegidas, CRUD de los cuatro catálogos, duplicados, concurrencia, flujo completo de renta, token antifalsificación y permisos por rol |
+| `tests/web_recorrido.py` | 87 comprobaciones HTTP sobre una instalación local: rutas protegidas, CRUD de los cuatro catálogos, duplicados, concurrencia, flujo completo de renta, token antifalsificación y permisos por rol |
 | `tests/ui-capturas.cjs` | Capturas de escritorio y móvil con Playwright; revisa errores de JavaScript y desbordamiento horizontal |
 | `tests/Verificar-inicio-local.ps1` | El lanzador de Windows sobre una base temporal |
 

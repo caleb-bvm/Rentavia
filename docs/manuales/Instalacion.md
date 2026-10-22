@@ -23,7 +23,7 @@ La configuración sensible se guarda en un archivo `.env` en la raíz. Ese archi
 Para crear `.env` con contraseñas aleatorias:
 
 ```powershell
-./scripts/Preparar-env-demo.ps1
+./scripts/Preparar-env.ps1
 ```
 
 El script no reemplaza un `.env` existente. Después de crearlo, abre el archivo y escribe tu clave en `OPENAI_API_KEY`. Las contraseñas no deben contener punto y coma ni comillas, porque forman parte de la cadena de conexión.
@@ -41,7 +41,7 @@ La clave de OpenAI solo la usa el servidor. No debe aparecer en vistas, JavaScri
 ### Primer arranque
 
 ```powershell
-./scripts/Iniciar-docker.ps1 -CrearAdministrador -DatosDemo
+./scripts/Iniciar-docker.ps1 -CrearAdministrador -DatosIniciales
 ```
 
 El script realiza estos pasos en orden:
@@ -51,7 +51,7 @@ El script realiza estos pasos en orden:
 3. Inicia SQL Server 2025 y espera a que su healthcheck responda.
 4. Aplica las migraciones de EF Core con el servicio `setup`.
 5. Crea la cuenta administradora con `ADMIN_EMAIL` y `ADMIN_PASSWORD`.
-6. Carga los datos de demostración (solo si la base está vacía).
+6. Carga los datos iniciales (solo si la base está vacía).
 7. Inicia la web.
 
 Abre `http://localhost:8080` e ingresa con el correo y la contraseña de `.env`.
@@ -90,7 +90,7 @@ El lanzador:
 3. Usa SQL Server Express (`.\SQLEXPRESS`) si existe. Si no, crea la instancia `(localdb)\Rentavia` e instala SQL Server Express LocalDB cuando hace falta. Windows puede pedir permisos de administrador en este paso.
 4. Crea la base y aplica las migraciones.
 5. Crea una cuenta administradora si no hay usuarios. Toma `ADMIN_EMAIL` y `ADMIN_PASSWORD` de `.env` o genera una contraseña aleatoria.
-6. Carga los datos de demostración si los catálogos están vacíos.
+6. Carga los datos iniciales si los catálogos están vacíos.
 7. Inicia la web, espera a que `/health` confirme la conexión con SQL Server y abre `http://127.0.0.1:5295`.
 
 La conexión elegida y las credenciales creadas se guardan en `.env.local.json`, que se queda en el equipo local. Las siguientes ejecuciones reutilizan la misma base y las mismas cuentas. Ctrl+C detiene la web.
@@ -100,11 +100,11 @@ El lanzador lee `OPENAI_API_KEY` y `OPENAI_MODEL` de `.env`. Si esas variables y
 | Opción | Uso |
 | --- | --- |
 | `-SoloPreparar` | Instala, compila y prepara la base sin iniciar la web |
-| `-SinDatosDemo` | Prepara la base y la cuenta sin datos ficticios |
+| `-SinDatosIniciales` | Prepara la base y la cuenta sin datos iniciales |
 | `-SinAbrirNavegador` | Inicia la web sin abrir el navegador |
 | `-Puerto 5296` | Usa otro puerto local |
 | `-ServidorSql '(localdb)\Rentavia'` | Usa una instancia local concreta |
-| `-BaseDatos Rentavia_Demo` | Usa otra base (letras, números y guion bajo) |
+| `-BaseDatos Rentavia_Pruebas` | Usa otra base (letras, números y guion bajo) |
 
 ### Opción manual
 
@@ -116,12 +116,12 @@ dotnet build Rentavia.sln
 $env:ASPNETCORE_ENVIRONMENT = 'Development'
 dotnet run --project src/Rentavia.Web --no-build -- --migrate
 ./scripts/Crear-administrador.ps1 -Correo 'administrador@agencia.example'
-dotnet run --project src/Rentavia.Web --no-build -- --seed-demo
+dotnet run --project src/Rentavia.Web --no-build -- --seed
 $env:OPENAI_API_KEY = '<tu clave>'
 dotnet run --project src/Rentavia.Web --no-build
 ```
 
-`Crear-administrador.ps1` pide la contraseña sin mostrarla en pantalla. `--seed-demo` solo funciona si no hay vehículos ni clientes. `dotnet run` no lee `.env`, por eso la clave de OpenAI se define como variable de la sesión. La web abre en `http://localhost:5295`.
+`Crear-administrador.ps1` pide la contraseña sin mostrarla en pantalla. `--seed` solo funciona si no hay vehículos ni clientes. `dotnet run` no lee `.env`, por eso la clave de OpenAI se define como variable de la sesión. La web abre en `http://localhost:5295`.
 
 La aplicación nunca aplica migraciones al arrancar; se aplican con `--migrate` o desde el lanzador.
 
@@ -138,9 +138,9 @@ Para comprobar la integración, abre Recomendador IA, completa el formulario y r
 | No conecta a SQL Server local | Que el servicio de SQL Server esté iniciado y la cadena de conexión apunte a la instancia correcta |
 | SQL Server en Docker no arranca | Memoria disponible y `docker compose ... logs database` |
 | El inicio de sesión falla | La cuenta queda bloqueada 10 minutos tras cinco intentos fallidos |
-| La cuenta demo ya existe | `--create-admin` no reemplaza cuentas; usa la existente o crea otra desde Usuarios |
+| La cuenta administradora ya existe | `--create-admin` no reemplaza cuentas; usa la existente o crea otra desde Usuarios |
 | No aparecen vehículos disponibles | Sucursal activa, vehículo en estado Activo, tarifa mayor que cero y sin ocupaciones en esas fechas |
-| No permite entregar | La reserva debe estar confirmada, iniciar en menos de cinco minutos y el cliente debe tener licencia vigente |
+| No permite entregar | La reserva debe estar confirmada, iniciar en menos de cinco minutos y el cliente debe estar activo |
 | El recomendador muestra "Reglas (sin IA)" | Clave, saldo de la cuenta de OpenAI, conexión a Internet y nombre del modelo |
 
 ## 7. Pruebas
