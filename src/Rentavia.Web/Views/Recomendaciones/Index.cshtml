@@ -4,9 +4,11 @@
 <div>
 <span class="eyebrow">ASISTENTE CON IA</span>
 <h1>Recomendador de vehículos</h1>
-<p class="lead-text">Describe el viaje y compara alternativas disponibles.</p>
+<p class="lead-text">Describe el viaje y compara alternativas disponibles. Al elegir una, pasas a reservarla.</p>
 </div>
+<a class="btn btn-outline-secondary" asp-controller="Disponibilidad" asp-action="Index"><span class="icon" aria-hidden="true">search</span>Buscar sin IA</a>
 </div>
+<partial name="_PasosRenta" model="1" />
 <div class="panel filter-panel">
     <form asp-action="Index" method="post" data-rango-fechas>
         <header class="filter-head">

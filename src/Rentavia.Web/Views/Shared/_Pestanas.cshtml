@@ -1,0 +1,10 @@
+@model Pestanas
+@* Filtro por estado de un listado: cada pestaña lleva el número de registros *@
+<nav class="tabs" aria-label="Filtrar por estado">
+    @foreach (var p in Model.Opciones)
+    {
+        <a class="tab @(p.Clave == Model.Actual ? "is-selected" : "")" asp-route-estado="@p.Clave" aria-current="@(p.Clave == Model.Actual ? "page" : null)">
+            @p.Texto<span class="tab-count">@p.Cantidad</span>
+        </a>
+    }
+</nav>

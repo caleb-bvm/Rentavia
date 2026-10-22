@@ -1,7 +1,8 @@
 @model EntregaForm
-@{ ViewData["Title"] = "Registrar entrega"; }
+@{ ViewData["Title"] = "Registrar entrega"; var reserva = ViewBag.Reserva as Reserva; }
 <div class="form-page">
-    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Alquileres</a>
+    <a class="back-link" asp-controller="Reservas" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Reservas</a>
+    <partial name="_PasosRenta" model="3" />
     <div class="panel form-panel">
         <header class="form-head">
             <span class="form-head-icon" aria-hidden="true"><span class="icon">key</span></span>
@@ -13,6 +14,10 @@
         </header>
         <form asp-action="Entregar" method="post">
             <div class="form-content">
+                @if (reserva is not null)
+                {
+                    <partial name="_Resumen" model="reserva" />
+                }
                 <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>La entrega se permite desde cinco minutos antes del inicio y mientras la reserva siga vigente.</span></p>
                 <div asp-validation-summary="ModelOnly" class="form-alert"></div>
                 <input asp-for="ReservaId" type="hidden" />
@@ -46,7 +51,7 @@
                 </fieldset>
             </div>
             <footer class="form-foot">
-                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <a class="btn btn-quiet" asp-controller="Reservas" asp-action="Index">Cancelar</a>
                 <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">key</span>Entregar vehículo</button>
             </footer>
         </form>

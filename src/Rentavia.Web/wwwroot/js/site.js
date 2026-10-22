@@ -8,7 +8,7 @@ document.querySelectorAll('form[data-confirm]').forEach(form => {
 // Color de los chips de estado según su texto
 const tonos = {
     success: ['activo', 'activa', 'disponible', 'habilitado', 'confirmada', 'cerrado', 'finalizado'],
-    info: ['abierto', 'en curso', 'programado', 'convertida'],
+    info: ['abierto', 'en curso', 'programado', 'convertida', 'entregada'],
     warning: ['fueradeservicio', 'pendiente'],
     danger: ['atrasado', 'cancelada', 'bloqueado', 'inactivo', 'inactiva', 'retirado']
 };

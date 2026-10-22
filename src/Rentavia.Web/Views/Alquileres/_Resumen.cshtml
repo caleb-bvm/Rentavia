@@ -1,0 +1,20 @@
+@model Reserva
+@* Contexto del formulario de entrega o devolución: a quién, qué vehículo y en qué período *@
+<dl class="summary-strip">
+    <div>
+        <dt><span class="icon" aria-hidden="true">person</span>Cliente</dt>
+        <dd>@Model.Cliente.Nombre @Model.Cliente.Apellido</dd>
+    </div>
+    <div>
+        <dt><span class="icon" aria-hidden="true">directions_car</span>Vehículo</dt>
+        <dd>@Model.Vehiculo.Placa · @Model.Vehiculo.Marca @Model.Vehiculo.Modelo</dd>
+    </div>
+    <div>
+        <dt><span class="icon" aria-hidden="true">event</span>Período acordado</dt>
+        <dd>@Presentacion.Fecha(Model.InicioUtc) → @Presentacion.Fecha(Model.FinUtc)</dd>
+    </div>
+    <div>
+        <dt><span class="icon" aria-hidden="true">payments</span>Estimado</dt>
+        <dd>@Presentacion.Dinero(Model.TotalEstimado) · @Model.Dias día(s)</dd>
+    </div>
+</dl>

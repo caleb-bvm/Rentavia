@@ -1,7 +1,8 @@
 @model DevolucionForm
-@{ ViewData["Title"] = "Registrar devolución"; }
+@{ ViewData["Title"] = "Registrar devolución"; var alquiler = ViewBag.Alquiler as Alquiler; }
 <div class="form-page">
-    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Alquileres</a>
+    <a class="back-link" asp-action="Detalle" asp-route-id="@Model.Id"><span class="icon" aria-hidden="true">arrow_back</span>Alquiler #@Model.Id</a>
+    <partial name="_PasosRenta" model="4" />
     <div class="panel form-panel">
         <header class="form-head">
             <span class="form-head-icon" aria-hidden="true"><span class="icon">assignment_return</span></span>
@@ -13,6 +14,11 @@
         </header>
         <form asp-action="Devolver" method="post">
             <div class="form-content">
+                @if (alquiler is not null)
+                {
+                    <partial name="_Resumen" model="alquiler.Reserva" />
+                    <p class="form-note"><span class="icon" aria-hidden="true">speed</span><span>Salió con @alquiler.KilometrajeInicial km y @alquiler.CombustibleInicial% de combustible.</span></p>
+                }
                 <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>No se aplican penalizaciones automáticas: los cargos los registra el empleado con un concepto. Cerrar la operación libera el vehículo; el saldo se consulta en el detalle.</span></p>
                 <div asp-validation-summary="ModelOnly" class="form-alert"></div>
                 <input asp-for="Id" type="hidden" />
@@ -66,7 +72,7 @@
                 </fieldset>
             </div>
             <footer class="form-foot">
-                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <a class="btn btn-quiet" asp-action="Detalle" asp-route-id="@Model.Id">Cancelar</a>
                 <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Cerrar alquiler</button>
             </footer>
         </form>

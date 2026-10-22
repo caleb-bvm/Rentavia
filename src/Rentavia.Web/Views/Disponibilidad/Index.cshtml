@@ -1,12 +1,14 @@
 @model DisponibilidadForm
-@{ ViewData["Title"] = "Disponibilidad"; }
+@{ ViewData["Title"] = "Buscar vehículo"; }
 <div class="page-heading">
 <div>
-<span class="eyebrow">BÚSQUEDA POR FECHAS</span>
-<h1>Disponibilidad de flota</h1>
-<p class="lead-text">Encuentra vehículos para las fechas del viaje.</p>
+<span class="eyebrow">DISPONIBILIDAD POR FECHAS</span>
+<h1>Buscar vehículo</h1>
+<p class="lead-text">Indica las fechas del viaje y elige uno de los vehículos libres para reservarlo.</p>
 </div>
+<a class="btn btn-outline-secondary" asp-controller="Recomendaciones" asp-action="Index"><span class="icon" aria-hidden="true">auto_awesome</span>¿Dudas? Pide una recomendación</a>
 </div>
+<partial name="_PasosRenta" model="1" />
 <div class="panel filter-panel">
     <form asp-action="Index" method="get" data-rango-fechas>
         <header class="filter-head">
@@ -99,6 +101,7 @@
     </form>
 </div>
 <div class="hint">Horario UTC-6. La disponibilidad se verifica nuevamente al confirmar. Tarifa por períodos de 24 horas redondeados hacia arriba.</div>
+@if(Model.Vehiculos.Count>0){<h2 class="results-count">@Model.Vehiculos.Count vehículo(s) libre(s) <small>· del más económico al más caro</small></h2>}
 <div class="vehicle-grid">@foreach(var v in Model.Vehiculos){<article class="vehicle-card">
 <div class="vehicle-image">@if(v.FotoRuta is not null){<img src="@v.FotoRuta" alt="@v.Marca @v.Modelo"/>}else{<span class="icon" aria-hidden="true">directions_car</span>}</div>
 <div class="vehicle-card-body">
@@ -114,4 +117,4 @@
 <a asp-controller="Reservas" asp-action="Editar" asp-route-vehiculoId="@v.Id" asp-route-inicio="@Model.Inicio.ToString("yyyy-MM-ddTHH:mm")" asp-route-fin="@Model.Fin.ToString("yyyy-MM-ddTHH:mm")" class="btn btn-primary"><span class="icon" aria-hidden="true">event</span>Seleccionar y reservar</a>
 </div>
 </article>}</div>
-@if(Model.Vehiculos.Count==0){<p class="empty">No hay vehículos que cumplan estos filtros.</p>}
+@if(Model.Vehiculos.Count==0){<p class="empty">No hay vehículos que cumplan estos filtros. Prueba otras fechas o quita algún filtro.</p>}
