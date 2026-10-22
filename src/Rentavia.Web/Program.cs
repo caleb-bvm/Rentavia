@@ -56,7 +56,7 @@ builder.Services.AddRateLimiter(options =>
 });
 var app = builder.Build();
 
-// Las tareas administrativas son explícitas; la web nunca migra al arrancar.
+// Las tareas administrativas son explícitas; la web nunca migra al arrancar..
 if (args.Contains("--migrate") || args.Contains("--create-admin") || args.Contains("--seed-demo"))
 {
     using var scope = app.Services.CreateScope();
