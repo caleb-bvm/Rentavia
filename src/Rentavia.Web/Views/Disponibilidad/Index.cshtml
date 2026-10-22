@@ -8,79 +8,95 @@
 </div>
 </div>
 <div class="panel filter-panel">
-<form asp-action="Index" method="get" data-rango-fechas>
-<div class="filter-header">
-<span class="icon" aria-hidden="true">event_available</span>
-<div>
-<h2>Buscar vehículos</h2>
-<p>Indica las fechas del viaje y lo que necesitas; los demás filtros son opcionales.</p>
-</div>
-</div>
-<div class="filter-body">
-<div asp-validation-summary="ModelOnly"></div>
-<div class="filter-groups">
-<fieldset class="filter-group">
-<legend><span class="icon" aria-hidden="true">schedule</span>Fechas del viaje</legend>
-<div class="field has-icon">
-<label asp-for="Inicio">Recogida</label>
-<span class="icon field-icon" aria-hidden="true">key</span>
-<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-inicio />
-<span asp-validation-for="Inicio" class="text-danger"></span>
-</div>
-<div class="field has-icon">
-<label asp-for="Fin">Devolución</label>
-<span class="icon field-icon" aria-hidden="true">assignment_return</span>
-<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-fin />
-<span asp-validation-for="Fin" class="text-danger"></span>
-</div>
-</fieldset>
-<fieldset class="filter-group">
-<legend><span class="icon" aria-hidden="true">group</span>Capacidad</legend>
-<div class="filter-row">
-<div class="field has-icon">
-<label asp-for="Pasajeros"></label>
-<span class="icon field-icon" aria-hidden="true">person</span>
-<input asp-for="Pasajeros" class="form-control" type="number" min="1" max="50" inputmode="numeric" />
-<span asp-validation-for="Pasajeros" class="text-danger"></span>
-</div>
-<div class="field has-icon">
-<label asp-for="Maletas"></label>
-<span class="icon field-icon" aria-hidden="true">luggage</span>
-<input asp-for="Maletas" class="form-control" type="number" min="0" max="50" inputmode="numeric" />
-<span asp-validation-for="Maletas" class="text-danger"></span>
-</div>
-</div>
-<span class="field-hint">Se muestran vehículos con al menos esta capacidad.</span>
-</fieldset>
-<fieldset class="filter-group">
-<legend><span class="icon" aria-hidden="true">tune</span>Más filtros <small>Opcional</small></legend>
-<div class="field has-icon">
-<label asp-for="CategoriaId"></label>
-<span class="icon field-icon" aria-hidden="true">category</span>
-<select asp-for="CategoriaId" class="form-select" asp-items="ViewBag.Categorias">
-<option value="">Todas las categorías</option>
-</select>
-<span asp-validation-for="CategoriaId" class="text-danger"></span>
-</div>
-<div class="field has-icon">
-<label asp-for="SucursalId"></label>
-<span class="icon field-icon" aria-hidden="true">store</span>
-<select asp-for="SucursalId" class="form-select" asp-items="ViewBag.Sucursales">
-<option value="">Todas las sucursales</option>
-</select>
-<span asp-validation-for="SucursalId" class="text-danger"></span>
-</div>
-</fieldset>
-</div>
-</div>
-<div class="filter-footer">
-<span class="filter-summary" data-duracion aria-live="polite"></span>
-<div class="filter-actions">
-<a asp-action="Index" class="btn btn-outline-secondary">Restablecer</a>
-<button class="btn btn-primary"><span class="icon" aria-hidden="true">search</span>Buscar disponibilidad</button>
-</div>
-</div>
-</form>
+    <form asp-action="Index" method="get" data-rango-fechas>
+        <header class="filter-head">
+            <span class="form-head-icon" aria-hidden="true"><span class="icon">event_available</span></span>
+            <div>
+                <h2>Buscar vehículos</h2>
+                <p>Indica las fechas del viaje y lo que necesitas; los demás filtros son opcionales.</p>
+            </div>
+        </header>
+        <div class="filter-body">
+            <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+            <div class="filter-groups">
+                <fieldset class="filter-group">
+                    <legend>Fechas del viaje</legend>
+                    <div class="rv-grid rv-fluid">
+                        <div class="rv-field">
+                            <label asp-for="Inicio" class="rv-label">Recogida</label>
+                            <div class="rv-control">
+                                <span class="icon" aria-hidden="true">key</span>
+                                <input asp-for="Inicio" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-inicio />
+                            </div>
+                            <span asp-validation-for="Inicio" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Fin" class="rv-label">Devolución</label>
+                            <div class="rv-control">
+                                <span class="icon" aria-hidden="true">assignment_return</span>
+                                <input asp-for="Fin" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" data-rango-fin />
+                            </div>
+                            <span asp-validation-for="Fin" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="filter-group">
+                    <legend>Capacidad</legend>
+                    <div class="rv-grid rv-pair">
+                        <div class="rv-field">
+                            <label asp-for="Pasajeros" class="rv-label"></label>
+                            <div class="rv-stepper">
+                                <button class="rv-step" type="button" data-step="-1" aria-label="Quitar un pasajero"></button>
+                                <input asp-for="Pasajeros" class="rv-input" type="number" min="1" max="50" inputmode="numeric" />
+                                <button class="rv-step" type="button" data-step="1" aria-label="Agregar un pasajero"></button>
+                            </div>
+                            <span asp-validation-for="Pasajeros" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Maletas" class="rv-label"></label>
+                            <div class="rv-stepper">
+                                <button class="rv-step" type="button" data-step="-1" aria-label="Quitar una maleta"></button>
+                                <input asp-for="Maletas" class="rv-input" type="number" min="0" max="50" inputmode="numeric" />
+                                <button class="rv-step" type="button" data-step="1" aria-label="Agregar una maleta"></button>
+                            </div>
+                            <span asp-validation-for="Maletas" class="rv-error"></span>
+                        </div>
+                    </div>
+                    <p class="rv-help">Se muestran vehículos con al menos esta capacidad.</p>
+                </fieldset>
+                <fieldset class="filter-group">
+                    <legend>Más filtros</legend>
+                    <div class="rv-field">
+                        <label asp-for="CategoriaId" class="rv-label"></label>
+                        <div class="rv-control">
+                            <span class="icon" aria-hidden="true">category</span>
+                            <select asp-for="CategoriaId" class="rv-select" asp-items="ViewBag.Categorias">
+                                <option value="">Todas las categorías</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="CategoriaId" class="rv-error"></span>
+                    </div>
+                    <div class="rv-field">
+                        <label asp-for="SucursalId" class="rv-label"></label>
+                        <div class="rv-control">
+                            <span class="icon" aria-hidden="true">store</span>
+                            <select asp-for="SucursalId" class="rv-select" asp-items="ViewBag.Sucursales">
+                                <option value="">Todas las sucursales</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="SucursalId" class="rv-error"></span>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <footer class="filter-foot">
+            <p class="rv-summary" data-duracion aria-live="polite"></p>
+            <div class="filter-actions">
+                <a asp-action="Index" class="btn btn-quiet">Restablecer</a>
+                <button class="btn btn-primary"><span class="icon" aria-hidden="true">search</span>Buscar disponibilidad</button>
+            </div>
+        </footer>
+    </form>
 </div>
 <div class="hint">Horario UTC-6. La disponibilidad se verifica nuevamente al confirmar. Tarifa por períodos de 24 horas redondeados hacia arriba.</div>
 <div class="vehicle-grid">@foreach(var v in Model.Vehiculos){<article class="vehicle-card">
