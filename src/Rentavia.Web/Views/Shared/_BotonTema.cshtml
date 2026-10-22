@@ -1,0 +1,12 @@
+@model string
+@* Botón de cambio de tema. site.js muestra el ícono del esquema al que se cambia. *@
+<button class="icon-btn theme-toggle @Model" type="button" data-theme-toggle aria-label="Cambiar tema">
+    <svg data-icono="sol" viewBox="0 0 24 24" aria-hidden="true" hidden>
+        <circle cx="12" cy="12" r="4.5" />
+        <path d="M11 1.5h2v3h-2zM11 19.5h2v3h-2zM1.5 11h3v2h-3zM19.5 11h3v2h-3z" />
+        <path d="M11 1.5h2v3h-2zM11 19.5h2v3h-2zM1.5 11h3v2h-3zM19.5 11h3v2h-3z" transform="rotate(45 12 12)" />
+    </svg>
+    <svg data-icono="luna" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" />
+    </svg>
+</button>

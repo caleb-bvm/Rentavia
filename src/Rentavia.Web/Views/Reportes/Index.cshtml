@@ -7,24 +7,52 @@
 <p class="lead-text">Resumen de registros del período seleccionado.</p>
 </div>
 </div>
-<div class="panel">
-<form asp-action="Index" method="get">
-<div asp-validation-summary="All">
-</div>
-<div class="form-grid">
-<div class="field">
-<label asp-for="Desde">
-</label>
-<input asp-for="Desde" type="date" class="form-control"/>
-</div>
-<div class="field">
-<label asp-for="Hasta">
-</label>
-<input asp-for="Hasta" type="date" class="form-control"/>
+<p class="print-only">Período: @Model.Desde.ToString("dd/MM/yyyy") – @Model.Hasta.ToString("dd/MM/yyyy")</p>
+<div class="panel filter-panel no-print">
+<form asp-action="Index" method="get" data-rango-fechas data-rango-max-dias="365">
+<div class="filter-header">
+<span class="icon" aria-hidden="true">analytics</span>
+<div>
+<h2>Período del reporte</h2>
+<p>Elige un atajo o indica las fechas exactas; el período puede abarcar hasta un año.</p>
 </div>
 </div>
-<div class="form-actions">
-<button class="btn btn-primary"><span class="icon" aria-hidden="true">search</span>Consultar</button> <button type="button" class="btn btn-outline-secondary" onclick="window.print()"><span class="icon" aria-hidden="true">print</span>Imprimir</button>
+<div class="filter-body">
+<div asp-validation-summary="ModelOnly"></div>
+<div class="filter-groups">
+<fieldset class="filter-group">
+<legend><span class="icon" aria-hidden="true">event</span>Fechas</legend>
+<div class="filter-row">
+<div class="field has-icon">
+<label asp-for="Desde"></label>
+<span class="icon field-icon" aria-hidden="true">event</span>
+<input asp-for="Desde" type="date" class="form-control" data-rango-inicio />
+</div>
+<div class="field has-icon">
+<label asp-for="Hasta"></label>
+<span class="icon field-icon" aria-hidden="true">event</span>
+<input asp-for="Hasta" type="date" class="form-control" data-rango-fin />
+</div>
+</div>
+</fieldset>
+<fieldset class="filter-group">
+<legend><span class="icon" aria-hidden="true">speed</span>Atajos</legend>
+<div class="filter-presets">
+<button type="button" class="chip" data-preset="7">Últimos 7 días</button>
+<button type="button" class="chip" data-preset="30">Últimos 30 días</button>
+<button type="button" class="chip" data-preset="mes">Este mes</button>
+<button type="button" class="chip" data-preset="anio">Este año</button>
+</div>
+<span class="field-hint">Al elegir un atajo, el reporte se actualiza.</span>
+</fieldset>
+</div>
+</div>
+<div class="filter-footer">
+<span class="filter-summary" data-duracion aria-live="polite"></span>
+<div class="filter-actions">
+<button type="button" class="btn btn-outline-secondary" onclick="window.print()"><span class="icon" aria-hidden="true">print</span>Imprimir</button>
+<button class="btn btn-primary"><span class="icon" aria-hidden="true">search</span>Consultar</button>
+</div>
 </div>
 </form>
 </div>

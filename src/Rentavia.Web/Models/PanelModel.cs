@@ -14,7 +14,8 @@ public class PanelModel
 
 public class ReporteModel
 {
-    public DateOnly Desde { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(-30));
+    // Últimos 30 días contando hoy, igual que el atajo "Últimos 30 días" del filtro
+    public DateOnly Desde { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(-29));
     public DateOnly Hasta { get; set; } = DateOnly.FromDateTime(DateTime.Today);
     public decimal Ingresos { get; set; }
     public int Reservas { get; set; }
