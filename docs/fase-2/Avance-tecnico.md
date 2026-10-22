@@ -35,11 +35,11 @@ La imagen se compila en dos etapas y corre como usuario sin privilegios. Compose
 
 ## Base de datos
 
-Tres migraciones: `BaseInicialSqlServer`, `OperacionDeRentas` y `ReferenciaAuditoria`. Once tablas de negocio más las de Identity, con claves foráneas restringidas, índices únicos, restricciones `CHECK` y `rowversion`. El detalle está en el [modelo de datos](../tecnico/Modelo-completo.md).
+Cinco migraciones: `BaseInicialSqlServer`, `OperacionDeRentas`, `ReferenciaAuditoria`, `DocumentoClienteSinLicencia` y `DescripcionCategoriaSinLimite`. Once tablas de negocio más las de Identity, con claves foráneas restringidas, índices únicos, restricciones `CHECK` y `rowversion`. El detalle está en el [modelo de datos](../tecnico/Modelo-completo.md).
 
 ## Pruebas
 
-15 pruebas automatizadas, 87 comprobaciones HTTP y 5 pruebas de restricciones SQL, todas correctas. Capturas de escritorio y móvil sin errores de JavaScript. Ver [verificación funcional](../evidencias/Verificacion-funcional.md).
+15 pruebas automatizadas, 87 comprobaciones HTTP y 5 pruebas de restricciones SQL, todas correctas. Capturas de escritorio y móvil sin errores de JavaScript. Ver las [pruebas](../../tests/README.md) y las [capturas](../evidencias/ui/).
 
 ## Parámetros del prototipo
 

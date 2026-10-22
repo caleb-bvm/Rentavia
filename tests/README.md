@@ -34,4 +34,4 @@ Necesita la web en ejecución y `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `.env`. Hace
 
 `ui-capturas.cjs` usa Node y Playwright con Chromium. Toma capturas de escritorio y móvil y revisa errores de JavaScript y desbordamiento horizontal. No es una dependencia de la aplicación.
 
-Los resultados están en [docs/evidencias](../docs/evidencias/Verificacion-funcional.md).
+Las capturas quedan en [docs/evidencias/ui](../docs/evidencias/ui/).

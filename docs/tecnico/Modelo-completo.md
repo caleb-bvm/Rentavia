@@ -1,6 +1,6 @@
 # Modelo de datos de Rentavía
 
-Esquema resultante de las migraciones `BaseInicialSqlServer`, `OperacionDeRentas`, `ReferenciaAuditoria` y `DocumentoClienteSinLicencia`. La fuente del esquema es el modelo de EF Core; el SQL equivalente está en [Esquema-completo.sql](../../database/scripts/Esquema-completo.sql).
+Esquema resultante de las migraciones `BaseInicialSqlServer`, `OperacionDeRentas`, `ReferenciaAuditoria`, `DocumentoClienteSinLicencia` y `DescripcionCategoriaSinLimite`. La fuente del esquema es el modelo de EF Core; el SQL equivalente está en [Esquema-completo.sql](../../database/scripts/Esquema-completo.sql).
 
 ```mermaid
 erDiagram

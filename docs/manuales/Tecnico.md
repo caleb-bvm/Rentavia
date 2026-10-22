@@ -62,13 +62,15 @@ Las clases principales tienen comentarios `///` que explican su responsabilidad.
 
 El [modelo de datos](../tecnico/Modelo-completo.md) contiene el diagrama entidad-relación y el diccionario. La base tiene once tablas de negocio, siete de Identity y el historial de migraciones.
 
-Hay tres migraciones:
+Hay cinco migraciones:
 
 | Migración | Cambio |
 | --- | --- |
 | `BaseInicialSqlServer` | Identity, categorías, sucursales, clientes y vehículos |
 | `OperacionDeRentas` | Reservas, ocupaciones, alquileres, pagos, mantenimientos, auditoría y recomendaciones |
 | `ReferenciaAuditoria` | Columna `RegistroClave` para auditar operaciones sobre usuarios |
+| `DocumentoClienteSinLicencia` | Quita `Licencia` y `VencimientoLicencia` de clientes; el documento queda como DUI o PASAPORTE |
+| `DescripcionCategoriaSinLimite` | `Descripcion` de categorías pasa a `nvarchar(max)` |
 
 Decisiones de tipos: el dinero usa `decimal(12,2)` y las fechas con hora usan `datetimeoffset` en UTC. La interfaz convierte a UTC-6 al mostrar y al recibir fechas.
 
@@ -183,7 +185,7 @@ Evidencia por agregar: capturas de `docker compose ps` con los servicios activos
 | `tests/ui-capturas.cjs` | Capturas de escritorio y móvil con Playwright; revisa errores de JavaScript y desbordamiento horizontal |
 | `tests/Verificar-inicio-local.ps1` | El lanzador de Windows sobre una base temporal |
 
-Las pruebas SQL crean una base `Rentavia_Pruebas_<GUID>` y la eliminan al terminar. `RENTAVIA_TEST_CONNECTION` permite indicar otra instancia y `RENTAVIA_TEST_RESULT` guarda los resultados en JSON. Los resultados están en [evidencias](../evidencias/Verificacion-funcional.md).
+Las pruebas SQL crean una base `Rentavia_Pruebas_<GUID>` y la eliminan al terminar. `RENTAVIA_TEST_CONNECTION` permite indicar otra instancia y `RENTAVIA_TEST_RESULT` guarda los resultados en JSON. Las capturas de pantalla quedan en [docs/evidencias/ui](../evidencias/ui/).
 
 ## 12. Mantenimiento del esquema
 
