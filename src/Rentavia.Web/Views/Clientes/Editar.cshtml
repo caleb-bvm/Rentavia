@@ -1,85 +1,98 @@
 @model ClienteForm
-@{ ViewData["Title"] = "Guardar cliente"; }
-<div class="page-heading">
-<div>
-<h1>Guardar cliente</h1>
-<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
-</div>
-</div>
-<div class="hint">Usa datos ficticios durante la demostración. La licencia se verifica al reservar y entregar.</div>
-<div class="panel form-panel">
-<form asp-action="Editar" method="post" >
-<div asp-validation-summary="All">
-</div>
-<input asp-for="Id" type="hidden" />
-<input asp-for="Version" type="hidden" />
-<div class="form-grid">
-<div class="field">
-<label asp-for="Nombre">
-</label>
-<input asp-for="Nombre" class="form-control" type="text"  />
-<span asp-validation-for="Nombre" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Apellido">
-</label>
-<input asp-for="Apellido" class="form-control" type="text"  />
-<span asp-validation-for="Apellido" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="TipoDocumento">
-</label>
-<input asp-for="TipoDocumento" class="form-control" type="text"  />
-<span asp-validation-for="TipoDocumento" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="NumeroDocumento">
-</label>
-<input asp-for="NumeroDocumento" class="form-control" type="text"  />
-<span asp-validation-for="NumeroDocumento" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Licencia">
-</label>
-<input asp-for="Licencia" class="form-control" type="text"  />
-<span asp-validation-for="Licencia" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="VencimientoLicencia">
-</label>
-<input asp-for="VencimientoLicencia" class="form-control" type="date"  />
-<span asp-validation-for="VencimientoLicencia" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Telefono">
-</label>
-<input asp-for="Telefono" class="form-control" type="text"  />
-<span asp-validation-for="Telefono" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Correo">
-</label>
-<input asp-for="Correo" class="form-control" type="email"  />
-<span asp-validation-for="Correo" class="text-danger">
-</span>
-</div>
-<div class="form-check field">
-<input asp-for="Activo" class="form-check-input" />
-<label asp-for="Activo" class="form-check-label">
-</label>
-</div>
-</div>
-<div class="form-actions">
-<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Guardar</button>
-<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
-</div>
-</form>
+@{
+    var nuevo = Model.Id == 0;
+    ViewData["Title"] = nuevo ? "Nuevo cliente" : "Editar cliente";
+}
+<div class="form-page">
+    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Clientes</a>
+    <div class="panel form-panel">
+        <header class="form-head">
+            <span class="form-head-icon" aria-hidden="true"><span class="icon">group</span></span>
+            <div>
+                <span class="eyebrow">CLIENTES</span>
+                <h1>@ViewData["Title"]</h1>
+                <p class="lead-text">Datos de identidad, licencia y contacto de quien renta.</p>
+            </div>
+        </header>
+        <form asp-action="Editar" method="post">
+            <div class="form-content">
+                <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>Usa datos ficticios durante la demostración. La licencia se verifica al reservar y entregar.</span></p>
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+                <input asp-for="Id" type="hidden" />
+                <input asp-for="Version" type="hidden" />
+                <fieldset class="form-section">
+                    <legend>Identidad</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field">
+                            <label asp-for="Nombre" class="rv-label"></label>
+                            <input asp-for="Nombre" class="rv-input" type="text" autocomplete="given-name" />
+                            <span asp-validation-for="Nombre" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Apellido" class="rv-label"></label>
+                            <input asp-for="Apellido" class="rv-input" type="text" autocomplete="family-name" />
+                            <span asp-validation-for="Apellido" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="TipoDocumento" class="rv-label"></label>
+                            <input asp-for="TipoDocumento" class="rv-input" type="text" placeholder="Ej. DUI, pasaporte" />
+                            <span asp-validation-for="TipoDocumento" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="NumeroDocumento" class="rv-label"></label>
+                            <input asp-for="NumeroDocumento" class="rv-input" type="text" />
+                            <span asp-validation-for="NumeroDocumento" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="form-section">
+                    <legend>Licencia de conducir</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field">
+                            <label asp-for="Licencia" class="rv-label">Número de licencia</label>
+                            <input asp-for="Licencia" class="rv-input" type="text" />
+                            <span asp-validation-for="Licencia" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="VencimientoLicencia" class="rv-label"></label>
+                            <input asp-for="VencimientoLicencia" class="rv-input" type="date" />
+                            <span class="rv-help">Debe seguir vigente al terminar cada reserva.</span>
+                            <span asp-validation-for="VencimientoLicencia" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="form-section">
+                    <legend>Contacto</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field">
+                            <label asp-for="Telefono" class="rv-label"></label>
+                            <input asp-for="Telefono" class="rv-input" type="tel" autocomplete="tel" />
+                            <span asp-validation-for="Telefono" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Correo" class="rv-label">Correo electrónico</label>
+                            <div class="rv-control">
+                                <span class="rv-affix">@@</span>
+                                <input asp-for="Correo" class="rv-input" type="email" autocomplete="email" placeholder="nombre@correo.com" />
+                            </div>
+                            <span asp-validation-for="Correo" class="rv-error"></span>
+                        </div>
+                        <label class="rv-switch rv-span-2">
+                            <input asp-for="Activo" class="rv-switch-input" />
+                            <span class="rv-switch-text">
+                                <strong>Cliente activo</strong>
+                                <small>Solo los clientes activos pueden reservar y recibir vehículos.</small>
+                            </span>
+                            <span class="rv-switch-track" aria-hidden="true"></span>
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+            <footer class="form-foot">
+                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>@(nuevo ? "Registrar cliente" : "Guardar cambios")</button>
+            </footer>
+        </form>
+    </div>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

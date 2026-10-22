@@ -1,70 +1,74 @@
 @model MantenimientoForm
 @{ ViewData["Title"] = "Programar mantenimiento"; }
-<div class="page-heading">
-<div>
-<h1>Programar mantenimiento</h1>
-<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
-</div>
-</div>
-<div class="hint">El mantenimiento bloquea la disponibilidad. Si existe una reserva en el período, debe resolverse primero.</div>
-<div class="panel form-panel">
-<form asp-action="Crear" method="post" >
-<div asp-validation-summary="All">
-</div>
-
-<div class="form-grid">
-<div class="field">
-<label asp-for="VehiculoId">
-</label>
-<select asp-for="VehiculoId" class="form-select" asp-items="ViewBag.Vehiculos">
-<option value="">Selecciona una opción</option>
-</select>
-<span asp-validation-for="VehiculoId" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Tipo">
-</label>
-<select asp-for="Tipo" class="form-select" asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new[]{"Preventivo","Correctivo"}))">
-<option value="">Selecciona una opción</option>
-</select>
-<span asp-validation-for="Tipo" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Inicio">
-</label>
-<input asp-for="Inicio" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
-<span asp-validation-for="Inicio" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Fin">
-</label>
-<input asp-for="Fin" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
-<span asp-validation-for="Fin" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Costo">
-</label>
-<input asp-for="Costo" class="form-control" type="number" step="0.01" />
-<span asp-validation-for="Costo" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Descripcion">
-</label>
-<textarea asp-for="Descripcion" class="form-control" rows="3">
-</textarea>
-<span asp-validation-for="Descripcion" class="text-danger">
-</span>
-</div>
-</div>
-<div class="form-actions">
-<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Programar</button>
-<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
-</div>
-</form>
+<div class="form-page">
+    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Mantenimiento</a>
+    <div class="panel form-panel">
+        <header class="form-head">
+            <span class="form-head-icon" aria-hidden="true"><span class="icon">build</span></span>
+            <div>
+                <span class="eyebrow">MANTENIMIENTO</span>
+                <h1>Programar mantenimiento</h1>
+                <p class="lead-text">Reserva el tiempo de taller de un vehículo.</p>
+            </div>
+        </header>
+        <form asp-action="Crear" method="post">
+            <div class="form-content">
+                <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>El mantenimiento bloquea la disponibilidad. Si existe una reserva en el período, debe resolverse primero.</span></p>
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+                <fieldset class="form-section">
+                    <legend>Vehículo y servicio</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field">
+                            <label asp-for="VehiculoId" class="rv-label"></label>
+                            <select asp-for="VehiculoId" class="rv-select" asp-items="ViewBag.Vehiculos">
+                                <option value="">Selecciona un vehículo</option>
+                            </select>
+                            <span asp-validation-for="VehiculoId" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Tipo" class="rv-label"></label>
+                            <select asp-for="Tipo" class="rv-select" asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new[]{"Preventivo","Correctivo"}))">
+                                <option value="">Selecciona una opción</option>
+                            </select>
+                            <span asp-validation-for="Tipo" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field rv-span-2">
+                            <label asp-for="Descripcion" class="rv-label"></label>
+                            <textarea asp-for="Descripcion" class="rv-textarea" rows="3" placeholder="Qué se revisará o reparará"></textarea>
+                            <span asp-validation-for="Descripcion" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="form-section">
+                    <legend>Período y costo</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field">
+                            <label asp-for="Inicio" class="rv-label"></label>
+                            <input asp-for="Inicio" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                            <span asp-validation-for="Inicio" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Fin" class="rv-label"></label>
+                            <input asp-for="Fin" class="rv-input" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                            <span asp-validation-for="Fin" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Costo" class="rv-label">Costo estimado</label>
+                            <div class="rv-control">
+                                <span class="rv-affix">$</span>
+                                <input asp-for="Costo" class="rv-input" type="number" step="0.01" inputmode="decimal" />
+                                <span class="rv-suffix">USD</span>
+                            </div>
+                            <span asp-validation-for="Costo" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <footer class="form-foot">
+                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">event_available</span>Programar</button>
+            </footer>
+        </form>
+    </div>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

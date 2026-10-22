@@ -1,46 +1,56 @@
 @model UsuarioForm
 @{ ViewData["Title"] = "Crear usuario"; }
-<div class="page-heading">
-<div>
-<h1>Crear usuario</h1>
-<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
-</div>
-</div>
-<div class="hint">La contraseña inicial debe tener al menos 10 caracteres, mayúscula, minúscula, número y símbolo. Entrega las credenciales por un medio seguro.</div>
-<div class="panel form-panel">
-<form asp-action="Crear" method="post" >
-<div asp-validation-summary="All">
-</div>
-
-<div class="form-grid">
-<div class="field">
-<label asp-for="Correo">
-</label>
-<input asp-for="Correo" class="form-control" type="email"  />
-<span asp-validation-for="Correo" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Clave">
-</label>
-<input asp-for="Clave" class="form-control" type="password"  />
-<span asp-validation-for="Clave" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Rol">
-</label>
-<select asp-for="Rol" class="form-select" asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new[]{"Empleado","Administrador"}))">
-<option value="">Selecciona una opción</option>
-</select>
-<span asp-validation-for="Rol" class="text-danger">
-</span>
-</div>
-</div>
-<div class="form-actions">
-<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Guardar</button>
-<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
-</div>
-</form>
+<div class="form-page">
+    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Usuarios</a>
+    <div class="panel form-panel">
+        <header class="form-head">
+            <span class="form-head-icon" aria-hidden="true"><span class="icon">manage_accounts</span></span>
+            <div>
+                <span class="eyebrow">ADMINISTRACIÓN</span>
+                <h1>Crear usuario</h1>
+                <p class="lead-text">Da acceso al sistema a una persona del equipo.</p>
+            </div>
+        </header>
+        <form asp-action="Crear" method="post">
+            <div class="form-content">
+                <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>Entrega las credenciales por un medio seguro.</span></p>
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+                <fieldset class="form-section">
+                    <legend>Credenciales y rol</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field rv-span-2">
+                            <label asp-for="Correo" class="rv-label">Correo electrónico</label>
+                            <div class="rv-control">
+                                <span class="rv-affix">@@</span>
+                                <input asp-for="Correo" class="rv-input" type="email" autocomplete="off" placeholder="nombre@agencia.com" />
+                            </div>
+                            <span asp-validation-for="Correo" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Clave" class="rv-label"></label>
+                            <div class="rv-control">
+                                <span class="icon" aria-hidden="true">lock</span>
+                                <input asp-for="Clave" class="rv-input" type="password" autocomplete="new-password" />
+                                <button class="rv-reveal" type="button" aria-label="Mostrar contraseña"><span class="icon" aria-hidden="true">visibility</span></button>
+                            </div>
+                            <span class="rv-help">Mínimo 10 caracteres, con mayúscula, minúscula, número y símbolo.</span>
+                            <span asp-validation-for="Clave" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Rol" class="rv-label"></label>
+                            <select asp-for="Rol" class="rv-select" asp-items="@(new Microsoft.AspNetCore.Mvc.Rendering.SelectList(new[]{"Empleado","Administrador"}))">
+                                <option value="">Selecciona un rol</option>
+                            </select>
+                            <span asp-validation-for="Rol" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <footer class="form-foot">
+                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Crear usuario</button>
+            </footer>
+        </form>
+    </div>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

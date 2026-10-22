@@ -1,60 +1,75 @@
 @model DevolucionForm
 @{ ViewData["Title"] = "Registrar devolución"; }
-<div class="page-heading">
-<div>
-<h1>Registrar devolución</h1>
-<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
-</div>
-</div>
-<div class="hint">Los cargos son registrados por el empleado con un concepto. No se aplican penalizaciones automáticas. Cerrar la operación libera el vehículo; el saldo se consulta en el detalle.</div>
-<div class="panel form-panel">
-<form asp-action="Devolver" method="post" >
-<div asp-validation-summary="All">
-</div>
-<input asp-for="Id" type="hidden" />
-<input asp-for="Version" type="hidden" />
-<div class="form-grid">
-<div class="field">
-<label asp-for="Kilometraje">
-</label>
-<input asp-for="Kilometraje" class="form-control" type="number"  />
-<span asp-validation-for="Kilometraje" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Combustible">
-</label>
-<input asp-for="Combustible" class="form-control" type="number"  />
-<span asp-validation-for="Combustible" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Cargo">
-</label>
-<input asp-for="Cargo" class="form-control" type="number" step="0.01" />
-<span asp-validation-for="Cargo" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Concepto">
-</label>
-<input asp-for="Concepto" class="form-control" type="text"  />
-<span asp-validation-for="Concepto" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Observaciones">
-</label>
-<textarea asp-for="Observaciones" class="form-control" rows="3">
-</textarea>
-<span asp-validation-for="Observaciones" class="text-danger">
-</span>
-</div>
-</div>
-<div class="form-actions">
-<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Cerrar alquiler</button>
-<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
-</div>
-</form>
+<div class="form-page">
+    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Alquileres</a>
+    <div class="panel form-panel">
+        <header class="form-head">
+            <span class="form-head-icon" aria-hidden="true"><span class="icon">assignment_return</span></span>
+            <div>
+                <span class="eyebrow">ALQUILERES</span>
+                <h1>Registrar devolución</h1>
+                <p class="lead-text">Revisa el vehículo al recibirlo y cierra la operación.</p>
+            </div>
+        </header>
+        <form asp-action="Devolver" method="post">
+            <div class="form-content">
+                <p class="form-note"><span class="icon" aria-hidden="true">info</span><span>No se aplican penalizaciones automáticas: los cargos los registra el empleado con un concepto. Cerrar la operación libera el vehículo; el saldo se consulta en el detalle.</span></p>
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+                <input asp-for="Id" type="hidden" />
+                <input asp-for="Version" type="hidden" />
+                <fieldset class="form-section">
+                    <legend>Inspección de llegada</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field">
+                            <label asp-for="Kilometraje" class="rv-label"></label>
+                            <div class="rv-control">
+                                <span class="icon" aria-hidden="true">speed</span>
+                                <input asp-for="Kilometraje" class="rv-input" type="number" inputmode="numeric" />
+                                <span class="rv-suffix">km</span>
+                            </div>
+                            <span asp-validation-for="Kilometraje" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Combustible" class="rv-label">Combustible</label>
+                            <div class="rv-range">
+                                <input asp-for="Combustible" type="range" min="0" max="100" step="5" />
+                                <output for="Combustible">@Model.Combustible%</output>
+                            </div>
+                            <span asp-validation-for="Combustible" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field rv-span-2">
+                            <label asp-for="Observaciones" class="rv-label"></label>
+                            <textarea asp-for="Observaciones" class="rv-textarea" rows="3" placeholder="Estado en que regresa el vehículo"></textarea>
+                            <span asp-validation-for="Observaciones" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="form-section">
+                    <legend>Cargo adicional</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field">
+                            <label asp-for="Cargo" class="rv-label">Monto</label>
+                            <div class="rv-control">
+                                <span class="rv-affix">$</span>
+                                <input asp-for="Cargo" class="rv-input" type="number" step="0.01" inputmode="decimal" />
+                                <span class="rv-suffix">USD</span>
+                            </div>
+                            <span class="rv-help">Déjalo en 0 si no hay cargos.</span>
+                            <span asp-validation-for="Cargo" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Concepto" class="rv-label">Concepto</label>
+                            <input asp-for="Concepto" class="rv-input" type="text" placeholder="Ej. Limpieza, combustible faltante" />
+                            <span asp-validation-for="Concepto" class="rv-error"></span>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <footer class="form-foot">
+                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Cerrar alquiler</button>
+            </footer>
+        </form>
+    </div>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

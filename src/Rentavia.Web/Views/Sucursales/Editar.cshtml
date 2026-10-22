@@ -1,49 +1,57 @@
 @model SucursalForm
-@{ ViewData["Title"] = "Guardar sucursal"; }
-<div class="page-heading">
-<div>
-<h1>Guardar sucursal</h1>
-<p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
-</div>
-</div>
-
-<div class="panel form-panel">
-<form asp-action="Editar" method="post" >
-<div asp-validation-summary="All">
-</div>
-<input asp-for="Id" type="hidden" />
-<div class="form-grid">
-<div class="field">
-<label asp-for="Nombre">
-</label>
-<input asp-for="Nombre" class="form-control" type="text"  />
-<span asp-validation-for="Nombre" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Direccion">
-</label>
-<input asp-for="Direccion" class="form-control" type="text"  />
-<span asp-validation-for="Direccion" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="Telefono">
-</label>
-<input asp-for="Telefono" class="form-control" type="text"  />
-<span asp-validation-for="Telefono" class="text-danger">
-</span>
-</div>
-<div class="form-check field">
-<input asp-for="Activa" class="form-check-input" />
-<label asp-for="Activa" class="form-check-label">
-</label>
-</div>
-</div>
-<div class="form-actions">
-<button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>Guardar</button>
-<a class="btn btn-outline-secondary" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Volver</a>
-</div>
-</form>
+@{
+    var nueva = Model.Id == 0;
+    ViewData["Title"] = nueva ? "Nueva sucursal" : "Editar sucursal";
+}
+<div class="form-page">
+    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Sucursales</a>
+    <div class="panel form-panel">
+        <header class="form-head">
+            <span class="form-head-icon" aria-hidden="true"><span class="icon">store</span></span>
+            <div>
+                <span class="eyebrow">CATÁLOGO</span>
+                <h1>@ViewData["Title"]</h1>
+                <p class="lead-text">Punto de entrega y devolución de los vehículos.</p>
+            </div>
+        </header>
+        <form asp-action="Editar" method="post">
+            <div class="form-content">
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+                <input asp-for="Id" type="hidden" />
+                <fieldset class="form-section">
+                    <legend>Datos de la sucursal</legend>
+                    <div class="rv-grid">
+                        <div class="rv-field rv-span-2">
+                            <label asp-for="Nombre" class="rv-label"></label>
+                            <input asp-for="Nombre" class="rv-input" type="text" placeholder="Ej. Aeropuerto internacional" />
+                            <span asp-validation-for="Nombre" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field rv-span-2">
+                            <label asp-for="Direccion" class="rv-label">Dirección</label>
+                            <input asp-for="Direccion" class="rv-input" type="text" autocomplete="street-address" />
+                            <span asp-validation-for="Direccion" class="rv-error"></span>
+                        </div>
+                        <div class="rv-field">
+                            <label asp-for="Telefono" class="rv-label">Teléfono</label>
+                            <input asp-for="Telefono" class="rv-input" type="tel" />
+                            <span asp-validation-for="Telefono" class="rv-error"></span>
+                        </div>
+                        <label class="rv-switch rv-span-2">
+                            <input asp-for="Activa" class="rv-switch-input" />
+                            <span class="rv-switch-text">
+                                <strong>Sucursal activa</strong>
+                                <small>Solo los vehículos de sucursales activas aparecen como disponibles.</small>
+                            </span>
+                            <span class="rv-switch-track" aria-hidden="true"></span>
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+            <footer class="form-foot">
+                <a class="btn btn-quiet" asp-action="Index">Cancelar</a>
+                <button class="btn btn-primary" type="submit"><span class="icon" aria-hidden="true">check</span>@(nueva ? "Crear sucursal" : "Guardar cambios")</button>
+            </footer>
+        </form>
+    </div>
 </div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }
