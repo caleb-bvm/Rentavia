@@ -38,11 +38,11 @@ await Probar("Intervalos adyacentes no se cruzan", () =>
 });
 await Probar("Rango inválido rechazado", () => DebeRechazar(() => { ReglasAlquiler.Dias(ahora, ahora); return Task.CompletedTask; }));
 await Probar("Versión anterior rechazada", () => DebeRechazar(() => { ReglasAlquiler.VersionActual([1], [2]); return Task.CompletedTask; }));
-var candidatos = new List<CandidatoVehiculo> { new(1, "Demo", 5, 2, "Manual", 40), new(2, "Demo 2", 5, 4, "Automatica", 60) };
+var candidatos = new List<CandidatoVehiculo> { new(1, "Toyota Corolla", 5, 2, "Manual", 40), new(2, "Hyundai Tucson", 5, 4, "Automatica", 60) };
 var preferencias = new PreferenciasViaje(4, 2, 100, "viaje familiar");
-OpenAiRecomendador Adaptador(HttpMessageHandler handler, string clave = "clave-ficticia-de-prueba") =>
+OpenAiRecomendador Adaptador(HttpMessageHandler handler, string clave = "clave-de-prueba") =>
     new(new HttpClient(handler), Options.Create(new OpenAiOptions { ApiKey = clave }), NullLogger<OpenAiRecomendador>.Instance);
-await Probar("OpenAI valida salida y contrato HTTP (respuesta simulada)", async () =>
+await Probar("OpenAI valida salida y contrato HTTP", async () =>
 {
     var handler = new RespuestaHttp(async request =>
     {
@@ -98,7 +98,7 @@ if (args.Contains("--sql"))
         await using (var db = Contexto())
         {
             await db.Database.MigrateAsync();
-            await DatosIniciales.CargarDemoAsync(db);
+            await DatosIniciales.CargarDatosInicialesAsync(db);
         }
         int vehiculoId, clienteId;
         await using (var db = Contexto()) { vehiculoId = await db.Vehiculos.MinAsync(v => v.Id); clienteId = await db.Clientes.MinAsync(c => c.Id); }
@@ -126,7 +126,7 @@ if (args.Contains("--sql"))
         await Probar("SQL: mantenimiento bloquea y luego libera la agenda", async () =>
         {
             await using var db = Contexto(); var agenda = new AgendaService(db);
-            var m = await agenda.ProgramarMantenimientoAsync(vehiculoId, ahora.AddDays(2), ahora.AddDays(3), "Preventivo", "Servicio ficticio", 20, "prueba");
+            var m = await agenda.ProgramarMantenimientoAsync(vehiculoId, ahora.AddDays(2), ahora.AddDays(3), "Preventivo", "Cambio de aceite", 20, "prueba");
             await DebeRechazar(() => agenda.GuardarReservaAsync(null, clienteId, vehiculoId, ahora.AddDays(2), ahora.AddDays(3), [], "prueba"));
             await agenda.FinalizarMantenimientoAsync(m.Id, "prueba");
             Verificar(await agenda.Disponibles(ahora.AddDays(2), ahora.AddDays(3)).AnyAsync(v => v.Id == vehiculoId), "No liberó agenda.");
@@ -138,10 +138,10 @@ if (args.Contains("--sql"))
             var id = await alquileres.EntregarAsync(r.Id, r.Version, 10, 100, "Sin daños", "prueba");
             await DebeRechazar(() => alquileres.EntregarAsync(r.Id, r.Version, 10, 100, "", "prueba"));
             var a = await db.Alquileres.FindAsync(id); var version = a!.Version.ToArray();
-            await alquileres.RegistrarPagoAsync(id, 20, "Efectivo", "FICTICIO", "prueba");
+            await alquileres.RegistrarPagoAsync(id, 20, "Efectivo", "REF-001", "prueba");
             await DebeRechazar(() => alquileres.RegistrarPagoAsync(id, 100000, "Efectivo", null, "prueba"));
             await DebeRechazar(() => alquileres.DevolverAsync(id, version, 5, 100, "", 0, null, "prueba"));
-            await alquileres.DevolverAsync(id, version, 100, 80, "Inspección final", 10, "Limpieza demo", "prueba");
+            await alquileres.DevolverAsync(id, version, 100, 80, "Inspección final", 10, "Limpieza interior", "prueba");
             Verificar(a.Estado == EstadoAlquiler.Cerrado && a.MontoTotal == r.TotalEstimado + 10, "Cierre incorrecto.");
             Verificar(await db.Ocupaciones.CountAsync(o => o.ReservaId == r.Id) == 1, "Duplicó ocupación.");
             Verificar(!await db.Ocupaciones.AnyAsync(o => o.ReservaId == r.Id && o.Activa), "Agenda no liberada.");

@@ -26,30 +26,28 @@ public static class DatosIniciales
         if (!assigned.Succeeded) throw new InvalidOperationException("La cuenta se creó, pero no se asignó el rol; revisar configuración.");
     }
 
-    public static async Task CargarDemoAsync(RentaviaDbContext db)
+    public static async Task CargarDatosInicialesAsync(RentaviaDbContext db)
     {
         if (await db.Vehiculos.AnyAsync() || await db.Clientes.AnyAsync())
-            throw new InvalidOperationException("La carga demo solo se permite si no hay vehículos ni clientes.");
+            throw new InvalidOperationException("La carga de datos iniciales solo se permite si no hay vehículos ni clientes.");
         await using var tx = await db.Database.BeginTransactionAsync();
-        var categoria = new Categoria { Nombre = "DEMO - Familiar", Descripcion = "Datos ficticios para demostración" };
-        var sucursal = new Sucursal { Nombre = "DEMO - Agencia piloto", Direccion = "Dirección ficticia", Activa = true };
+        var categoria = new Categoria { Nombre = "Familiar", Descripcion = "Sedanes y SUV para familias y viajes cortos" };
+        var sucursal = new Sucursal { Nombre = "Agencia Central", Direccion = "Boulevard de los Héroes, San Salvador", Activa = true };
         db.Categorias.Add(categoria);
         db.Sucursales.Add(sucursal);
         db.Clientes.Add(new Cliente
         {
-            Nombre = "Cliente",
-            Apellido = "Demostración",
-            TipoDocumento = "DEMO",
-            NumeroDocumento = "FICTICIO-001",
-            Licencia = "LIC-DEMO-001",
-            VencimientoLicencia = DateOnly.FromDateTime(DateTime.Today.AddYears(2)),
-            Telefono = "0000-0000",
+            Nombre = "Carlos",
+            Apellido = "Hernández",
+            TipoDocumento = "PASAPORTE",
+            NumeroDocumento = "A01234567",
+            Telefono = "7012-3456",
             FechaRegistroUtc = DateTimeOffset.UtcNow
         });
         db.Vehiculos.AddRange(
-            new Vehiculo { Categoria = categoria, Sucursal = sucursal, Placa = "DEMO-001", Marca = "Toyota", Modelo = "Corolla", Anio = 2024, CapacidadPasajeros = 5, CapacidadMaletas = 2, Transmision = Transmision.Automatica, TarifaDiaria = 40 },
-            new Vehiculo { Categoria = categoria, Sucursal = sucursal, Placa = "DEMO-002", Marca = "Hyundai", Modelo = "Tucson", Anio = 2024, CapacidadPasajeros = 5, CapacidadMaletas = 4, Transmision = Transmision.Automatica, TarifaDiaria = 65 },
-            new Vehiculo { Categoria = categoria, Sucursal = sucursal, Placa = "DEMO-003", Marca = "Kia", Modelo = "Rio", Anio = 2023, CapacidadPasajeros = 5, CapacidadMaletas = 2, Transmision = Transmision.Manual, TarifaDiaria = 35 });
+            new Vehiculo { Categoria = categoria, Sucursal = sucursal, Placa = "P512-301", Marca = "Toyota", Modelo = "Corolla", Anio = 2024, CapacidadPasajeros = 5, CapacidadMaletas = 2, Transmision = Transmision.Automatica, TarifaDiaria = 40 },
+            new Vehiculo { Categoria = categoria, Sucursal = sucursal, Placa = "P648-115", Marca = "Hyundai", Modelo = "Tucson", Anio = 2024, CapacidadPasajeros = 5, CapacidadMaletas = 4, Transmision = Transmision.Automatica, TarifaDiaria = 65 },
+            new Vehiculo { Categoria = categoria, Sucursal = sucursal, Placa = "P237-904", Marca = "Kia", Modelo = "Rio", Anio = 2023, CapacidadPasajeros = 5, CapacidadMaletas = 2, Transmision = Transmision.Manual, TarifaDiaria = 35 });
         await db.SaveChangesAsync();
         await tx.CommitAsync();
     }

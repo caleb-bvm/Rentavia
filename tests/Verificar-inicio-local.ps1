@@ -45,19 +45,19 @@ try {
     } | ConvertTo-Json | Set-Content -LiteralPath $archivoConfig -Encoding UTF8
     $carpetaAnterior = (Get-Location).Path
     $entornoAnterior = $env:ConnectionStrings__Rentavia
-    & $lanzador -SoloPreparar -SinDatosDemo
+    & $lanzador -SoloPreparar -SinDatosIniciales
     Comprobar ((Get-Location).Path -eq $carpetaAnterior) 'Restauro la carpeta de trabajo'
     Comprobar ($env:ConnectionStrings__Rentavia -eq $entornoAnterior) 'Restauro la conexion del proceso'
-    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM __EFMigrationsHistory') -eq 3) 'Aplico las tres migraciones actuales'
+    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM __EFMigrationsHistory') -eq 5) 'Aplico las cinco migraciones actuales'
     Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM AspNetUsers') -eq 1) 'Creo una unica cuenta inicial'
-    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM Vehiculos') -eq 0) 'Respeto -SinDatosDemo'
+    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM Vehiculos') -eq 0) 'Respeto -SinDatosIniciales'
     $hash = Consultar-Prueba 'SELECT TOP (1) PasswordHash FROM AspNetUsers'
     & $lanzador -SoloPreparar
     & $lanzador -SoloPreparar
     Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM AspNetUsers') -eq 1) 'Las siguientes ejecuciones conservaron la cuenta'
     Comprobar ((Consultar-Prueba 'SELECT TOP (1) PasswordHash FROM AspNetUsers') -eq $hash) 'Conservo la contrasena inicial'
-    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM Vehiculos') -eq 3) 'Cargo los vehiculos demo una sola vez'
-    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM Clientes') -eq 1) 'Conservo el cliente demo sin duplicarlo'
+    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM Vehiculos') -eq 3) 'Cargo los vehiculos iniciales una sola vez'
+    Comprobar ((Consultar-Prueba 'SELECT COUNT(*) FROM Clientes') -eq 1) 'Conservo el cliente inicial sin duplicarlo'
 
     $listener = New-Object Net.Sockets.TcpListener ([Net.IPAddress]::Loopback), 0
     $listener.Start()

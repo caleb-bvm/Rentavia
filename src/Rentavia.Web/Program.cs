@@ -57,7 +57,7 @@ builder.Services.AddRateLimiter(options =>
 var app = builder.Build();
 
 // Las tareas administrativas son explícitas; la web nunca migra al arrancar..
-if (args.Contains("--migrate") || args.Contains("--create-admin") || args.Contains("--seed-demo"))
+if (args.Contains("--migrate") || args.Contains("--create-admin") || args.Contains("--seed"))
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<RentaviaDbContext>();
@@ -69,7 +69,7 @@ if (args.Contains("--migrate") || args.Contains("--create-admin") || args.Contai
         await DatosIniciales.CrearAdministradorAsync(scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>(),
             scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(), correo, clave);
     }
-    if (args.Contains("--seed-demo")) await DatosIniciales.CargarDemoAsync(db);
+    if (args.Contains("--seed")) await DatosIniciales.CargarDatosInicialesAsync(db);
     Console.WriteLine("Operación administrativa completada.");
     return;
 }

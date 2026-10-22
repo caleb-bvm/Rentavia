@@ -1,4 +1,4 @@
-param([switch]$CrearAdministrador, [switch]$DatosDemo)
+param([switch]$CrearAdministrador, [switch]$DatosIniciales)
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
 if (-not (Test-Path -LiteralPath '.env')) { throw 'Copia .env.example a .env y configura las contraseñas.' }
@@ -16,9 +16,9 @@ if ($CrearAdministrador) {
     docker compose --env-file .env -f docker/docker-compose.yml run --rm setup --create-admin
     if ($LASTEXITCODE -ne 0) { throw 'No se pudo crear el administrador. La cuenta existente no se sobrescribe.' }
 }
-if ($DatosDemo) {
-    docker compose --env-file .env -f docker/docker-compose.yml run --rm setup --seed-demo
-    if ($LASTEXITCODE -ne 0) { throw 'No se cargaron los datos demo; solo se permite en una base vacía.' }
+if ($DatosIniciales) {
+    docker compose --env-file .env -f docker/docker-compose.yml run --rm setup --seed
+    if ($LASTEXITCODE -ne 0) { throw 'No se cargaron los datos iniciales; solo se permite en una base vacía.' }
 }
 docker compose --env-file .env -f docker/docker-compose.yml up -d web
 if ($LASTEXITCODE -ne 0) { throw 'No se pudo iniciar la web.' }
