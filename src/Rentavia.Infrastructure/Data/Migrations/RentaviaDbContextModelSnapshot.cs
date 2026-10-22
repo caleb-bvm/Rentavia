@@ -350,8 +350,7 @@ namespace Rentavia.Infrastructure.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descripcion")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -391,11 +390,6 @@ namespace Rentavia.Infrastructure.Data.Migrations
                     b.Property<DateTimeOffset>("FechaRegistroUtc")
                         .HasColumnType("datetimeoffset(0)");
 
-                    b.Property<string>("Licencia")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -415,9 +409,6 @@ namespace Rentavia.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateOnly>("VencimientoLicencia")
-                        .HasColumnType("date");
 
                     b.Property<byte[]>("Version")
                         .IsConcurrencyToken()

@@ -316,3 +316,36 @@ VALUES (N'20261012182424_ReferenciaAuditoria', N'10.0.11');
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+UPDATE [Clientes] SET [TipoDocumento] = N'PASAPORTE' WHERE [TipoDocumento] <> N'DUI';
+
+DECLARE @var0 nvarchar(max);
+SELECT @var0 = QUOTENAME([d].[name])
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Clientes]') AND [c].[name] = N'Licencia');
+IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [Clientes] DROP CONSTRAINT ' + @var0 + ';');
+ALTER TABLE [Clientes] DROP COLUMN [Licencia];
+
+DECLARE @var1 nvarchar(max);
+SELECT @var1 = QUOTENAME([d].[name])
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'[Clientes]') AND [c].[name] = N'VencimientoLicencia');
+IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [Clientes] DROP CONSTRAINT ' + @var1 + ';');
+ALTER TABLE [Clientes] DROP COLUMN [VencimientoLicencia];
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20261022150000_DocumentoClienteSinLicencia', N'10.0.11');
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+ALTER TABLE [Categorias] ALTER COLUMN [Descripcion] nvarchar(max) NULL;
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20261022160000_DescripcionCategoriaSinLimite', N'10.0.11');
+
+COMMIT;
+GO

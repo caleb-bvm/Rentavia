@@ -1,4 +1,4 @@
--- Prueba con datos ficticios. Revierte los registros al terminar.
+-- Verifica las restricciones de la base. Revierte los registros al terminar.
 -- Ejecutar únicamente en la base de desarrollo Rentavia.
 SET NOCOUNT ON;
 SET XACT_ABORT OFF;
@@ -8,12 +8,12 @@ BEGIN TRY
     INSERT INTO Categorias (Nombre) VALUES (N'PRUEBA_BASE_CATEGORIA');
     DECLARE @CategoriaId int = SCOPE_IDENTITY();
     INSERT INTO Sucursales (Nombre, Direccion, Activa)
-        VALUES (N'PRUEBA_BASE_SUCURSAL', N'Dirección ficticia', 1);
+        VALUES (N'PRUEBA_BASE_SUCURSAL', N'Calle Principal, Santa Tecla', 1);
     DECLARE @SucursalId int = SCOPE_IDENTITY();
 
     INSERT INTO Vehiculos (CategoriaId, SucursalId, Placa, Marca, Modelo, Anio,
         CapacidadPasajeros, CapacidadMaletas, Kilometraje, Transmision, Estado)
-        VALUES (@CategoriaId, @SucursalId, N'TEST-BASE', N'Ficticia', N'Prueba', 2026,
+        VALUES (@CategoriaId, @SucursalId, N'P999-TST', N'Nissan', N'Versa', 2026,
             5, 2, 100, N'Manual', N'Activo');
     DECLARE @VehiculoId int = SCOPE_IDENTITY();
     DECLARE @VersionInicial binary(8) = (SELECT Version FROM Vehiculos WHERE Id = @VehiculoId);
@@ -25,7 +25,7 @@ BEGIN TRY
     BEGIN TRY
         INSERT INTO Vehiculos (CategoriaId, SucursalId, Placa, Marca, Modelo, Anio,
             CapacidadPasajeros, CapacidadMaletas, Kilometraje, Transmision, Estado)
-            VALUES (@CategoriaId, @SucursalId, N'TEST-BASE', N'Ficticia', N'Prueba', 2026,
+            VALUES (@CategoriaId, @SucursalId, N'P999-TST', N'Nissan', N'Versa', 2026,
                 5, 2, 100, N'Manual', N'Activo');
         THROW 51001, 'La placa duplicada fue aceptada.', 1;
     END TRY
@@ -52,15 +52,13 @@ BEGIN TRY
         PRINT 'OK: categoría referenciada protegida';
     END CATCH;
 
-    INSERT INTO Clientes (Nombre, Apellido, TipoDocumento, NumeroDocumento, Licencia,
-        VencimientoLicencia, Telefono, FechaRegistroUtc)
-        VALUES (N'Persona', N'Ficticia', N'Prueba', N'TEST-BASE-DOC', N'TEST-LIC',
-            '20300101', N'00000000', TODATETIMEOFFSET(SYSUTCDATETIME(), '+00:00'));
+    INSERT INTO Clientes (Nombre, Apellido, TipoDocumento, NumeroDocumento, Telefono, FechaRegistroUtc)
+        VALUES (N'Ana', N'López', N'PASAPORTE', N'TEST-BASE-DOC', N'00000000',
+            TODATETIMEOFFSET(SYSUTCDATETIME(), '+00:00'));
     BEGIN TRY
-        INSERT INTO Clientes (Nombre, Apellido, TipoDocumento, NumeroDocumento, Licencia,
-            VencimientoLicencia, Telefono, FechaRegistroUtc)
-            VALUES (N'Otra', N'Ficticia', N'Prueba', N'TEST-BASE-DOC', N'TEST-LIC',
-                '20300101', N'00000000', TODATETIMEOFFSET(SYSUTCDATETIME(), '+00:00'));
+        INSERT INTO Clientes (Nombre, Apellido, TipoDocumento, NumeroDocumento, Telefono, FechaRegistroUtc)
+            VALUES (N'Luis', N'Pérez', N'PASAPORTE', N'TEST-BASE-DOC', N'00000000',
+                TODATETIMEOFFSET(SYSUTCDATETIME(), '+00:00'));
         THROW 51004, 'El documento duplicado fue aceptado.', 1;
     END TRY
     BEGIN CATCH
@@ -69,7 +67,7 @@ BEGIN TRY
     END CATCH;
 
     ROLLBACK TRANSACTION;
-    PRINT 'OK: pruebas finalizadas; registros ficticios revertidos';
+    PRINT 'OK: pruebas finalizadas; registros revertidos';
 END TRY
 BEGIN CATCH
     IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;

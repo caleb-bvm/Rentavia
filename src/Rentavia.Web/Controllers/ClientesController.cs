@@ -9,7 +9,7 @@ using Rentavia.Web.Models;
 namespace Rentavia.Web.Controllers;
 
 /// <summary>
-/// CRUD de clientes. Documento y licencia se guardan en mayúsculas para evitar duplicados.
+/// CRUD de clientes. El documento (DUI o pasaporte) se guarda en mayúsculas para evitar duplicados.
 /// Un cliente con reservas se desactiva en lugar de eliminarse.
 /// </summary>
 public class ClientesController(RentaviaDbContext db) : ProyectoController
@@ -27,10 +27,9 @@ public class ClientesController(RentaviaDbContext db) : ProyectoController
             Id = c.Id,
             Nombre = c.Nombre,
             Apellido = c.Apellido,
-            TipoDocumento = c.TipoDocumento,
-            NumeroDocumento = c.NumeroDocumento,
-            Licencia = c.Licencia,
-            VencimientoLicencia = c.VencimientoLicencia,
+            TipoDocumento = c.TipoDocumento == ClienteForm.Dui ? ClienteForm.Dui : ClienteForm.Pasaporte,
+            NumeroDui = c.TipoDocumento == ClienteForm.Dui ? c.NumeroDocumento : null,
+            NumeroPasaporte = c.TipoDocumento == ClienteForm.Dui ? null : c.NumeroDocumento,
             Telefono = c.Telefono,
             Correo = c.Correo,
             Activo = c.Activo,
@@ -51,10 +50,8 @@ public class ClientesController(RentaviaDbContext db) : ProyectoController
 
             c.Nombre = form.Nombre.Trim();
             c.Apellido = form.Apellido.Trim();
-            c.TipoDocumento = form.TipoDocumento.Trim().ToUpperInvariant();
-            c.NumeroDocumento = form.NumeroDocumento.Trim().ToUpperInvariant();
-            c.Licencia = form.Licencia.Trim().ToUpperInvariant();
-            c.VencimientoLicencia = form.VencimientoLicencia;
+            c.TipoDocumento = form.TipoDocumento;
+            c.NumeroDocumento = form.NumeroDocumento;
             c.Telefono = form.Telefono.Trim();
             c.Correo = form.Correo?.Trim();
             c.Activo = form.Activo;

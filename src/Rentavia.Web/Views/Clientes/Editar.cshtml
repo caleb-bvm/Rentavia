@@ -6,7 +6,6 @@
 <p class="lead-text">Completa los datos y revisa antes de confirmar.</p>
 </div>
 </div>
-<div class="hint">Usa datos ficticios durante la demostración. La licencia se verifica al reservar y entregar.</div>
 <div class="panel form-panel">
 <form asp-action="Editar" method="post" >
 <div asp-validation-summary="All">
@@ -31,29 +30,25 @@
 <div class="field">
 <label asp-for="TipoDocumento">
 </label>
-<input asp-for="TipoDocumento" class="form-control" type="text"  />
+<select asp-for="TipoDocumento" class="form-select">
+<option value="DUI">DUI</option>
+<option value="PASAPORTE">Pasaporte</option>
+</select>
 <span asp-validation-for="TipoDocumento" class="text-danger">
 </span>
 </div>
 <div class="field">
-<label asp-for="NumeroDocumento">
+<label asp-for="NumeroDui">
 </label>
-<input asp-for="NumeroDocumento" class="form-control" type="text"  />
-<span asp-validation-for="NumeroDocumento" class="text-danger">
+<input asp-for="NumeroDui" class="form-control" type="text" placeholder="00000000-0" maxlength="10" />
+<span asp-validation-for="NumeroDui" class="text-danger">
 </span>
 </div>
 <div class="field">
-<label asp-for="Licencia">
+<label asp-for="NumeroPasaporte">
 </label>
-<input asp-for="Licencia" class="form-control" type="text"  />
-<span asp-validation-for="Licencia" class="text-danger">
-</span>
-</div>
-<div class="field">
-<label asp-for="VencimientoLicencia">
-</label>
-<input asp-for="VencimientoLicencia" class="form-control" type="date"  />
-<span asp-validation-for="VencimientoLicencia" class="text-danger">
+<input asp-for="NumeroPasaporte" class="form-control" type="text" maxlength="30" />
+<span asp-validation-for="NumeroPasaporte" class="text-danger">
 </span>
 </div>
 <div class="field">
@@ -82,4 +77,20 @@
 </div>
 </form>
 </div>
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+<script>
+// Activa solo la caja del documento elegido; la otra se limpia y se desactiva.
+const tipo = document.getElementById("TipoDocumento");
+const dui = document.getElementById("NumeroDui");
+const pasaporte = document.getElementById("NumeroPasaporte");
+function cambiarDocumento() {
+    const esDui = tipo.value === "DUI";
+    dui.disabled = !esDui;
+    pasaporte.disabled = esDui;
+    (esDui ? pasaporte : dui).value = "";
+}
+tipo.addEventListener("change", cambiarDocumento);
+cambiarDocumento();
+</script>
+}

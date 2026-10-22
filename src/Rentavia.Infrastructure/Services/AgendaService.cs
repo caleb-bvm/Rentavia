@@ -47,9 +47,8 @@ public class AgendaService(RentaviaDbContext db)
             || !await db.Sucursales.AnyAsync(s => s.Id == vehiculo.SucursalId && s.Activa))
             throw new ReglaNegocioException("El vehículo o su sucursal no están activos.");
 
-        var ultimoDia = DateOnly.FromDateTime(fin.UtcDateTime.AddHours(-6));
-        if (!await db.Clientes.AnyAsync(c => c.Id == clienteId && c.Activo && c.VencimientoLicencia >= ultimoDia))
-            throw new ReglaNegocioException("Selecciona un cliente activo con licencia vigente durante la reserva.");
+        if (!await db.Clientes.AnyAsync(c => c.Id == clienteId && c.Activo))
+            throw new ReglaNegocioException("Selecciona un cliente activo.");
 
         var esNueva = !id.HasValue;
         var reserva = id.HasValue ? await db.Reservas.FindAsync(id.Value) : new Reserva();
