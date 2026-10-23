@@ -10,20 +10,22 @@ Rentavía está implementado como aplicación ASP.NET Core MVC en cuatro capas, 
 
 Los requisitos RF-01 a RF-12 vienen de la propuesta de la Fase I.
 
+Todas las pruebas se hicieron en la aplicación en ejecución.
+
 | Requisito | Implementación | Cómo se probó |
 | --- | --- | --- |
-| RF-01 Acceso y permisos | Identity con roles Administrador y Empleado; `CuentaController` y `UsuariosController` | Recorrido HTTP: inicio de sesión, rutas protegidas y restricciones del empleado |
-| RF-02 Clientes | `ClientesController` con búsqueda, validaciones, control de versión y desactivación | CRUD en el recorrido HTTP y edición concurrente rechazada |
-| RF-03 Flota | Vehículos con fotografía y tarifa, categorías y sucursales | CRUD en el recorrido HTTP y placa duplicada rechazada |
-| RF-04 Disponibilidad | `AgendaService.Disponibles` sobre la tabla `Ocupaciones` | Prueba de intervalos y prueba SQL de mantenimiento |
-| RF-05 Reservas | Crear, editar y cancelar con bloqueo transaccional del vehículo | Prueba de dos conexiones simultáneas y de cancelación |
-| RF-06 Entrega | `AlquilerService.EntregarAsync` con inspección inicial y vista imprimible | Prueba SQL y recorrido HTTP |
-| RF-07 Devolución y cargos | Inspección final, cargo adicional con concepto y pagos internos | Prueba SQL de pago, saldo, devolución y auditoría |
-| RF-08 Mantenimiento | Programar y finalizar sobre la misma agenda | Prueba SQL: bloquea y luego libera |
+| RF-01 Acceso y permisos | Identity con roles Administrador y Empleado; `CuentaController` y `UsuariosController` | Inicio de sesión, rutas protegidas y restricciones del empleado |
+| RF-02 Clientes | `ClientesController` con búsqueda, validaciones, control de versión y desactivación | Alta, edición y desactivación; edición simultánea en dos pestañas rechazada |
+| RF-03 Flota | Vehículos con fotografía y tarifa, categorías y sucursales | Alta y edición; placa duplicada rechazada |
+| RF-04 Disponibilidad | `AgendaService.Disponibles` sobre la tabla `Ocupaciones` | Vehículos en mantenimiento o reservados no aparecen como disponibles |
+| RF-05 Reservas | Crear, editar y cancelar con bloqueo transaccional del vehículo | Reserva en fechas que se cruzan rechazada; edición y cancelación |
+| RF-06 Entrega | `AlquilerService.EntregarAsync` con inspección inicial y vista imprimible | Entrega de una reserva confirmada y comprobante imprimible |
+| RF-07 Devolución y cargos | Inspección final, cargo adicional con concepto y pagos internos | Devolución con cargo adicional, pago y saldo |
+| RF-08 Mantenimiento | Programar y finalizar sobre la misma agenda | El mantenimiento bloquea el vehículo y al finalizar lo libera |
 | RF-09 Correo | No incluido; la propuesta lo dejaba sujeto al alcance del prototipo | No aplica |
-| RF-10 Reportes | Pagos, reservas, entregas, costo de mantenimiento y uso por vehículo | Recorrido HTTP con cuenta de administrador |
-| RF-11 Recomendación con IA | `OpenAiRecomendador` con API Responses, salida JSON estricta y validación de IDs | Pruebas del adaptador y consulta real con OpenAI |
-| RF-12 Auditoría | Evento guardado en la misma transacción de cada operación sensible | Prueba SQL y pantalla de auditoría |
+| RF-10 Reportes | Pagos, reservas, entregas, costo de mantenimiento y uso por vehículo | Reportes con cuenta de administrador |
+| RF-11 Recomendación con IA | `OpenAiRecomendador` con API Responses, salida JSON estricta y validación de IDs | Consulta real con OpenAI y respaldo por reglas sin clave |
+| RF-12 Auditoría | Evento guardado en la misma transacción de cada operación sensible | Pantalla de auditoría después de cada operación |
 
 ## Integración con OpenAI
 
@@ -39,7 +41,7 @@ Cinco migraciones: `BaseInicialSqlServer`, `OperacionDeRentas`, `ReferenciaAudit
 
 ## Pruebas
 
-15 pruebas automatizadas, 87 comprobaciones HTTP y 5 pruebas de restricciones SQL, todas correctas. Capturas de escritorio y móvil sin errores de JavaScript. Cómo ejecutarlas está en el [manual técnico](../manuales/Tecnico.md#11-pruebas) y las capturas en `docs/evidencias/ui/`.
+Pruebas funcionales de cada módulo en la aplicación, en escritorio y móvil, y 5 pruebas de restricciones SQL, todas correctas. El detalle está en el [manual técnico](../manuales/Tecnico.md#11-pruebas) y las capturas en `docs/evidencias/ui/`.
 
 ## Parámetros del prototipo
 

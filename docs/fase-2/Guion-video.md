@@ -12,7 +12,7 @@ La guía pide un video de 5 a 10 minutos en el que participen los cinco integran
 | 3:00 a 4:30 | Cristian | Disponibilidad, reserva, intento de reservar el mismo vehículo en fechas que se cruzan, entrega, pago y devolución |
 | 4:30 a 5:45 | Cristian y Caleb | Recomendador: preferencias del viaje, candidatos filtrados, resultado de OpenAI con explicación y paso a la reserva |
 | 5:45 a 7:00 | Nathaly | `Iniciar-docker.ps1`, `docker compose ps`, la aplicación en `localhost:8080` y los datos conservados tras reiniciar |
-| 7:00 a 8:00 | Jimmy y Josue | Pruebas automatizadas, evidencias, manuales, retos y lecciones aprendidas |
+| 7:00 a 8:00 | Jimmy y Josue | Pruebas, evidencias, manuales, retos y lecciones aprendidas |
 
 Antes de grabar: cargar los datos iniciales, ocultar `.env` y cualquier contraseña o clave, y comprobar que el recomendador muestre origen **OpenAI**.
 
