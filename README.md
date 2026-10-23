@@ -8,17 +8,38 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-gpt--4.1--mini-412991?logo=openai&logoColor=white)
 ![UDB](https://img.shields.io/badge/UDB-DSP_ciclo_02--2026-003366)
 
-Sistema web para la gestión interna de una agencia de renta de vehículos. Es el proyecto de cátedra de Desarrollo de Software Propietario (Universidad Don Bosco, ciclo 02-2026).
+> Sistema web para la gestión interna de una agencia de renta de vehículos.
+> Proyecto de cátedra de **Desarrollo de Software Propietario** (Universidad Don Bosco, ciclo 02-2026).
 
-El personal de la agencia administra la flota y los clientes, consulta la disponibilidad por fechas, crea reservas, entrega y recibe vehículos, registra pagos y programa mantenimientos. Un recomendador con OpenAI sugiere vehículos disponibles según las necesidades del viaje.
+## Contenido
+
+- [Descripción](#descripción)
+- [Tecnologías](#tecnologías)
+- [Módulos](#módulos)
+- [Inicio rápido](#inicio-rápido)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Documentación](#documentación)
+
+## Descripción
+
+El personal de la agencia puede:
+
+- Administrar la flota y los clientes.
+- Consultar la disponibilidad de vehículos por fechas.
+- Crear reservas, entregar y recibir vehículos.
+- Registrar pagos y programar mantenimientos.
+
+Además, un **recomendador con OpenAI** sugiere vehículos disponibles según las necesidades del viaje.
 
 ## Tecnologías
 
-- C# y ASP.NET Core MVC sobre .NET 10.
-- Entity Framework Core 10 con SQL Server.
-- ASP.NET Core Identity para cuentas y roles.
-- API Responses de OpenAI (`gpt-4.1-mini` por defecto) para el recomendador.
-- Docker y Docker Compose para la aplicación y la base de datos.
+| Área | Tecnología |
+| --- | --- |
+| Lenguaje y framework | C# y ASP.NET Core MVC sobre .NET 10 |
+| Acceso a datos | Entity Framework Core 10 con SQL Server |
+| Autenticación | ASP.NET Core Identity (cuentas y roles) |
+| Inteligencia artificial | API Responses de OpenAI (`gpt-4.1-mini` por defecto) |
+| Contenedores | Docker y Docker Compose (aplicación y base de datos) |
 
 ## Módulos
 
@@ -33,18 +54,41 @@ El personal de la agencia administra la flota y los clientes, consulta la dispon
 | Recomendador IA | Sugerencias de OpenAI entre los vehículos disponibles, con explicación |
 | Reportes y auditoría | Ingresos, reservas, uso de la flota y bitácora de operaciones |
 
-## Ejecución rápida con Docker
+## Inicio rápido
 
-Requiere Docker Desktop con motor Linux.
+### Con Docker
+
+**Requisito:** Docker Desktop con motor Linux.
+
+Desde la carpeta raíz del proyecto:
+
+1. Genera el archivo de entorno:
+
+   ```powershell
+   ./scripts/Preparar-env.ps1
+   ```
+
+   Esto crea `.env` con contraseñas aleatorias. El correo y la contraseña del administrador quedan en ese archivo.
+
+2. Abre `.env` y escribe tu clave en `OPENAI_API_KEY`.
+
+3. Inicia la aplicación:
+
+   ```powershell
+   ./scripts/Iniciar-docker.ps1 -CrearAdministrador -DatosIniciales
+   ```
+
+4. Abre <http://localhost:8080>.
+
+En los siguientes arranques basta con:
 
 ```powershell
-# Desde la carpeta raíz del proyecto
-./scripts/Preparar-env.ps1
-# Abre .env y escribe tu clave en OPENAI_API_KEY
-./scripts/Iniciar-docker.ps1 -CrearAdministrador -DatosIniciales
+./scripts/Iniciar-docker.ps1
 ```
 
-`Preparar-env.ps1` crea `.env` con contraseñas aleatorias; el correo y la contraseña del administrador quedan en ese archivo. La aplicación abre en `http://localhost:8080`. En los siguientes arranques basta con `./scripts/Iniciar-docker.ps1`.
+### Sin Docker (Windows)
+
+Haz doble clic en `Iniciar-Rentavia.cmd`.
 
 ## Estructura del proyecto
 
@@ -66,17 +110,17 @@ docs/
 
 ## Documentación
 
-Fase II:
+### Fase II
 
-- [Instalación](docs/fase-2/Instalacion.md)
-- [Técnico](docs/fase-2/Tecnico.md), con las [pruebas](docs/fase-2/Tecnico.md#11-pruebas)
+- [Manual de instalación](docs/fase-2/Instalacion.md)
+- [Manual técnico](docs/fase-2/Tecnico.md) (incluye las [pruebas](docs/fase-2/Tecnico.md#11-pruebas))
 - [Modelo de datos](docs/fase-2/Modelo-de-datos.md)
 - [Propuesta de despliegue en Azure](docs/fase-2/Propuesta-Azure.md)
 - [Lineamientos de la Fase II](<docs/fase-2/DSP_Proyecto Fase 2_2026.pdf>)
 
-El manual de usuario y el avance técnico forman parte del documento de entrega de la Fase II (secciones 11 y 4 a 9).
+> El manual de usuario y el avance técnico forman parte del documento de entrega de la Fase II (secciones 11 y 4 a 9).
 
-Fase I:
+### Fase I
 
 - [Documento de la propuesta](<docs/fase-1/Documentación de Proyecto de Cátedra.docx>)
 - [Diagramas](docs/fase-1/diagramas/)
