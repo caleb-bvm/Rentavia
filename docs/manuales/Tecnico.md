@@ -51,7 +51,7 @@ Los CRUD de catálogos usan el contexto de EF Core directamente desde su control
 | `src/Rentavia.Web/Controllers` | Un controlador por módulo; `ProyectoController` es la base con autorización |
 | `src/Rentavia.Web/Models` | Formularios con validaciones y modelos de las vistas |
 | `src/Rentavia.Web/Views` | Vistas Razor por módulo y el layout común |
-| `database` | SQL generado de las migraciones y script de verificación |
+| `database` | SQL generado de las migraciones, script de verificación y respaldo de datos (`datos/`) |
 | `docker` | `Dockerfile` y `docker-compose.yml` |
 | `scripts` | Lanzador de Windows, arranque en Docker, creación de cuentas y `.env` |
 | `tests/Rentavia.Tests` | Pruebas automatizadas en C# |
@@ -79,6 +79,16 @@ Las migraciones se aplican con `dotnet run --project src/Rentavia.Web -- --migra
 Decisiones de tipos: el dinero usa `decimal(12,2)` y las fechas con hora usan `datetimeoffset` en UTC. La interfaz convierte a UTC-6 al mostrar y al recibir fechas.
 
 Restricciones principales: placa única con formato Pxxx-xxx validado en el formulario, documento único por tipo, claves foráneas con borrado restringido, `CHECK` en capacidades, kilometraje, combustible, fechas e importes, y un índice filtrado que permite un solo alquiler abierto por vehículo.
+
+### Respaldo de datos
+
+`database/datos/Datos-actuales.sql` contiene todas las filas de la base: clientes, vehículos, reservas, rentas, pagos, usuarios y auditoría. Las fotos de los vehículos están en `src/Rentavia.Web/wwwroot/uploads/vehiculos/`. Se restaura sobre una base con las migraciones aplicadas; borra las filas que haya y carga las del respaldo:
+
+```powershell
+sqlcmd -S '.\SQLEXPRESS' -d Rentavia -E -C -b -f 65001 -i database/datos/Datos-actuales.sql
+```
+
+Para regenerar el respaldo desde la base local: `./scripts/Exportar-datos.ps1`.
 
 ## 5. Disponibilidad y concurrencia
 
