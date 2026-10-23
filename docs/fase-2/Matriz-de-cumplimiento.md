@@ -12,7 +12,7 @@ Relación entre lo que pide la [guía de la Fase II](../lineamientos/DSP_Proyect
 | 4. Docker: Dockerfile, docker-compose.yml, variables de entorno | `docker/`, `.env.example`, `scripts/Iniciar-docker.ps1` | Completo; faltan capturas en evidencias |
 | 4. Propuesta Azure: servicio, beneficios, costos, arquitectura | [Propuesta Azure](Propuesta-Azure.md) | Completo |
 | 5. Integración general del sistema | Flujo de renta conectado a agenda, pagos, auditoría e IA | Completo |
-| 6. Pruebas de funcionamiento con evidencia | `tests/`, [pruebas en el manual técnico](../manuales/Tecnico.md#11-pruebas), capturas en `docs/evidencias/ui/` | Completo; faltan capturas de Docker y OpenAI |
+| 6. Pruebas de funcionamiento con evidencia | `database/Verificar-base.sql`, [pruebas en el manual técnico](../manuales/Tecnico.md#11-pruebas), capturas en `docs/evidencias/ui/` | Completo; faltan capturas de Docker y OpenAI |
 | 7. Manual de instalación | [Instalacion.md](../manuales/Instalacion.md) | Completo |
 | 7. Manual de usuario | [Usuario.md](../manuales/Usuario.md) | Completo |
 | 7. Manual técnico | [Tecnico.md](../manuales/Tecnico.md) | Completo |
@@ -24,7 +24,7 @@ Relación entre lo que pide la [guía de la Fase II](../lineamientos/DSP_Proyect
 
 | Criterio | Respaldo en el proyecto |
 | --- | --- |
-| 1. Aplicación web funcional | Todos los módulos operativos; 87 comprobaciones HTTP correctas |
+| 1. Aplicación web funcional | Todos los módulos operativos y probados en la aplicación |
 | 2. Backend y lógica de negocio | `AgendaService` y `AlquilerService` con reglas de agenda, tarifa histórica, saldo y estados |
 | 3. Base de datos y EF Core | Migraciones, relaciones, restricciones, índices y control de concurrencia |
 | 4. Operaciones CRUD | Categorías, sucursales, clientes y vehículos, con eliminación segura del historial |
@@ -32,7 +32,7 @@ Relación entre lo que pide la [guía de la Fase II](../lineamientos/DSP_Proyect
 | 6. Integración general | Reserva, entrega, pago, devolución, mantenimiento y recomendación sobre la misma agenda |
 | 7. Docker y despliegue | Imagen en dos etapas, Compose con base de datos, volúmenes y servicio de setup; propuesta Azure |
 | 8. Diseño UX/UI | Identidad azul y amarillo de los prototipos de la Fase I; diseño adaptable a móvil |
-| 9. Pruebas y validación | 15 pruebas automatizadas, recorrido HTTP, pruebas SQL y capturas |
+| 9. Pruebas y validación | Pruebas funcionales por módulo, pruebas SQL de restricciones y capturas |
 | 10. Documentación técnica | Tres manuales, modelo de datos, avance técnico y matriz |
 | 11. Estructura del proyecto | Carpetas pedidas por la guía, README y `.env.example` |
 | 12. Presentación final | [Guion](Guion-video.md) con reparto por integrante |

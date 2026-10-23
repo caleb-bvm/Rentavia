@@ -54,8 +54,6 @@ Los CRUD de catálogos usan el contexto de EF Core directamente desde su control
 | `database` | SQL generado de las migraciones, script de verificación y respaldo de datos (`datos/`) |
 | `docker` | `Dockerfile` y `docker-compose.yml` |
 | `scripts` | Lanzador de Windows, arranque en Docker, creación de cuentas y `.env` |
-| `tests/Rentavia.Tests` | Pruebas automatizadas en C# |
-| `tests/recorridos` | Recorrido HTTP en Python, capturas con Playwright y verificación del lanzador |
 | `docs` | Lineamientos, entregables de cada fase, manuales y capturas de evidencia |
 
 Las clases principales tienen comentarios `///` que explican su responsabilidad.
@@ -192,38 +190,13 @@ Evidencia por agregar: capturas de `docker compose ps` con los servicios activos
 
 ## 11. Pruebas
 
-| Herramienta | Qué prueba |
+| Prueba | Qué verifica |
 | --- | --- |
-| `tests/Rentavia.Tests` (`dotnet run -- --sql`) | 15 casos: cálculo de tarifas, intervalos, versiones, contrato y validación del adaptador OpenAI con respuestas controladas, y en SQL Server real la reserva concurrente, tarifa histórica, edición, cancelación, mantenimiento, entrega única, pagos, devolución, auditoría y rowversion |
-| `tests/recorridos/web_recorrido.py` | 87 comprobaciones HTTP sobre una instalación local: rutas protegidas, CRUD de los cuatro catálogos, duplicados, concurrencia, flujo completo de renta, token antifalsificación y permisos por rol |
-| `tests/recorridos/ui-capturas.cjs` | Capturas de escritorio y móvil con Playwright; revisa errores de JavaScript y desbordamiento horizontal |
-| `tests/recorridos/Verificar-inicio-local.ps1` | El lanzador de Windows sobre una base temporal |
+| Funcional en la aplicación | Inicio de sesión y permisos por rol, CRUD de los cuatro catálogos con duplicados rechazados, reserva en fechas que se cruzan rechazada, flujo completo de renta, mantenimiento, reportes, auditoría y recomendador con y sin OpenAI |
+| Vista móvil | Navegación y formularios en pantalla de teléfono |
 | `database/Verificar-base.sql` | Restricciones de la base: placa y documento únicos, capacidad, borrado restringido y rowversion |
 
-### Pruebas automatizadas
-
-```powershell
-dotnet run --project tests/Rentavia.Tests -- --sql
-```
-
-Las pruebas SQL crean una base `Rentavia_Pruebas_<GUID>` y la eliminan al terminar; sin `--sql` solo corren las que no necesitan base de datos. Las pruebas del adaptador de OpenAI usan respuestas HTTP controladas, así se cubren errores como un HTTP 429, un JSON defectuoso o un timeout, que no se pueden provocar a voluntad con la API real. `RENTAVIA_TEST_CONNECTION` permite indicar otra instancia y `RENTAVIA_TEST_RESULT` guarda los resultados en JSON.
-
-### Lanzador de Windows
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tests/recorridos/Verificar-inicio-local.ps1 -ServidorSql '(localdb)\Rentavia'
-```
-
-Requiere .NET y SQL Server instalados; sin `-ServidorSql` usa `.\SQLEXPRESS`. Crea y elimina una base `Rentavia_Inicio_Pruebas_<GUID>` y comprueba migraciones, cuenta inicial, repetición sin duplicados, la opción sin datos iniciales, el arranque HTTP y el inicio de sesión.
-
-### Recorrido HTTP y capturas
-
-```powershell
-python -m pip install -r tests/recorridos/requirements.txt
-python tests/recorridos/web_recorrido.py --url http://127.0.0.1:5295
-```
-
-Necesita la web en ejecución y `ADMIN_EMAIL` y `ADMIN_PASSWORD` en `.env`. Deja alquileres y cuentas de prueba en la base, así que debe usarse sobre una base de pruebas. `ui-capturas.cjs` usa Node y Playwright con Chromium y guarda las capturas en `docs/evidencias/ui/`; no es una dependencia de la aplicación.
+Las capturas de las pruebas en la aplicación están en `docs/evidencias/ui/`.
 
 ### Restricciones SQL
 

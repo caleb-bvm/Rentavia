@@ -146,7 +146,7 @@ Para comprobar la integración, abre Recomendador IA, completa el formulario y r
 ## 7. Pruebas
 
 ```powershell
-dotnet run --project tests/Rentavia.Tests -- --sql
+sqlcmd -S '.\SQLEXPRESS' -d Rentavia -E -C -b -f 65001 -i database/Verificar-base.sql
 ```
 
-Las pruebas crean una base temporal `Rentavia_Pruebas_<GUID>` y la eliminan al terminar; nunca tocan la base `Rentavia`. Sin `--sql` solo se ejecutan las pruebas que no necesitan base de datos. El [manual técnico](Tecnico.md#11-pruebas) explica las demás pruebas: el recorrido web, las capturas automáticas, la verificación del lanzador y las restricciones SQL.
+El script comprueba las restricciones de la base y revierte sus filas al terminar. El [manual técnico](Tecnico.md#11-pruebas) describe las pruebas hechas en la aplicación.

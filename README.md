@@ -55,9 +55,6 @@ src/
   Rentavia.Application/     Reglas de cálculo y contrato del recomendador
   Rentavia.Infrastructure/  EF Core, migraciones y servicios (agenda, alquiler, OpenAI)
   Rentavia.Web/             Controladores MVC, formularios y vistas Razor
-tests/
-  Rentavia.Tests/           Pruebas automatizadas en C#
-  recorridos/               Recorrido HTTP, capturas de pantalla y prueba del lanzador
 database/                   Esquema SQL generado y script de verificación
 docker/                     Dockerfile y docker-compose.yml
 scripts/                    Lanzador de Windows, Docker, .env y creación de cuentas
