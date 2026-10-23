@@ -71,4 +71,4 @@ docs/                       Manuales, documentación técnica y evidencias
 - [Propuesta de despliegue en Azure](docs/fase-2/Propuesta-Azure.md)
 - [Guion del video y la presentación](docs/fase-2/Guion-video.md)
 - [Modelo de datos](docs/tecnico/Modelo-completo.md)
-- [Evidencias de pruebas](docs/evidencias/Verificacion-funcional.md)
+- [Pruebas automatizadas](tests/README.md)

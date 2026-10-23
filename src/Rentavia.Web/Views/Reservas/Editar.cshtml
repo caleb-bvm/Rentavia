@@ -2,9 +2,19 @@
 @{
     var nueva = Model.Id == 0;
     ViewData["Title"] = nueva ? "Nueva reserva" : "Editar reserva";
+    // Para registrar un cliente sin perder el vehículo ni las fechas ya elegidos
+    var volver = Url.Action("Editar", new { vehiculoId = Model.VehiculoId, inicio = Model.Inicio.ToString("yyyy-MM-ddTHH:mm"), fin = Model.Fin.ToString("yyyy-MM-ddTHH:mm") });
 }
 <div class="form-page">
-    <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Reservas</a>
+    @if (nueva)
+    {
+        <a class="back-link" asp-controller="Disponibilidad" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Buscar vehículo</a>
+        <partial name="_PasosRenta" model="2" />
+    }
+    else
+    {
+        <a class="back-link" asp-action="Index"><span class="icon" aria-hidden="true">arrow_back</span>Reservas</a>
+    }
     <div class="panel form-panel">
         <header class="form-head">
             <span class="form-head-icon" aria-hidden="true"><span class="icon">event</span></span>
@@ -29,6 +39,10 @@
                                 <option value="">Selecciona un cliente</option>
                             </select>
                             <span asp-validation-for="ClienteId" class="rv-error"></span>
+                            @if (nueva)
+                            {
+                                <a class="rv-help-link" asp-controller="Clientes" asp-action="Editar" asp-route-volver="@volver"><span class="icon" aria-hidden="true">add</span>¿Cliente nuevo? Regístralo aquí</a>
+                            }
                         </div>
                         <div class="rv-field">
                             <label asp-for="VehiculoId" class="rv-label"></label>
@@ -36,6 +50,10 @@
                                 <option value="">Selecciona un vehículo</option>
                             </select>
                             <span asp-validation-for="VehiculoId" class="rv-error"></span>
+                            @if (nueva)
+                            {
+                                <a class="rv-help-link" asp-controller="Disponibilidad" asp-action="Index" asp-route-inicio="@Model.Inicio.ToString("yyyy-MM-ddTHH:mm")" asp-route-fin="@Model.Fin.ToString("yyyy-MM-ddTHH:mm")"><span class="icon" aria-hidden="true">search</span>Ver vehículos libres en estas fechas</a>
+                            }
                         </div>
                     </div>
                 </fieldset>

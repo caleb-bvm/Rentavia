@@ -15,11 +15,30 @@ Abre la dirección que te indique el responsable (por ejemplo `http://localhost:
 
 ![Pantalla de acceso](../evidencias/ui/01-acceso.png)
 
-El menú lateral contiene Inicio, Disponibilidad, Vehículos, Clientes, Reservas, Alquileres, Mantenimiento, Recomendador IA, Categorías y Sucursales. Los administradores ven además Usuarios, Reportes y Auditoría. **Cerrar sesión** termina el acceso. Si intentas abrir una sección sin permiso, el sistema muestra un aviso.
+El menú lateral agrupa las opciones según la tarea:
+
+| Grupo | Opciones |
+| --- | --- |
+| (inicio) | Inicio |
+| Rentar | Buscar vehículo, Recomendador IA, Reservas, Alquileres |
+| Flota y clientes | Vehículos, Mantenimiento, Clientes |
+| Configuración | Categorías, Sucursales |
+| Administración (solo administradores) | Reportes, Auditoría, Usuarios |
+
+La barra superior indica siempre dónde estás (por ejemplo, Rentar › Reservas › Nueva reserva) e incluye el atajo **Nueva renta**, que abre Buscar vehículo. **Cerrar sesión** termina el acceso. Si intentas abrir una sección sin permiso, el sistema muestra un aviso.
+
+### Ciclo de una renta
+
+Toda renta sigue cuatro pasos, que se muestran como una guía en la parte superior de cada pantalla del proceso. Cada paso es un enlace a su pantalla:
+
+1. **Buscar vehículo**: fechas, capacidad y filtros; o el Recomendador IA si el cliente no sabe qué elegir.
+2. **Reservar**: elegir el cliente y confirmar el período.
+3. **Entregar**: inspección de salida cuando el cliente recoge el vehículo.
+4. **Devolver y cobrar**: inspección de llegada, cargos y pagos.
 
 ## Panel de inicio
 
-Muestra vehículos activos, clientes activos, reservas confirmadas, alquileres abiertos, ingresos registrados y las próximas devoluciones. Las cifras se calculan con los datos de la base en ese momento.
+Muestra lo que necesita atención: vehículos libres en este momento, reservas por entregar, alquileres en curso y devoluciones atrasadas (en rojo cuando hay alguna). Cada cifra abre el listado correspondiente. Debajo están la guía del ciclo de renta y dos listas de trabajo: **Próximas entregas**, con el botón Entregar, y **Próximas devoluciones**, con el botón Devolver. Las cifras se calculan con los datos de la base en ese momento.
 
 ![Panel de inicio](../evidencias/ui/02-panel.png)
 
@@ -48,10 +67,10 @@ Si dos personas editan el mismo registro a la vez, la segunda recibe un aviso pa
 
 ## Disponibilidad y reservas
 
-1. En Disponibilidad indica inicio, fin, pasajeros y maletas. Categoría y sucursal son filtros opcionales.
-2. Pulsa Buscar. La lista solo muestra vehículos sin reservas, alquileres ni mantenimientos en ese período.
-3. Elige un vehículo y pulsa Reservar.
-4. Selecciona el cliente, revisa las fechas y guarda.
+1. En Buscar vehículo (o con **Nueva renta**) indica inicio, fin, pasajeros y maletas. Categoría y sucursal son filtros opcionales.
+2. Pulsa Buscar disponibilidad. La lista solo muestra vehículos sin reservas, alquileres ni mantenimientos en ese período, del más económico al más caro.
+3. Elige un vehículo y pulsa Seleccionar y reservar.
+4. Selecciona el cliente, revisa las fechas y confirma. Si el cliente aún no está registrado, usa **¿Cliente nuevo? Regístralo aquí**: al guardarlo vuelves a la reserva con el cliente ya elegido, sin perder el vehículo ni las fechas.
 
 ![Consulta de disponibilidad](../evidencias/ui/03-disponibilidad.png)
 
@@ -59,7 +78,7 @@ Al guardar, el sistema vuelve a revisar la agenda. Si otro empleado reservó ese
 
 El cobro se calcula por períodos de 24 horas, redondeados hacia arriba, en dólares y con horario UTC-6. La reserva guarda la tarifa diaria vigente en ese momento.
 
-En Reservas se ven el estado, las fechas y el total acordado. Editar permite cambiar cliente y fechas manteniendo el vehículo y la tarifa original. Para cambiar de vehículo hay que cancelar y crear otra reserva. Cancelar libera la agenda y conserva el registro.
+En Reservas se ven el estado, las fechas y el total acordado. Las pestañas Por entregar, Entregadas, Canceladas y Todas filtran el listado; por defecto se muestran las reservas por entregar, la más próxima primero. Una reserva entregada enlaza con su alquiler. Editar permite cambiar cliente y fechas manteniendo el vehículo y la tarifa original. Para cambiar de vehículo hay que cancelar y crear otra reserva. Cancelar libera la agenda y conserva el registro.
 
 ![Listado de reservas](../evidencias/ui/04-reservas.png)
 
@@ -67,15 +86,17 @@ En Reservas se ven el estado, las fechas y el total acordado. Editar permite cam
 
 ### Entregar
 
-Desde una reserva confirmada, pulsa Entregar. Se puede hacer desde cinco minutos antes del inicio y mientras la reserva siga vigente. Registra kilometraje, porcentaje de combustible y observaciones de la inspección. La entrega crea el alquiler y mantiene ocupada la misma agenda de la reserva.
+Desde una reserva por entregar (en Reservas o en Próximas entregas del inicio), pulsa Entregar. El formulario muestra el cliente, el vehículo y el período acordado antes de la inspección. Se puede hacer desde cinco minutos antes del inicio y mientras la reserva siga vigente. Registra kilometraje, porcentaje de combustible y observaciones de la inspección. La entrega crea el alquiler y mantiene ocupada la misma agenda de la reserva.
 
-### Detalle del alquiler
+### Alquileres y detalle
 
-Muestra cliente, vehículo, período, tarifa, inspecciones, total, pagos y saldo. El botón Imprimir genera una versión para papel.
+En Alquileres, las pestañas En curso, Atrasados, Cerrados y Todos filtran el listado. Cada alquiler en curso tiene el botón Devolver, y los que tienen saldo pendiente, el botón Cobrar.
+
+El detalle muestra cliente, vehículo, período, tarifa, inspecciones, total, pagos y saldo. El botón Imprimir genera una versión para papel.
 
 ### Registrar pagos
 
-Indica monto, método (Efectivo, Transferencia o Tarjeta) y una referencia opcional. El monto no puede superar el saldo pendiente. Es un registro interno de la agencia; el sistema no cobra a tarjetas ni se conecta con bancos.
+Indica monto (se propone el saldo pendiente), método (Efectivo, Transferencia o Tarjeta) y una referencia opcional. El monto no puede superar el saldo pendiente. Es un registro interno de la agencia; el sistema no cobra a tarjetas ni se conecta con bancos.
 
 ### Devolver
 

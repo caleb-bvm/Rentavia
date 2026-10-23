@@ -19,20 +19,44 @@
 @{
     var controlador = ViewContext.RouteData.Values["controller"]?.ToString();
     var accion = ViewContext.RouteData.Values["action"]?.ToString();
-    // Controlador, texto e ícono de Material Symbols de cada opción del menú
-    var operacion = new[]
+    var esAdministrador = User.IsInRole("Administrador");
+    // El menú se agrupa por tarea: primero lo que se hace cada día (rentar), después la flota y la configuración.
+    // Cada opción: controlador, acción, texto e ícono de Material Symbols.
+    var grupos = new List<(string Titulo, (string Controlador, string Accion, string Texto, string Icono)[] Opciones)>
     {
-        ("Home", "Inicio", "space_dashboard"),
-        ("Disponibilidad", "Disponibilidad", "event_available"),
-        ("Vehiculos", "Vehículos", "directions_car"),
-        ("Clientes", "Clientes", "group"),
-        ("Reservas", "Reservas", "event"),
-        ("Alquileres", "Alquileres", "car_rental"),
-        ("Mantenimientos", "Mantenimiento", "build"),
-        ("Recomendaciones", "Recomendador IA", "auto_awesome"),
-        ("Categorias", "Categorías", "category"),
-        ("Sucursales", "Sucursales", "store")
+        ("", [("Home", "Index", "Inicio", "space_dashboard")]),
+        ("Rentar", [
+            ("Disponibilidad", "Index", "Buscar vehículo", "event_available"),
+            ("Recomendaciones", "Index", "Recomendador IA", "auto_awesome"),
+            ("Reservas", "Index", "Reservas", "event"),
+            ("Alquileres", "Index", "Alquileres", "car_rental")
+        ]),
+        ("Flota y clientes", [
+            ("Vehiculos", "Index", "Vehículos", "directions_car"),
+            ("Mantenimientos", "Index", "Mantenimiento", "build"),
+            ("Clientes", "Index", "Clientes", "group")
+        ]),
+        ("Configuración", [
+            ("Categorias", "Index", "Categorías", "category"),
+            ("Sucursales", "Index", "Sucursales", "store")
+        ])
     };
+    if (esAdministrador)
+    {
+        grupos.Add(("Administración", [
+            ("Reportes", "Index", "Reportes", "analytics"),
+            ("Reportes", "Auditoria", "Auditoría", "policy"),
+            ("Usuarios", "Index", "Usuarios", "manage_accounts")
+        ]));
+    }
+    // Reportes tiene dos opciones en el menú; en los demás basta con el controlador
+    bool Activa((string Controlador, string Accion, string Texto, string Icono) o) =>
+        controlador == o.Controlador && (controlador != "Reportes" || accion == o.Accion);
+    var grupoActual = grupos.FirstOrDefault(g => g.Opciones.Any(Activa));
+    var opcionActual = grupoActual.Opciones?.FirstOrDefault(Activa);
+    var titulo = ViewData["Title"]?.ToString();
+    // En Inicio y en las pantallas del ciclo de renta el atajo "Nueva renta" sobra
+    var enFlujo = controlador is "Home" or "Disponibilidad" or "Recomendaciones" || (controlador == "Reservas" && accion == "Editar");
 }
 <div class="app-shell @(User.Identity?.IsAuthenticated == true ? "" : "public-shell")">
     @if (User.Identity?.IsAuthenticated == true)
@@ -42,26 +66,19 @@
                 <span class="brand-mark">RV</span>
                 <span>RENTAVÍA<small>GESTIÓN DE FLOTA</small></span>
             </a>
-            <span class="nav-caption">OPERACIÓN</span>
             <nav aria-label="Navegación principal">
-                @foreach (var item in operacion)
+                @foreach (var grupo in grupos)
                 {
-                    <a class="@(controlador == item.Item1 ? "active" : "")" asp-controller="@item.Item1" asp-action="Index">
-                        <span class="icon" aria-hidden="true">@item.Item3</span>@item.Item2
-                    </a>
-                }
-                @if (User.IsInRole("Administrador"))
-                {
-                    <span class="nav-caption">ADMINISTRACIÓN</span>
-                    <a class="@(controlador == "Reportes" && accion == "Index" ? "active" : "")" asp-controller="Reportes" asp-action="Index">
-                        <span class="icon" aria-hidden="true">analytics</span>Reportes
-                    </a>
-                    <a class="@(controlador == "Reportes" && accion == "Auditoria" ? "active" : "")" asp-controller="Reportes" asp-action="Auditoria">
-                        <span class="icon" aria-hidden="true">policy</span>Auditoría
-                    </a>
-                    <a class="@(controlador == "Usuarios" ? "active" : "")" asp-controller="Usuarios" asp-action="Index">
-                        <span class="icon" aria-hidden="true">manage_accounts</span>Usuarios
-                    </a>
+                    @if (grupo.Titulo != "")
+                    {
+                        <span class="nav-caption">@grupo.Titulo.ToUpper()</span>
+                    }
+                    @foreach (var o in grupo.Opciones)
+                    {
+                        <a class="@(Activa(o) ? "active" : "")" asp-controller="@o.Controlador" asp-action="@o.Accion" aria-current="@(Activa(o) ? "page" : null)">
+                            <span class="icon" aria-hidden="true">@o.Icono</span>@o.Texto
+                        </a>
+                    }
                 }
             </nav>
             <div class="sidebar-bottom">
@@ -83,6 +100,35 @@
                 <button class="menu-toggle" type="button" data-nav-toggle aria-controls="menu" aria-label="Abrir menú">
                     <span class="icon" aria-hidden="true">menu</span>
                 </button>
+                @* Migas: sección del menú › opción › pantalla actual, para saber siempre dónde se está *@
+                <nav class="topbar-title breadcrumbs" aria-label="Ubicación">
+                    @if (grupoActual.Titulo is { Length: > 0 })
+                    {
+                        <span class="crumb-section">@grupoActual.Titulo</span>
+                    }
+                    @if (opcionActual is { } actual)
+                    {
+                        @if (titulo is not null && titulo != actual.Texto && controlador != "Home")
+                        {
+                            <a class="crumb-section" asp-controller="@actual.Controlador" asp-action="@actual.Accion">@actual.Texto</a>
+                            <span aria-current="page">@titulo</span>
+                        }
+                        else
+                        {
+                            <span aria-current="page">@actual.Texto</span>
+                        }
+                    }
+                    else if (titulo is not null)
+                    {
+                        <span aria-current="page">@titulo</span>
+                    }
+                </nav>
+                @if (!enFlujo)
+                {
+                    <a class="btn btn-tonal btn-sm topbar-cta" asp-controller="Disponibilidad" asp-action="Index" title="Buscar un vehículo libre y reservarlo">
+                        <span class="icon" aria-hidden="true">add</span><span class="topbar-cta-text">Nueva renta</span>
+                    </a>
+                }
                 <partial name="_BotonTema" model="string.Empty" />
             </header>
             <div class="content-wrap">

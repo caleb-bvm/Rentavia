@@ -6,7 +6,7 @@ Motor: SQL Server. El esquema se crea con las migraciones de Entity Framework Co
 
 | Archivo | Uso |
 | --- | --- |
-| `scripts/Esquema-completo.sql` | SQL generado a partir de las tres migraciones, para revisar el esquema completo |
+| `scripts/Esquema-completo.sql` | SQL generado a partir de las cinco migraciones, para revisar el esquema completo |
 | `datos/Datos-actuales.sql` | Todas las filas de la base (clientes, vehículos, reservas, rentas, pagos, usuarios, auditoría). Las fotos de los vehículos están en `src/Rentavia.Web/wwwroot/uploads/vehiculos/` |
 | `scripts/Verificar-base.sql` | Prueba de restricciones: placa y documento únicos, capacidad, borrado restringido y rowversion. Revierte sus cambios al terminar |
 
@@ -37,4 +37,4 @@ Para regenerar el respaldo desde la base local: `./scripts/Exportar-datos.ps1`.
 sqlcmd -S '.\SQLEXPRESS' -d Rentavia -E -C -b -f 65001 -i database/scripts/Verificar-base.sql
 ```
 
-Solo en desarrollo: el script revierte sus filas, pero los valores IDENTITY consumidos pueden dejar saltos. El último resultado está en [Pruebas-integridad-sql.txt](../docs/evidencias/Pruebas-integridad-sql.txt).
+Solo en desarrollo: el script revierte sus filas, pero los valores IDENTITY consumidos pueden dejar saltos.

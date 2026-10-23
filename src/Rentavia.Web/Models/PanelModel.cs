@@ -4,11 +4,11 @@ namespace Rentavia.Web.Models;
 
 public class PanelModel
 {
-    public int VehiculosActivos { get; set; }
-    public int ClientesActivos { get; set; }
-    public int ReservasConfirmadas { get; set; }
+    public int VehiculosLibres { get; set; }
+    public int ReservasPorEntregar { get; set; }
     public int AlquileresAbiertos { get; set; }
-    public decimal IngresosRegistrados { get; set; }
+    public int DevolucionesAtrasadas { get; set; }
+    public List<Reserva> Entregas { get; set; } = [];
     public List<Alquiler> Devoluciones { get; set; } = [];
 }
 

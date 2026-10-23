@@ -18,8 +18,13 @@ public class ClientesController(RentaviaDbContext db) : ProyectoController
         .Where(c => buscar == null || c.Nombre.Contains(buscar) || c.Apellido.Contains(buscar) || c.NumeroDocumento.Contains(buscar))
         .OrderBy(c => c.Apellido).ThenBy(c => c.Nombre).ToListAsync());
 
-    public async Task<IActionResult> Editar(int id = 0)
+    /// <summary>
+    /// Formulario de cliente. Con <paramref name="volver"/> (por ejemplo, desde una reserva nueva)
+    /// al guardar se regresa a esa pantalla con el cliente ya elegido.
+    /// </summary>
+    public async Task<IActionResult> Editar(int id = 0, string? volver = null)
     {
+        ViewBag.Volver = Url.IsLocalUrl(volver) ? volver : null;
         if (id == 0) return View(new ClienteForm());
         var c = await db.Clientes.FindAsync(id);
         return c is null ? NotFound() : View(new ClienteForm
@@ -38,8 +43,9 @@ public class ClientesController(RentaviaDbContext db) : ProyectoController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Editar(ClienteForm form)
+    public async Task<IActionResult> Editar(ClienteForm form, string? volver)
     {
+        ViewBag.Volver = Url.IsLocalUrl(volver) ? volver : null;
         if (!ModelState.IsValid) return View(form);
         var c = form.Id == 0 ? new Cliente { FechaRegistroUtc = DateTimeOffset.UtcNow } : await db.Clientes.FindAsync(form.Id);
         if (c is null) return NotFound();
@@ -58,6 +64,11 @@ public class ClientesController(RentaviaDbContext db) : ProyectoController
             if (form.Id == 0) db.Clientes.Add(c);
 
             await db.GuardarConAuditoriaAsync(Actor, form.Id == 0 ? "Crear" : "Editar", "Cliente", () => c.Id);
+            if (ViewBag.Volver is string destino)
+            {
+                TempData["Exito"] = "Cliente guardado; ya está seleccionado.";
+                return LocalRedirect(destino + (destino.Contains('?') ? "&" : "?") + "clienteId=" + c.Id);
+            }
             TempData["Exito"] = "Cliente guardado.";
             return RedirectToAction(nameof(Index));
         }

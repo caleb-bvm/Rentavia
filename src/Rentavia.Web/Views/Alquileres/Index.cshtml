@@ -1,11 +1,16 @@
 @model List<Alquiler>
-@{ ViewData["Title"] = "Alquileres"; }
+@{
+    ViewData["Title"] = "Alquileres";
+    var pestanas = (Pestanas)ViewBag.Pestanas;
+}
 <div class="page-heading">
 <div>
 <h1>Alquileres</h1>
-<p class="lead-text">Entregas, devoluciones y saldos.</p>
+<p class="lead-text">Vehículos entregados a un cliente. Al regresar, registra la devolución y los pagos.</p>
 </div>
 </div>
+<partial name="_PasosRenta" model="4" />
+<partial name="_Pestanas" model="pestanas" />
 <div class="panel table-responsive">
 <table class="table">
 <thead>
@@ -13,28 +18,28 @@
 <th>Contrato</th>
 <th>Cliente</th>
 <th>Vehículo</th>
-<th>Entrega</th>
-<th>Total / saldo</th>
+<th>Período</th>
+<th>Importe</th>
 <th>Estado</th>
-<th>
-</th>
+<th><span class="visually-hidden">Acciones</span></th>
 </tr>
 </thead>
 <tbody>
-@foreach(var a in Model){<tr>
+@foreach(var a in Model){var saldo=a.MontoTotal-a.Pagos.Sum(p=>p.Monto);var atrasado=a.Estado==EstadoAlquiler.Abierto&&a.Reserva.FinUtc<DateTimeOffset.UtcNow;<tr>
 <td>#@a.Id</td>
 <td>@a.Reserva.Cliente.Nombre @a.Reserva.Cliente.Apellido</td>
-<td>@a.Vehiculo.Placa</td>
-<td>@Presentacion.Fecha(a.EntregaUtc)</td>
+<td>@a.Vehiculo.Placa<br/><small>@a.Vehiculo.Marca @a.Vehiculo.Modelo</small></td>
+<td>@Presentacion.Fecha(a.EntregaUtc)<br/>@Presentacion.Fecha(a.Reserva.FinUtc)</td>
 <td>@Presentacion.Dinero(a.MontoTotal)<br/>
-<small>Saldo: @Presentacion.Dinero(a.MontoTotal-a.Pagos.Sum(p=>p.Monto))</small>
+<small>Saldo: @Presentacion.Dinero(saldo)</small>
 </td>
 <td>
-<span class="state">@a.Estado</span>
+<span class="state">@(atrasado ? "Atrasado" : a.Estado == EstadoAlquiler.Abierto ? "En curso" : "Cerrado")</span>
 </td>
 <td>
-<a asp-action="Detalle" asp-route-id="@a.Id" class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">visibility</span>Detalle</a>
+@if(a.Estado==EstadoAlquiler.Abierto){<a asp-action="Devolver" asp-route-id="@a.Id" class="btn btn-sm btn-primary"><span class="icon" aria-hidden="true">assignment_return</span>Devolver</a> }
+<a asp-action="Detalle" asp-route-id="@a.Id" class="btn btn-sm btn-outline-secondary"><span class="icon" aria-hidden="true">@(saldo > 0 ? "payments" : "visibility")</span>@(saldo > 0 ? "Cobrar" : "Ver contrato")</a>
 </td>
 </tr>}
 </tbody>
-</table>@if(Model.Count==0){<p class="empty">Todavía no hay alquileres. Convierte una reserva desde Entregar.</p>}</div>
+</table>@if(Model.Count==0){<p class="empty">@(pestanas.Actual == "en-curso" ? "No hay vehículos rentados en este momento. Se crean al entregar una reserva." : "No hay alquileres en esta vista.")</p>}</div>
