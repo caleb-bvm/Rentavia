@@ -55,30 +55,29 @@ src/
   Rentavia.Application/     Reglas de cálculo y contrato del recomendador
   Rentavia.Infrastructure/  EF Core, migraciones y servicios (agenda, alquiler, OpenAI)
   Rentavia.Web/             Controladores MVC, formularios y vistas Razor
-database/                   Esquema SQL generado y script de verificación
+database/                   Esquema SQL generado, script de verificación y respaldo de datos (datos/)
 docker/                     Dockerfile y docker-compose.yml
-scripts/                    Lanzador de Windows, Docker, .env y creación de cuentas
+scripts/                    Lanzador de Windows, Docker, .env, creación de cuentas y exportación de datos
 docs/
-  lineamientos/             Guías de la cátedra para cada fase
-  fase-1/                   Documento y diagramas de la propuesta
-  fase-2/                   Avance técnico, matriz de cumplimiento, propuesta Azure y guion
-  manuales/                 Instalación, usuario, técnico, modelo de datos y decisiones técnicas
+  fase-1/                   Lineamientos, documento y diagramas de la propuesta
+  fase-2/                   Lineamientos, manuales de instalación y técnico, modelo de datos y propuesta Azure
   evidencias/               Capturas de la interfaz
 ```
 
 ## Documentación
 
-Manuales:
+Fase II:
 
-- [Instalación](docs/manuales/Instalacion.md)
-- [Usuario](docs/manuales/Usuario.md)
-- [Técnico](docs/manuales/Tecnico.md), con las [pruebas](docs/manuales/Tecnico.md#11-pruebas)
-- [Modelo de datos](docs/manuales/Modelo-de-datos.md)
-- [Decisiones técnicas](docs/manuales/Decisiones-tecnicas.md)
-
-Entrega de la Fase II:
-
-- [Avance técnico](docs/fase-2/Avance-tecnico.md)
-- [Matriz de cumplimiento](docs/fase-2/Matriz-de-cumplimiento.md)
+- [Instalación](docs/fase-2/Instalacion.md)
+- [Técnico](docs/fase-2/Tecnico.md), con las [pruebas](docs/fase-2/Tecnico.md#11-pruebas)
+- [Modelo de datos](docs/fase-2/Modelo-de-datos.md)
 - [Propuesta de despliegue en Azure](docs/fase-2/Propuesta-Azure.md)
-- [Guion del video y la presentación](docs/fase-2/Guion-video.md)
+- [Lineamientos de la Fase II](<docs/fase-2/DSP_Proyecto Fase 2_2026.pdf>)
+
+El manual de usuario y el avance técnico forman parte del documento de entrega de la Fase II (secciones 11 y 4 a 9).
+
+Fase I:
+
+- [Documento de la propuesta](<docs/fase-1/Documentación de Proyecto de Cátedra.docx>)
+- [Diagramas](docs/fase-1/diagramas/)
+- [Lineamientos de la Fase I](<docs/fase-1/DSP_Proyecto Fase 1_2026.pdf>)
