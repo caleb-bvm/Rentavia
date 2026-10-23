@@ -53,14 +53,14 @@ Los CRUD de catálogos usan el contexto de EF Core directamente desde su control
 | `src/Rentavia.Web/Views` | Vistas Razor por módulo y el layout común |
 | `database` | SQL generado de las migraciones, script de verificación y respaldo de datos (`datos/`) |
 | `docker` | `Dockerfile` y `docker-compose.yml` |
-| `scripts` | Lanzador de Windows, arranque en Docker, creación de cuentas y `.env` |
-| `docs` | Lineamientos, entregables de cada fase, manuales y capturas de evidencia |
+| `scripts` | Lanzador de Windows, arranque en Docker, creación de cuentas, `.env` y exportación de datos |
+| `docs` | Lineamientos y entregables de cada fase, manuales y capturas de evidencia |
 
 Las clases principales tienen comentarios `///` que explican su responsabilidad.
 
 ## 4. Base de datos
 
-El [modelo de datos](Modelo-de-datos.md) contiene el diagrama entidad-relación y el diccionario. La base tiene once tablas de negocio, siete de Identity y el historial de migraciones. Las [decisiones técnicas](Decisiones-tecnicas.md) resumen por qué se eligió cada parte del diseño.
+El [modelo de datos](Modelo-de-datos.md) contiene el diagrama entidad-relación y el diccionario. La base tiene once tablas de negocio, siete de Identity y el historial de migraciones.
 
 Hay cinco migraciones:
 
@@ -99,7 +99,9 @@ Para evitar que dos empleados reserven el mismo vehículo al mismo tiempo, cada 
 3. Consulta si hay ocupaciones que se crucen.
 4. Guarda la reserva, la ocupación y la auditoría, y confirma.
 
-La prueba automatizada "dos conexiones simultáneas" comprueba que solo una de dos reservas concurrentes se confirma.
+Como la segunda transacción espera a que la primera confirme y después encuentra su ocupación, solo una de dos reservas concurrentes del mismo vehículo se confirma.
+
+Un mantenimiento iniciado y sin finalizar bloquea el vehículo para cualquier fecha hasta que se finaliza, no solo durante su intervalo estimado. El listado de vehículos lo muestra como "En mantenimiento".
 
 Las ediciones de cliente, vehículo, reserva y alquiler usan `rowversion`. Si el registro cambió desde que se abrió el formulario, el sistema avisa en lugar de sobrescribir.
 
