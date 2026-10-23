@@ -1,9 +1,9 @@
-# Genera database/datos/Datos-actuales.sql con todas las filas de la base local.
+# Genera database/datos/datos.sql con todas las filas de la base local.
 # Uso: ./scripts/Exportar-datos.ps1 [-Servidor '.\SQLEXPRESS'] [-BaseDatos Rentavia]
 param(
     [string]$Servidor = '.\SQLEXPRESS',
     [string]$BaseDatos = 'Rentavia',
-    [string]$Salida = (Join-Path $PSScriptRoot '..\database\datos\Datos-actuales.sql')
+    [string]$Salida = (Join-Path $PSScriptRoot '..\database\datos\datos.sql')
 )
 $ErrorActionPreference = 'Stop'
 $inv = [Globalization.CultureInfo]::InvariantCulture

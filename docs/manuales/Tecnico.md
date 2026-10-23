@@ -74,7 +74,7 @@ Hay cinco migraciones:
 | `DocumentoClienteSinLicencia` | Retira las columnas de licencia del cliente; basta con el documento de identidad |
 | `DescripcionCategoriaSinLimite` | Quita el límite de longitud de la descripción de categorías |
 
-Las migraciones se aplican con `dotnet run --project src/Rentavia.Web -- --migrate` (o `dotnet ef database update --project src/Rentavia.Infrastructure --startup-project src/Rentavia.Web`); en Docker lo hace el servicio `setup`. `database/Esquema-completo.sql` es el SQL equivalente para revisar el esquema y no debe ejecutarse sobre una base que ya tiene las migraciones aplicadas.
+Las migraciones se aplican con `dotnet run --project src/Rentavia.Web -- --migrate` (o `dotnet ef database update --project src/Rentavia.Infrastructure --startup-project src/Rentavia.Web`); en Docker lo hace el servicio `setup`. `database/schema.sql` es el SQL equivalente para revisar el esquema y no debe ejecutarse sobre una base que ya tiene las migraciones aplicadas.
 
 Decisiones de tipos: el dinero usa `decimal(12,2)` y las fechas con hora usan `datetimeoffset` en UTC. La interfaz convierte a UTC-6 al mostrar y al recibir fechas.
 
@@ -82,10 +82,10 @@ Restricciones principales: placa única con formato Pxxx-xxx validado en el form
 
 ### Respaldo de datos
 
-`database/datos/Datos-actuales.sql` contiene todas las filas de la base: clientes, vehículos, reservas, rentas, pagos, usuarios y auditoría. Las fotos de los vehículos están en `src/Rentavia.Web/wwwroot/uploads/vehiculos/`. Se restaura sobre una base con las migraciones aplicadas; borra las filas que haya y carga las del respaldo:
+`database/datos/datos.sql` contiene todas las filas de la base: clientes, vehículos, reservas, rentas, pagos, usuarios y auditoría. Las fotos de los vehículos están en `src/Rentavia.Web/wwwroot/uploads/vehiculos/`. Se restaura sobre una base con las migraciones aplicadas; borra las filas que haya y carga las del respaldo:
 
 ```powershell
-sqlcmd -S '.\SQLEXPRESS' -d Rentavia -E -C -b -f 65001 -i database/datos/Datos-actuales.sql
+sqlcmd -S '.\SQLEXPRESS' -d Rentavia -E -C -b -f 65001 -i database/datos/datos.sql
 ```
 
 Para regenerar el respaldo desde la base local: `./scripts/Exportar-datos.ps1`.
@@ -243,4 +243,4 @@ dotnet ef migrations has-pending-model-changes --project src/Rentavia.Infrastruc
 dotnet run --project src/Rentavia.Web -- --migrate
 ```
 
-No se deben editar migraciones que ya se aplicaron. Después de cada cambio conviene ejecutar de nuevo las pruebas SQL, sobre todo las de agenda, y regenerar `database/Esquema-completo.sql` con `dotnet ef migrations script`.
+No se deben editar migraciones que ya se aplicaron. Después de cada cambio conviene ejecutar de nuevo las pruebas SQL, sobre todo las de agenda, y regenerar `database/schema.sql` con `dotnet ef migrations script`.
