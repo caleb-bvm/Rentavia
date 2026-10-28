@@ -31,7 +31,7 @@ public class EntregaForm
     public string Version { get; set; } = "";
     [Range(0, 10000000)] public int Kilometraje { get; set; }
     [Range(0, 100), Display(Name = "Combustible (%)")] public int Combustible { get; set; } = 100;
-    [StringLength(500)] public string Observaciones { get; set; } = "";
+    [StringLength(500), DisplayFormat(ConvertEmptyStringToNull = false)] public string Observaciones { get; set; } = "";
 }
 
 public class DevolucionForm
@@ -40,7 +40,7 @@ public class DevolucionForm
     public string Version { get; set; } = "";
     [Range(0, 10000000)] public int Kilometraje { get; set; }
     [Range(0, 100), Display(Name = "Combustible (%)")] public int Combustible { get; set; }
-    [StringLength(500)] public string Observaciones { get; set; } = "";
+    [StringLength(500), DisplayFormat(ConvertEmptyStringToNull = false)] public string Observaciones { get; set; } = "";
     [Range(typeof(decimal), "0", "999999"), Display(Name = "Cargo adicional USD")] public decimal Cargo { get; set; }
     [StringLength(150), Display(Name = "Concepto del cargo")] public string? Concepto { get; set; }
 }
@@ -66,7 +66,7 @@ public class MantenimientoForm
 public class RecomendacionForm : DisponibilidadForm
 {
     [Range(typeof(decimal), "0.01", "999999"), Display(Name = "Presupuesto diario USD")] public decimal PresupuestoDiario { get; set; } = 100;
-    [StringLength(1000)] public string Preferencias { get; set; } = "";
+    [StringLength(1000), DisplayFormat(ConvertEmptyStringToNull = false)] public string Preferencias { get; set; } = "";
     public ResultadoRecomendacion? Resultado { get; set; }
 }
 
